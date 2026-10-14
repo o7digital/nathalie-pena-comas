@@ -34,14 +34,14 @@ test('video loads on confirmation, traps focus, and restores focus on Escape', a
  await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/HbRmwVkSP8Q/);
  await page.keyboard.press('Escape'); await expect(page.locator('#video-modal')).not.toBeVisible();
  await expect(page.locator('iframe')).toHaveCount(0); await expect(trigger).toBeFocused();
- await page.locator('.song-card [data-video="otT5_7vJYv4"]').click();
+ await page.locator('.video [data-video="otT5_7vJYv4"]').click();
  await expect(page.locator('#video-title')).toHaveText('Esclavo y Amo');
  await expect(page.locator('#video-fallback')).toHaveAttribute('href', /otT5_7vJYv4/);
 });
 test('language routes work without JavaScript; localized SEO and sitemap exist', async ({ browser, request }) => {
  const context = await browser.newContext({ javaScriptEnabled: false, baseURL: process.env.TEST_BASE_URL || "http://localhost:4322" }); const page = await context.newPage();
  await page.goto('/es/'); await page.locator('.language-switch a[lang="en"]').click();
- await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a')).toContainText('Listen now');
+ await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a').first()).toContainText('Discover the artist');
  await expect(page.locator('link[hreflang="es"]')).toHaveCount(1);
  const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
  expect(graph['@graph'].filter((item: { '@type': string }) => item['@type'] === 'MusicRecording')).toHaveLength(2);
@@ -71,4 +71,16 @@ test('reduced motion keeps content visible', async ({ page }) => {
  await page.emulateMedia({ reducedMotion: 'reduce' }); await page.goto('/es/');
  expect(await page.locator('.story-copy').evaluate(el => getComputedStyle(el).opacity)).toBe('1');
  expect(await page.locator('html').evaluate(el => getComputedStyle(el).scrollBehavior)).toBe('auto');
+});
+
+test('official album gallery and opera performances open the correct destinations', async ({page}) => {
+ await page.goto('/en/');
+ await expect(page.locator('.album')).toHaveCount(4);
+ await expect(page.locator('.release-feature a')).toHaveAttribute('href','https://orcd.co/quintoelemento');
+ for (const [id,title] of [['pG7lJPLcO-g','Song to the Moon'],['NrGZajhOGAc','O soave fanciulla']]) {
+  await page.locator(`[data-video="${id}"]`).click();
+  await expect(page.locator('#video-title')).toHaveText(title);
+  await expect(page.locator('#video-fallback')).toHaveAttribute('href',`https://www.youtube.com/watch?v=${id}`);
+  await page.keyboard.press('Escape');
+ }
 });

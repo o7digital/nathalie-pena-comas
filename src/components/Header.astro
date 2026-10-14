@@ -5,7 +5,7 @@ const { lang } = Astro.props;
 const t = translations[lang];
 ---
 
-  <div class="announcement" set:html={t.announcement} />
+
   <header class="nav" id="site-header">
     <a class="brand" href="#top" aria-label="Nathalie Peña-Comas">NATHALIE<br/>PEÑA-COMAS<span>SOPRANO · ARTIST</span></a>
     <nav class="navlinks" id="navlinks" aria-label={t.navLabel}><a href="#music" set:html={t.navMusic} /><a href="#story" set:html={t.navStory} /><a href="#videos" set:html={t.navVideos} /><a href="#listen" set:html={t.navListen} /><a href="#contact" set:html={t.navContact} /></nav>

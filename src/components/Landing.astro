@@ -1,4 +1,6 @@
 ---
+import International from "./International.astro";
+import Performances from "./Performances.astro";
 import Base from "../layouts/Base.astro";
 import Header from "./Header.astro";
 import Hero from "./Hero.astro";
@@ -13,4 +15,4 @@ import type { Locale } from "../data/translations";
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 ---
-<Base lang={lang}><Header lang={lang}/><main id="main"><Hero lang={lang} /><Releases lang={lang} /><Story lang={lang} /><Videos lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>
+<Base lang={lang}><Header lang={lang}/><main id="main"><Hero lang={lang} /><International lang={lang} /><Releases lang={lang} /><Story lang={lang} /><Videos lang={lang} /><Performances lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>

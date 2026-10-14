@@ -1,23 +1,12 @@
 ---
-import { translations, type Locale } from "../data/translations";
+import { Image } from 'astro:assets';
+import hero from '../assets/official/hero.jpg';
+import { translations, type Locale } from '../data/translations';
 interface Props { lang: Locale }
-const { lang } = Astro.props;
-const t = translations[lang];
-import { Image } from "astro:assets";
-import sombrasVideo from "../assets/sombras-video.jpg";
+const {lang}=Astro.props; const t=translations[lang]; const es=lang==='es';
 ---
-
-    <section class="hero section" aria-labelledby="hero-title">
-      <Image fetchpriority="high" loading="eager" class="hero-photo" src={sombrasVideo} alt="Nathalie Peña-Comas — Sombras Nada Más, video oficial"  widths={[480, 800, 1280]} sizes="(max-width: 780px) 100vw, 65vw" format="webp" />
-      <div class="hero-grid"></div>
-      <div class="hero-inner fade-in">
-        <div class="eyebrow" set:html={t.heroKicker} />
-        <h1 id="hero-title">Nathalie<br/><em>Peña-Comas</em></h1>
-        <p class="hero-sub" set:html={t.heroSub} />
-        <p class="hero-desc" set:html={t.heroDesc} />
-        <div class="hero-ctas"><a href="#music" class="btn-gold"><span set:html={t.heroListen} /><span class="btn-arrow">↗</span></a><button class="btn-outline" data-video="HbRmwVkSP8Q"><span>▷</span><span set:html={t.heroWatch} /></button></div>
-      </div>
-      <div class="hero-index">01 —<span set:html={t.heroIndex} /></div>
-      <div class="hero-social"><a href="https://open.spotify.com/track/4BE0KqF21ot4HCBzuWR6aA" target="_blank" rel="noopener">SPOTIFY ↗</a><a href="https://www.youtube.com/watch?v=HbRmwVkSP8Q" target="_blank" rel="noopener">YOUTUBE ↗</a><a href="https://www.nathaliepenacomas.net/" target="_blank" rel="noopener" set:html={t.official} /></div><div class="scroll-note" set:html={t.scroll} />
-    </section>
-    <div class="marquee" aria-hidden="true"><span set:html={t.marqueeOne} /><b>✦</b><span set:html={t.marqueeTwo} /><b>✦</b><span set:html={t.marqueeThree} /><b>✦</b><span set:html={t.marqueeFour} /></div>
+<section class="hero section" aria-labelledby="hero-title">
+ <Image src={hero} class="hero-photo" width={2560} alt="Nathalie Peña-Comas" widths={[640,960,1440,1920,2560]} sizes="(max-width: 780px) 1440px, 100vw" format="webp" quality={85} loading="eager" fetchpriority="high" />
+ <div class="hero-inner fade-in"><div class="eyebrow">SOPRANO · INTERNATIONAL ARTIST</div><h1 id="hero-title">Nathalie<br/><em>Peña-Comas</em></h1><p class="hero-sub">{es?'El mundo, su escenario.':'The world, her stage.'}</p><div class="hero-ctas"><a class="btn-gold" href="#story">{es?'Descubrir a la artista':'Discover the artist'} <span>↗</span></a><a class="btn-outline" href="#music">{es?'Explorar la música':'Explore the music'} <span>↗</span></a></div></div>
+ <div class="hero-bottom"><span>{es?'RAÍCES DOMINICANAS. ALMA UNIVERSAL.':'DOMINICAN ROOTS. A UNIVERSAL SOUL.'}</span><a href="#voice">{es?'Desliza para descubrir':'Scroll to discover'} ↓</a><button data-video="HbRmwVkSP8Q">▷ {t.heroWatch}</button></div>
+</section>

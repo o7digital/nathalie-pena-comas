@@ -15,17 +15,17 @@ onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 if (!motion.matches && 'IntersectionObserver' in window) {
  const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: .08 });
- document.querySelectorAll('.section-top, .song-card, .story-copy, .video, .listen-inner, .contact h2').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
+ document.querySelectorAll('.section-top, .honor, .album, .release-feature, .story-copy, .video, .listen-inner, .contact h2').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
  motion.addEventListener('change', () => { if (motion.matches) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')); observer.disconnect(); } });
 }
 const video = $<HTMLDialogElement>('#video-modal');
 const container = $('#video-container');
 let currentVideo = ''; let videoTrigger: HTMLElement | null = null;
-const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4']);
+const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4', 'pG7lJPLcO-g', 'NrGZajhOGAc']);
 document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.addEventListener('click', () => {
  const id = button.dataset.video ?? ''; if (!validVideos.has(id) || !video) return;
  currentVideo = id; videoTrigger = button;
- const title = id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo';
+ const title = button.dataset.title ?? (id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo');
  const heading = $('#video-title'); if (heading) heading.textContent = title;
  const fallback = $<HTMLAnchorElement>('#video-fallback'); if (fallback) fallback.href = `https://www.youtube.com/watch?v=${id}`;
  $('.video-consent')?.removeAttribute('hidden');
@@ -98,3 +98,16 @@ document.addEventListener('keydown', event => {
  if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
  else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
 });
+
+// Small compositor-only drift, active solely while the hero is in view.
+const heroPhoto = document.querySelector<HTMLElement>('.hero-photo');
+let heroInView = true, framePending = false;
+if (heroPhoto && 'IntersectionObserver' in window) {
+ const heroObserver = new IntersectionObserver(entries => { heroInView = entries[0].isIntersecting; });
+ heroObserver.observe(heroPhoto);
+ window.addEventListener('scroll', () => {
+  if (motion.matches || !heroInView || framePending) return;
+  framePending = true; requestAnimationFrame(() => { heroPhoto.style.transform = `translateY(${Math.min(window.scrollY * .07, 55)}px) scale(1.02)`; framePending = false; });
+ }, { passive: true });
+ motion.addEventListener('change', () => { if (motion.matches) heroPhoto.style.transform = ''; });
+}
