@@ -32,14 +32,37 @@ test('gallery autoplay keeps moving on hover and focus, and respects pause and r
  const count=page.locator('[data-gallery-count]');
  await expect(count).toHaveText('02 / 03',{timeout:8000});
  // Wait until smooth scrolling has actually reached the second image.
- await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[1].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
+ await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[1].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
  await page.locator('#gallery-track').hover();await page.locator('#gallery-track').focus();
  await expect(count).toHaveText('03 / 03',{timeout:5000});
- await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[2].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
+ await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[2].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
  await page.locator('[data-gallery-pause]').click();await expect(page.locator('[data-gallery-pause]')).toHaveAttribute('aria-pressed','true');
  await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.waitForTimeout(3500);await expect(count).toHaveText('03 / 03');
  await page.locator('[data-gallery-pause]').click();await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();
  await expect(count).toHaveText('01 / 03',{timeout:5000});
- await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[0].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
+ await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[0].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('[data-gallery-pause]')).toBeDisabled();await page.waitForTimeout(3500);await expect(count).toHaveText('01 / 03');
+});
+
+for(const width of [390,1440])test(`gallery wraps forward seamlessly at ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:900});await page.goto('/es/#gallery');
+ await page.locator('#gallery-track').scrollIntoViewIfNeeded();
+ await page.locator('[data-gallery-pause]').click();
+ const next=page.locator('[data-gallery-next]');
+ for(let cycle=0;cycle<2;cycle++)for(const label of ['02 / 03','03 / 03','01 / 03']){
+  const before=await page.locator('#gallery-track').evaluate(el=>el.scrollLeft);
+  const positions:number[]=[];
+  await page.exposeFunction(`record${cycle}${label.slice(0,2)}`, (x:number)=>positions.push(x));
+  const name=`record${cycle}${label.slice(0,2)}`;
+  await page.locator('#gallery-track').evaluate((el,name)=>{
+   const record=()=>{(window as any)[name](el.scrollLeft);};
+   el.addEventListener('scroll',record);setTimeout(()=>el.removeEventListener('scroll',record),1000);
+  },name);
+  await next.click();await expect(page.locator('[data-gallery-count]')).toHaveText(label);
+  await page.waitForTimeout(1100);
+  // The animated part advances right, including the transition from the last to first photo.
+  expect(positions.some(x=>x>before+20)).toBe(true);
+  const index=Number(label.slice(0,2))-1;
+  await expect.poll(()=>page.locator('#gallery-track').evaluate((el,index)=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[index].getBoundingClientRect().left-el.getBoundingClientRect().left),index)).toBeLessThan(3);
+ }
 });
