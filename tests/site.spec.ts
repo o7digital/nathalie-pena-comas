@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-for (const lang of ['es', 'en']) for (const width of [390, 768, 1440]) {
+for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440]) {
  test(`${lang} responsive at ${width}px`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 });
   const errors: string[] = []; const thirdParty: string[] = [];
@@ -16,7 +16,7 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1440]) {
   expect(await page.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   const ids = await page.locator('[id]').evaluateAll(elements => elements.map(e => e.id)); expect(new Set(ids).size).toBe(ids.length);
   expect(thirdParty).toEqual([]); expect(errors).toEqual([]);
-  if (width < 780) {
+  if (width <= 1250) {
    await page.locator('#menu-btn').click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'true');
    const about = page.locator('#navlinks a[href="https://www.nathaliepenacomas.net/bio"]');
    await about.evaluate(el => el.addEventListener('click', e => e.preventDefault()));
