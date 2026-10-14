@@ -1,0 +1,26 @@
+{
+  "name": "nathalie-pena-comas-premium-landing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "check": "astro check",
+    "test": "playwright test",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@playwright/test": "^1.64.0",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "sharp": "^0.35.5",
+    "esbuild": "^0.28.1"
+  }
+}

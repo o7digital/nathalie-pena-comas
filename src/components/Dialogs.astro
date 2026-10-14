@@ -1,0 +1,17 @@
+---
+import { translations, type Locale } from '../data/translations';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = translations[lang];
+---
+<dialog class="video-modal" id="video-modal" aria-labelledby="video-title">
+ <div class="video-modal-inner"><button class="close-modal" data-close-video aria-label={t.close}>✕</button>
+ <h2 id="video-title">{t.videoDialog}</h2><div class="video-consent"><p>{t.externalVideo}</p><button class="btn-gold" id="load-video">▷ {t.loadVideo}</button></div>
+ <div id="video-container"></div><a id="video-fallback" target="_blank" rel="noopener" class="text-link">{t.fallback} ↗</a></div>
+</dialog>
+<dialog class="consent-modal" id="consent-modal" aria-labelledby="consent-title">
+ <button class="consent-close" data-close-consent aria-label={t.close}>✕</button><div class="kicker">{t.preferences}</div><h2 id="consent-title">{t.consentTitle}</h2><p>{t.consentDesc}</p>
+ <a href={`/${lang}/privacy/`} class="text-link">{t.privacy} ↗</a>
+ <label><input id="consent-analytics" type="checkbox" /> {t.analytics}</label><label><input id="consent-marketing" type="checkbox" /> {t.marketing}</label>
+ <div class="consent-actions"><button data-consent="reject" class="btn-outline">{t.reject}</button><button data-consent="save" class="btn-outline">{t.save}</button><button data-consent="accept" class="btn-gold">{t.accept}</button></div>
+</dialog>

@@ -1,0 +1,10 @@
+---
+import { translations, type Locale } from "../data/translations";
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = translations[lang];
+import { Image } from "astro:assets";
+import sombrasVideo from "../assets/sombras-video.jpg";
+import esclavoVideo from "../assets/esclavo-video.jpg";
+---
+    <section class="films section" id="videos"><div class="section-top"><div><div class="kicker" set:html={t.videoKicker} /><h2 class="section-title" set:html={t.videoTitle} /></div><p class="section-intro" set:html={t.videoDesc} /></div><div class="video-grid"><article class="video"><div class="video-frame"><Image loading="lazy" src={sombrasVideo} alt="Sombras Nada Más video" widths={[480, 800, 1280]} sizes="(max-width: 780px) 100vw, 65vw" format="webp" /><button class="play" aria-label={t.play + " Sombras Nada Más"} data-video="HbRmwVkSP8Q">▶</button></div><div class="video-meta"><div><h3>Sombras Nada Más</h3><span set:html={t.officialVideo} /></div><a class="arrow-link" href="https://youtu.be/HbRmwVkSP8Q" target="_blank" rel="noopener" aria-label={t.play + " on YouTube"}>↗</a></div></article><article class="video"><div class="video-frame"><Image loading="lazy" src={esclavoVideo} alt="Esclavo y Amo video" widths={[480, 800, 1280]} sizes="(max-width: 780px) 100vw, 65vw" format="webp" /><button class="play" aria-label={t.play + " Esclavo y Amo"} data-video="otT5_7vJYv4">▶</button></div><div class="video-meta"><div><h3>Esclavo y Amo</h3><span set:html={t.officialVideo} /></div><a class="arrow-link" href="https://youtu.be/otT5_7vJYv4" target="_blank" rel="noopener" aria-label={t.play + " on YouTube"}>↗</a></div></article></div></section>

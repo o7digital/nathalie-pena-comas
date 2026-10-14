@@ -1,0 +1,7 @@
+---
+import { translations, type Locale } from "../data/translations";
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = translations[lang];
+---
+    <section class="contact section" id="contact"><div class="kicker" set:html={t.contactKicker} /><h2 set:html={t.contactTitle} /><p set:html={t.contactDesc} /><a href="https://www.nathaliepenacomas.net/contact" target="_blank" rel="noopener" class="btn-gold"><span set:html={t.contactCTA} /><span class="btn-arrow">↗</span></a><a class="press-link" href="https://www.nathaliepenacomas.net/about-3" target="_blank" rel="noopener">{t.press} ↗</a></section>
