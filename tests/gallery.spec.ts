@@ -26,18 +26,20 @@ for(const lang of ['es','en'])for(const width of [390,1440]){
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  });
 }
-test('gallery autoplay advances and pauses for hover, explicit pause and reduced motion',async({page})=>{
+test('gallery autoplay keeps moving on hover and focus, and respects pause and reduced motion',async({page})=>{
  test.setTimeout(45000);
  await page.goto('/en/#gallery');await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.mouse.move(0,0);
  const count=page.locator('[data-gallery-count]');
  await expect(count).toHaveText('02 / 03',{timeout:8000});
  // Wait until smooth scrolling has actually reached the second image.
  await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[1].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
- await page.locator('#gallery-track').hover();await page.waitForTimeout(5500);await expect(count).toHaveText('02 / 03');
- await page.locator('[data-gallery-pause]').click();await expect(page.locator('[data-gallery-pause]')).toHaveAttribute('aria-pressed','true');
- await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.waitForTimeout(5500);await expect(count).toHaveText('02 / 03');
- await page.locator('[data-gallery-pause]').click();await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();
- await expect(count).toHaveText('03 / 03',{timeout:8000});
+ await page.locator('#gallery-track').hover();await page.locator('#gallery-track').focus();
+ await expect(count).toHaveText('03 / 03',{timeout:5000});
  await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[2].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
- await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('[data-gallery-pause]')).toBeDisabled();await page.waitForTimeout(5500);await expect(count).toHaveText('03 / 03');
+ await page.locator('[data-gallery-pause]').click();await expect(page.locator('[data-gallery-pause]')).toHaveAttribute('aria-pressed','true');
+ await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.waitForTimeout(3500);await expect(count).toHaveText('03 / 03');
+ await page.locator('[data-gallery-pause]').click();await page.mouse.move(0,0);await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();});await page.locator('#gallery-track').scrollIntoViewIfNeeded();
+ await expect(count).toHaveText('01 / 03',{timeout:5000});
+ await expect.poll(()=>page.locator('#gallery-track').evaluate(el=>Math.abs(el.querySelectorAll('figure')[0].getBoundingClientRect().left-el.getBoundingClientRect().left))).toBeLessThan(3);
+ await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('[data-gallery-pause]')).toBeDisabled();await page.waitForTimeout(3500);await expect(count).toHaveText('01 / 03');
 });
