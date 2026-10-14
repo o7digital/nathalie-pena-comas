@@ -1,0 +1,33 @@
+.photo-gallery .gallery-controls{display:flex;align-items:center;justify-content:flex-end;gap:13px;flex-wrap:wrap}
+.photo-gallery .gallery-controls[hidden]{display:none}
+.gallery-controls>span{font-size:13px;letter-spacing:.12em;margin-right:12px;color:#745326;font-variant-numeric:tabular-nums}
+.gallery-controls button,.gallery-lightbox button{display:inline-flex;align-items:center;justify-content:center;min-width:48px;min-height:48px;border:1px solid #74532666;color:#141619;background:transparent;font-size:24px;transition:background .2s,color .2s}
+.gallery-controls button:hover{background:#141619;color:#fff}
+.gallery-controls .gallery-pause{font-size:12px;padding:12px 17px;letter-spacing:.03em}
+.gallery-controls button:disabled{opacity:.65;cursor:default}
+.photo-gallery .photographs{display:flex;gap:32px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#c2a476 #f5f3ef;align-items:flex-start;padding:5px 0 22px;scroll-behavior:smooth}
+.photo-gallery .photographs figure,.photo-gallery .photographs figure:nth-child(2),.photo-gallery .photographs figure:nth-child(3){flex:0 0 65%;min-width:0;margin:0;padding:0;scroll-snap-align:start;scroll-snap-stop:always}
+.photo-gallery .photographs figure:last-child{margin-right:35%}
+.photo-gallery .photographs .gallery-photo{display:block;position:relative;overflow:hidden;background:#141619}
+.photo-gallery .photographs img,.photo-gallery .photographs figure:nth-child(2) img,.photo-gallery .photographs figure:nth-child(3) img{width:100%;aspect-ratio:3/2;object-fit:cover;transition:transform .6s}
+.photo-gallery .photographs figure:first-child img{object-position:70% center}
+.gallery-photo:hover img{transform:scale(1.025)}
+.gallery-enlarge{position:absolute;right:20px;bottom:20px;display:grid;place-items:center;width:46px;height:46px;border:1px solid #ffffff99;border-radius:50%;color:#fff;background:#14161977;font-size:24px;pointer-events:none}
+.photo-gallery .photographs figcaption{margin-top:18px;padding-right:8px}
+.gallery-lightbox{width:min(1400px,calc(100% - 48px));height:calc(100dvh - 48px);max-width:none;max-height:none;margin:auto;border:1px solid #c2a47655;padding:64px 32px 22px;background:#141619;color:#f5f3ef;overflow:hidden;box-shadow:0 20px 100px #0008}
+.gallery-lightbox:not([open]){display:none}
+.gallery-lightbox[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:18px}
+.gallery-lightbox::backdrop{background:#090b0ef0;backdrop-filter:blur(12px)}
+.gallery-lightbox .gallery-lightbox-close{position:absolute;right:17px;top:10px;border:0;color:#fff;font-size:24px}
+.gallery-lightbox-image{min-height:0;display:flex;justify-content:center;align-items:center}
+.gallery-lightbox-image img{display:block;width:100%;height:100%;max-width:100%;object-fit:contain}
+.gallery-lightbox-bottom{display:flex;align-items:center;justify-content:space-between;gap:25px;border-top:1px solid #c2a47655;padding-top:18px}
+.gallery-lightbox-bottom p{font-size:15px;line-height:1.7;margin:0;color:#f5f3ef}
+.gallery-lightbox-bottom>div{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.gallery-lightbox button{border-color:#c2a47666;color:#f5f3ef}
+.gallery-lightbox button:hover{background:#c2a476;color:#141619}
+.gallery-lightbox [data-lightbox-count]{font-size:13px;font-variant-numeric:tabular-nums}
+.gallery-lightbox :focus-visible{outline-color:#c2a476}
+@media(max-width:780px){.photo-gallery .gallery-controls{justify-content:flex-start;margin-top:28px;gap:10px}.photo-gallery .photographs{gap:18px}.photo-gallery .photographs figure,.photo-gallery .photographs figure:nth-child(2),.photo-gallery .photographs figure:nth-child(3){flex-basis:88%}.photo-gallery .photographs figure:last-child{margin-right:12%}.photo-gallery .photographs img,.photo-gallery .photographs figure:nth-child(2) img,.photo-gallery .photographs figure:nth-child(3) img{aspect-ratio:4/5}.gallery-enlarge{right:14px;bottom:14px}.gallery-lightbox{width:calc(100% - 16px);height:calc(100dvh - 16px);padding:64px 14px 18px}.gallery-lightbox-bottom{flex-direction:column;align-items:stretch;gap:14px}.gallery-lightbox-bottom>div{justify-content:space-between}.gallery-lightbox-bottom p{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.photo-gallery .photographs{scroll-behavior:auto}.gallery-photo:hover img{transform:none}}
+.gallery-lightbox .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
