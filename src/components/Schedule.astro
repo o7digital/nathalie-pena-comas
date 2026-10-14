@@ -1,0 +1,8 @@
+---
+import {schedule} from '../data/schedule';
+import type {Locale} from '../data/translations';
+interface Props {lang:Locale} const {lang}=Astro.props;const es=lang==='es';
+const today = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const upcoming=schedule.filter(event=>event.date>=today);
+---
+<section class="agenda section" id="schedule"><div class="section-top"><div><div class="kicker">{es?'Agenda / En el escenario':'Schedule / On stage'}</div><h2 class="section-title">{es?'Próximas':'Upcoming'}<br/><em>{es?'actuaciones.':'performances.'}</em></h2></div><a href="https://www.nathaliepenacomas.net/schedule" class="text-link">{es?'Ver agenda completa':'View full schedule'} ↗</a></div><div class="concert-list">{upcoming.map(event=><a class="concert" href="https://www.nathaliepenacomas.net/schedule"><time datetime={event.date}><strong>{event.date.slice(8)}</strong><span>{new Intl.DateTimeFormat(lang,{month:'short',timeZone:'UTC'}).format(new Date(event.date))} / {event.date.slice(0,4)}</span></time><div class="concert-program"><h3>{event.title}</h3><p>{event.ensemble}</p></div><div class="concert-place"><span>{event.venue}</span><small>{event.city}</small></div><span class="concert-arrow" aria-hidden="true">↗</span></a>)}</div>{!upcoming.length&&<p>{es?'Consulta las próximas fechas en la agenda oficial.':'Find upcoming dates in the official schedule.'}</p>}<p class="source-note">{es?'Programa anunciado en el sitio oficial. Fechas sujetas a actualización.':'Programme announced on the official website. Dates subject to updates.'}</p></section>

@@ -1,12 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import hero from '../assets/official/hero.jpg';
-import { translations, type Locale } from '../data/translations';
+import hero from '../assets/official/editorial.jpg';
+import type { Locale } from '../data/translations';
 interface Props { lang: Locale }
-const {lang}=Astro.props; const t=translations[lang]; const es=lang==='es';
+const {lang}=Astro.props; const es=lang==='es';
 ---
-<section class="hero section" aria-labelledby="hero-title">
- <Image src={hero} class="hero-photo" width={2560} alt="Nathalie Peña-Comas" widths={[640,960,1440,1920,2560]} sizes="(max-width: 780px) 1440px, 100vw" format="webp" quality={85} loading="eager" fetchpriority="high" />
- <div class="hero-inner fade-in"><div class="eyebrow">SOPRANO · INTERNATIONAL ARTIST</div><h1 id="hero-title">Nathalie<br/><em>Peña-Comas</em></h1><p class="hero-sub">{es?'El mundo, su escenario.':'The world, her stage.'}</p><div class="hero-ctas"><a class="btn-gold" href="#story">{es?'Descubrir a la artista':'Discover the artist'} <span>↗</span></a><a class="btn-outline" href="#music">{es?'Explorar la música':'Explore the music'} <span>↗</span></a></div></div>
- <div class="hero-bottom"><span>{es?'RAÍCES DOMINICANAS. ALMA UNIVERSAL.':'DOMINICAN ROOTS. A UNIVERSAL SOUL.'}</span><a href="#voice">{es?'Desliza para descubrir':'Scroll to discover'} ↓</a><button data-video="HbRmwVkSP8Q">▷ {t.heroWatch}</button></div>
+<section class="hero signature-hero section" aria-labelledby="hero-title">
+  <div class="hero-portrait"><Image src={hero} class="hero-photo" width={1920} alt="Nathalie Peña-Comas — fotografía oficial, vestido azul" widths={[640,960,1440,1920]} sizes="(max-width: 780px) 960px, 58vw" format="webp" quality={90} loading="eager" fetchpriority="high" /><span class="portrait-caption">NATHALIE PEÑA-COMAS / {es?'RETRATO OFICIAL':'OFFICIAL PORTRAIT'}</span></div>
+  <div class="hero-inner fade-in"><div class="eyebrow">{es?'Soprano · Actriz · República Dominicana':'Soprano · Actress · Dominican Republic'}</div><h1 id="hero-title">Nathalie<br/><em>Peña-Comas</em></h1><p class="hero-sub">{es?'Una vida dedicada':'A life devoted'}<br/><em>{es?'al arte de la voz.':'to the art of the voice.'}</em></p><p class="hero-description">{es?'Ópera, escenario y raíces. El universo artístico de una soprano dominicana formada en Viena.':'Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.'}</p><div class="hero-ctas"><a class="text-link" href="#story">{es?'Conocer a Nathalie':'Discover Nathalie'} ↗</a><a class="text-link" href="#schedule">{es?'Próximos conciertos':'Upcoming performances'} ↓</a></div></div>
+  <div class="hero-bottom"><span>LATIN GRAMMY NOMINEE</span><a href="#voice">{es?'La artista y su mundo':'The artist & her world'} ↓</a><button data-video="pG7lJPLcO-g" data-title="Song to the Moon">▷ Song to the Moon</button></div>
 </section>

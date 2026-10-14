@@ -18,8 +18,10 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1440]) {
   expect(thirdParty).toEqual([]); expect(errors).toEqual([]);
   if (width < 780) {
    await page.locator('#menu-btn').click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'true');
-   await page.locator('#navlinks a[href="#music"]').click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'false');
-   await expect(page.locator('.nav')).toHaveClass(/scrolled/);
+   const about = page.locator('#navlinks a[href="https://www.nathaliepenacomas.net/bio"]');
+   await about.evaluate(el => el.addEventListener('click', e => e.preventDefault()));
+   await about.click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'false');
+   await expect(page.locator('.nav .official-brand img')).toBeVisible();
   }
   await page.screenshot({ path: `test-results/${lang}-${width}.png` });
  });
@@ -31,7 +33,7 @@ test('video loads on confirmation, traps focus, and restores focus on Escape', a
  await page.keyboard.press('Shift+Tab');
  expect(await page.evaluate(() => !!document.activeElement?.closest('#video-modal'))).toBe(true);
  await page.locator('#load-video').click();
- await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/HbRmwVkSP8Q/);
+ await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/pG7lJPLcO-g/);
  await page.keyboard.press('Escape'); await expect(page.locator('#video-modal')).not.toBeVisible();
  await expect(page.locator('iframe')).toHaveCount(0); await expect(trigger).toBeFocused();
  await page.locator('.video [data-video="otT5_7vJYv4"]').click();
@@ -41,7 +43,7 @@ test('video loads on confirmation, traps focus, and restores focus on Escape', a
 test('language routes work without JavaScript; localized SEO and sitemap exist', async ({ browser, request }) => {
  const context = await browser.newContext({ javaScriptEnabled: false, baseURL: process.env.TEST_BASE_URL || "http://localhost:4322" }); const page = await context.newPage();
  await page.goto('/es/'); await page.locator('.language-switch a[lang="en"]').click();
- await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a').first()).toContainText('Discover the artist');
+ await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a').first()).toContainText('Discover Nathalie');
  await expect(page.locator('link[hreflang="es"]')).toHaveCount(1);
  const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
  expect(graph['@graph'].filter((item: { '@type': string }) => item['@type'] === 'MusicRecording')).toHaveLength(2);
@@ -78,9 +80,32 @@ test('official album gallery and opera performances open the correct destination
  await expect(page.locator('.album')).toHaveCount(4);
  await expect(page.locator('.release-feature a')).toHaveAttribute('href','https://orcd.co/quintoelemento');
  for (const [id,title] of [['pG7lJPLcO-g','Song to the Moon'],['NrGZajhOGAc','O soave fanciulla']]) {
-  await page.locator(`[data-video="${id}"]`).click();
+  await page.locator(`.video [data-video="${id}"]`).click();
   await expect(page.locator('#video-title')).toHaveText(title);
   await expect(page.locator('#video-fallback')).toHaveAttribute('href',`https://www.youtube.com/watch?v=${id}`);
+  await page.keyboard.press('Escape');
+ }
+});
+
+test('official NPC identity, complete navigation and editorial sections are retained', async ({page}) => {
+ await page.goto('/en/');
+ const nav=page.locator('#navlinks a');
+ await expect(nav).toHaveText(['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact']);
+ const paths=['/en/','/bio','/schedule','/latest','/about-3','/recordings','/projects','/gallery','/contact'];
+ for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', i===0?paths[i]:'https://www.nathaliepenacomas.net'+paths[i]);
+ await expect(page.locator('.nav .brand img')).toHaveAttribute('src','/logo-npc.png');
+ await expect(page.locator('footer .brand img')).toHaveAttribute('src','/logo-npc.png');
+ await expect(page.locator('.concert')).toHaveCount(4);
+ await expect(page.locator('.concert time').first()).toHaveAttribute('datetime','2026-10-24');
+ await expect(page.locator('#spirituosi')).toContainText('Ensemble');
+ await expect(page.locator('.repertoire')).toContainText('Violetta');
+ await expect(page.locator('#gallery figure')).toHaveCount(3);
+ await expect(page.locator('#newsletter a')).toHaveAttribute('href','https://www.nathaliepenacomas.net/#SITE_FOOTER');
+ await expect(page.locator('.classical-grid [data-video]')).toHaveCount(4);
+ await expect(page.locator('.classical-grid [data-video]').first()).toHaveAttribute('data-video','pG7lJPLcO-g');
+ for(const [id,title] of [['U1QDrRtdnAI','Addio del passato'],['Ept9wg2IlDo','In trutina']]) {
+  await page.locator(`.video [data-video="${id}"]`).click();
+  await expect(page.locator('#video-title')).toHaveText(title);
   await page.keyboard.press('Escape');
  }
 });

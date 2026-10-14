@@ -15,13 +15,13 @@ onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 if (!motion.matches && 'IntersectionObserver' in window) {
  const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: .08 });
- document.querySelectorAll('.section-top, .honor, .album, .release-feature, .story-copy, .video, .listen-inner, .contact h2').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
+ document.querySelectorAll('.section-top, .honor, .album, .release-feature, .story-copy, .video, .listen-inner, .contact h2, .ensemble-copy, .concert, .press-feature, .news-list, .newsletter').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
  motion.addEventListener('change', () => { if (motion.matches) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')); observer.disconnect(); } });
 }
 const video = $<HTMLDialogElement>('#video-modal');
 const container = $('#video-container');
 let currentVideo = ''; let videoTrigger: HTMLElement | null = null;
-const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4', 'pG7lJPLcO-g', 'NrGZajhOGAc']);
+const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4', 'pG7lJPLcO-g', 'NrGZajhOGAc', 'U1QDrRtdnAI', 'Ept9wg2IlDo']);
 document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.addEventListener('click', () => {
  const id = button.dataset.video ?? ''; if (!validVideos.has(id) || !video) return;
  currentVideo = id; videoTrigger = button;
@@ -102,7 +102,7 @@ document.addEventListener('keydown', event => {
 // Small compositor-only drift, active solely while the hero is in view.
 const heroPhoto = document.querySelector<HTMLElement>('.hero-photo');
 let heroInView = true, framePending = false;
-if (heroPhoto && 'IntersectionObserver' in window) {
+if (heroPhoto && !document.querySelector('.signature-hero') && 'IntersectionObserver' in window) {
  const heroObserver = new IntersectionObserver(entries => { heroInView = entries[0].isIntersecting; });
  heroObserver.observe(heroPhoto);
  window.addEventListener('scroll', () => {
