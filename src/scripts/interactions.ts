@@ -111,3 +111,33 @@ if (heroPhoto && !document.querySelector('.signature-hero') && 'IntersectionObse
  }, { passive: true });
  motion.addEventListener('change', () => { if (motion.matches) heroPhoto.style.transform = ''; });
 }
+
+// Keep each language link on the section the visitor is currently reading.
+if (document.getElementById('home')) {
+ const destinations = [...document.querySelectorAll<HTMLElement>('main section[id], main #press, main #music-films, footer #contact')];
+ const languageLinks = [...document.querySelectorAll<HTMLAnchorElement>('.language-switch a[lang]')];
+ function currentSection() {
+  if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) return 'contact';
+  const edge = (header?.getBoundingClientRect().height ?? 104) + 48;
+  return destinations.filter(el => el.getBoundingClientRect().top <= edge).sort((a,b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top).at(-1)?.id ?? 'home';
+ }
+ function updateSectionLinks() {
+  const id = currentSection();
+  const navId = ({voice:'about',music:'media',collection:'media','music-films':'media',newsletter:'contact'} as Record<string,string>)[id] ?? id;
+  languageLinks.forEach(link => { link.href = `/${link.lang}/#${id}`; });
+  links?.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
+   if (link.hash === `#${navId}`) link.setAttribute('aria-current','location');
+   else link.removeAttribute('aria-current');
+  });
+ }
+ let sectionFrame = false;
+ window.addEventListener('scroll', () => {
+  if (sectionFrame) return;
+  sectionFrame = true;
+  requestAnimationFrame(() => { updateSectionLinks(); sectionFrame = false; });
+ }, {passive:true});
+ window.addEventListener('hashchange', updateSectionLinks);
+ window.addEventListener('resize', updateSectionLinks);
+ languageLinks.forEach(link => link.addEventListener('click', updateSectionLinks));
+ updateSectionLinks();
+}

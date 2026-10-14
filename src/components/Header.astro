@@ -1,14 +1,15 @@
 ---
 import { translations, type Locale } from '../data/translations';
-import { navigation, officialOrigin } from '../data/navigation';
+import { navigation, sectionHref } from '../data/navigation';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = translations[lang];
+const isHome = Astro.url.pathname === `/${lang}/`;
 ---
 <header class="nav" id="site-header">
-  <a class="brand official-brand" href={`/${lang}/`} aria-label="Nathalie Peña-Comas — Home"><img src="/logo-npc.png" alt="Nathalie Peña Comas — logo NPC oficial" width="529" height="330" /></a>
+  <a class="brand official-brand" href={sectionHref('home',lang,isHome)} aria-label={`Nathalie Peña-Comas — ${lang==='es'?'Inicio':'Home'}`}><img src="/logo-npc.png" alt="Nathalie Peña Comas — NPC" width="529" height="330" /></a>
   <nav class="navlinks" id="navlinks" aria-label={t.navLabel}>
-    {navigation.map(({label,path}) => <a href={path === '/' ? `/${lang}/` : officialOrigin + path} aria-current={path === '/' ? 'page' : undefined}>{label}</a>)}
+    {navigation.map(({id,...labels}) => <a href={sectionHref(id,lang,isHome)} aria-current={isHome && id==='home'?'location':undefined}>{labels[lang]}</a>)}
   </nav>
-  <div class="navright"><div class="language-switch" aria-label="Language"><a href="/es/" lang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a></div><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
+  <div class="navright"><div class="language-switch" aria-label={lang==='es'?'Idioma':'Language'}><a href="/es/" lang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a></div><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
 </header>

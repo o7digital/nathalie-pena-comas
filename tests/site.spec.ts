@@ -18,8 +18,7 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440
   expect(thirdParty).toEqual([]); expect(errors).toEqual([]);
   if (width <= 1250) {
    await page.locator('#menu-btn').click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'true');
-   const about = page.locator('#navlinks a[href="https://www.nathaliepenacomas.net/bio"]');
-   await about.evaluate(el => el.addEventListener('click', e => e.preventDefault()));
+   const about = page.locator('#navlinks a[href="#about"]');
    await about.click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'false');
    await expect(page.locator('.nav .official-brand img')).toBeVisible();
   }
@@ -91,8 +90,8 @@ test('official NPC identity, complete navigation and editorial sections are reta
  await page.goto('/en/');
  const nav=page.locator('#navlinks a');
  await expect(nav).toHaveText(['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact']);
- const paths=['/en/','/bio','/schedule','/latest','/about-3','/recordings','/projects','/gallery','/contact'];
- for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', i===0?paths[i]:'https://www.nathaliepenacomas.net'+paths[i]);
+ const paths=['#home','#about','#schedule','#news','#press','#media','#spirituosi','#gallery','#contact'];
+ for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', paths[i]);
  await expect(page.locator('.nav .brand img')).toHaveAttribute('src','/logo-npc.png');
  await expect(page.locator('footer .brand img')).toHaveAttribute('src','/logo-npc.png');
  await expect(page.locator('.concert')).toHaveCount(4);
@@ -100,7 +99,8 @@ test('official NPC identity, complete navigation and editorial sections are reta
  await expect(page.locator('#spirituosi')).toContainText('Ensemble');
  await expect(page.locator('.repertoire')).toContainText('Violetta');
  await expect(page.locator('#gallery figure')).toHaveCount(3);
- await expect(page.locator('#newsletter a')).toHaveAttribute('href','https://www.nathaliepenacomas.net/#SITE_FOOTER');
+ await expect(page.locator('#newsletter a, #newsletter button, #newsletter form')).toHaveCount(0);
+ await expect(page.locator('#newsletter')).toContainText('unavailable in this demonstration');
  await expect(page.locator('.classical-grid [data-video]')).toHaveCount(4);
  await expect(page.locator('.classical-grid [data-video]').first()).toHaveAttribute('data-video','pG7lJPLcO-g');
  for(const [id,title] of [['U1QDrRtdnAI','Addio del passato'],['Ept9wg2IlDo','In trutina']]) {

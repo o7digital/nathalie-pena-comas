@@ -229,3 +229,11 @@ body { background:var(--cream); color:var(--ink); font-size:18px; line-height:1.
 .signature-hero { height:auto; min-height:max(960px,100svh); max-height:none; }
 .signature-hero .hero-bottom { z-index:3; }
 @media (max-width:780px) { .signature-hero { min-height:950px; } }
+/* Standalone demonstration: readable in-page articles and honest service status. */
+.news-list>article { padding:35px 0; border-bottom:1px solid #14161930; }
+.press-feature p { color:var(--body-copy); font-size:18px; line-height:1.85; }
+.newsletter-status { max-width:420px; margin:0; color:var(--body-copy); }
+.concert { cursor:default; }
+.concert:hover { padding-inline:0; background:transparent; }
+.representation .text-link { text-transform:none; letter-spacing:0; overflow-wrap:anywhere; }
+@media(max-width:780px) { .press-feature p { font-size:16px; } }
