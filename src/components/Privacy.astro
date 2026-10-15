@@ -1,5 +1,6 @@
 ---
 import { localizer } from '../data/locales';
+import { oliviaCopy } from '../data/olivia';
 import Header from './Header.astro';
 import Base from '../layouts/Base.astro';
 import Footer from './Footer.astro';
@@ -8,6 +9,7 @@ import { translations, type Locale } from '../data/translations';
 interface Props { lang: Locale }
 const { lang } = Astro.props;const l = localizer(lang);
 const t = translations[lang];
+const olivia = oliviaCopy(lang);
 
 ---
 <Base lang={lang} privacy>
@@ -15,7 +17,8 @@ const t = translations[lang];
  <main id="main" class="privacy-page">
   <a href={`/${lang}/`}>← Nathalie Peña-Comas</a>
   <h1>{t.privacy}</h1>
-  <p>{l("Este sitio presenta la música de Nathalie Peña-Comas y dirige a los visitantes hacia plataformas externas. No incluye formularios ni recoge datos de contacto.", "This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms. It has no forms and collects no contact details.")}</p>
+  <p>{l("Este sitio presenta la música de Nathalie Peña-Comas y dirige a los visitantes hacia plataformas externas.", "This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms.")}</p>
+  <h2>Olivia AI v2</h2><p>{olivia.privacyDetails}</p>
   <h2>{l("Medición y publicidad", "Measurement and advertising")}</h2>
   <p>{l("La medición de audiencia y la publicidad están desactivadas por defecto. Cuando se configuren, Google Analytics 4 y Meta Pixel solo se cargarán después de tu consentimiento para la categoría correspondiente. Podrán registrar visitas y clics hacia plataformas musicales, con el destino, idioma y sección del enlace. Puedes rechazar ambas categorías sin limitar la navegación.", "Audience measurement and advertising are disabled by default. If configured, Google Analytics 4 and Meta Pixel load only after you consent to the relevant category. They may record visits and music platform clicks, including destination, language and link section. You can reject both categories without limiting navigation.")}</p>
   <h2>{l("Tus preferencias", "Your preferences")}</h2>

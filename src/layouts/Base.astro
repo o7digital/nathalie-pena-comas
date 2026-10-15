@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Olivia from '../components/Olivia.astro';
 import '../styles/official-v3.css';
 import '../styles/art-direction-v4.css';
 import { getImage } from 'astro:assets';
@@ -38,7 +39,7 @@ const graph = { '@context': 'https://schema.org', '@graph': [
  {!privacy && <script type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\u003c')} />}
 </head>
 <body id="top" data-lang={lang} data-ga={import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? ''} data-pixel={import.meta.env.PUBLIC_META_PIXEL_ID ?? ''}>
- <a class="skip-link" href="#main">{t.skip}</a><slot />
+ <a class="skip-link" href="#main">{t.skip}</a><slot /><Olivia lang={lang} />
  <script>import '../scripts/interactions';</script>
 </body>
 </html>
