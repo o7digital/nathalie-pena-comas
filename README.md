@@ -1,6 +1,6 @@
 # Nathalie Peña-Comas — El arte de sentir
 
-Landing musicale bilingue, réalisée à partir du prototype fourni. Astro 5, TypeScript, CSS et JavaScript natifs ; sortie entièrement statique pour Vercel. Aucun portrait généré, aucune adresse de contact inventée.
+Site artistique en 11 langues, réalisée à partir du prototype fourni. Astro 5, TypeScript, CSS et JavaScript natifs ; sortie entièrement statique pour Vercel. Aucun portrait généré, aucune adresse de contact inventée.
 
 ## Installation et prévisualisation
 
@@ -25,7 +25,7 @@ Les tests utilisent Google Chrome installé sur le Mac. Sans Chrome : `npx playw
 ## Organisation
 
 - `src/components/` : header, hero, musique, biographie, vidéos, plateformes, contact, footer et dialogues.
-- `src/data/translations.ts` : textes ES/EN, rendus côté serveur ; HTML limité aux textes éditoriaux internes.
+- `src/data/translations.ts` : textes des 11 langues, rendus côté serveur ; HTML limité aux textes éditoriaux internes.
 - `src/data/music.ts` : métadonnées vérifiées pour les données structurées.
 - `src/layouts/Base.astro` : SEO localisé, canonical, hreflang, Open Graph, MusicGroup et MusicRecording.
 - `src/scripts/interactions.ts` : menu mobile, header au scroll, animations, lecteur vidéo et consentement.
@@ -68,3 +68,9 @@ Avant d’activer de vrais identifiants publicitaires, compléter la politique a
 Astro 5 est conservé conformément au brief. L’audit npm signale encore des avis concernant Astro nécessitant une migration majeure pour disparaître. La publication est statique : aucun serveur Astro, server island, View Transition ou entrée HTML non fiable ; seules des images JPEG vérifiées et locales sont optimisées au build. Les dépendances sharp/esbuild sont mises à jour par overrides. Ne pas ajouter d’optimisation distante ou de rendu serveur sans réexaminer ces avis et envisager une migration Astro.
 
 Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement et l’absence de requêtes tierces initiales. Ils simulent le document vidéo pour vérifier l’intégration ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
+
+## Versions internationales
+
+Routes : `/es/`, `/en/`, `/de/` (Autriche et Allemagne), `/fr/`, `/it/`, `/sv/`, `/hu/`, `/hr/`, `/ru/`, `/zh-TW/` (chinois traditionnel) et `/ja/`. Chaque langue dispose aussi de `/privacy/`, de métadonnées traduites et de liens hreflang dans le HTML et le sitemap. Le menu conserve la section consultée, y compris sur mobile, et fonctionne sans JavaScript.
+
+Les traductions de démonstration sont issues d’une base automatique avec révision éditoriale ; une validation par des locuteurs natifs est recommandée avant une communication officielle. Les titres des œuvres, albums, noms propres et crédits restent dans leur forme officielle. Les textes additionnels se trouvent dans `src/data/localized.json` et le registre des langues dans `src/data/locales.ts`. Le référencement de chaque marché nécessite un travail de localisation complémentaire.

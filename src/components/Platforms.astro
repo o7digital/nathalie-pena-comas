@@ -1,7 +1,8 @@
 ---
+import { localizer } from '../data/locales';
 import { translations, type Locale } from "../data/translations";
 interface Props { lang: Locale }
-const { lang } = Astro.props;
+const { lang } = Astro.props;const l = localizer(lang);
 const t = translations[lang];
 ---
-    <section class="listen section" id="listen"><div class="listen-inner"><div><div class="kicker" set:html={t.listenKicker} /><h2 set:html={t.listenTitle} /><p set:html={t.listenDesc} /></div><div class="platform-list"><a class="platform" href="https://open.spotify.com/artist/3lDJkwtZmncXJuv2BUpB80" target="_blank" rel="noopener"><span>◉ Spotify</span><small>↗</small></a><a class="platform" href="https://orcd.co/quintoelemento" target="_blank" rel="noopener"><span>♫ Quinto Elemento: Tierra</span><small>↗</small></a><a class="platform" href="https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299" target="_blank" rel="noopener"><span>♫ Apple Music</span><small>↗</small></a><a class="platform" href="#about"><span set:html={lang==='es'?'Conocer a Nathalie':'Discover Nathalie'} /><small>↗</small></a></div></div></section>
+    <section class="listen section" id="listen"><div class="listen-inner"><div><div class="kicker" set:html={t.listenKicker} /><h2 set:html={t.listenTitle} /><p set:html={t.listenDesc} /></div><div class="platform-list"><a class="platform" href="https://open.spotify.com/artist/3lDJkwtZmncXJuv2BUpB80" target="_blank" rel="noopener"><span>◉ Spotify</span><small>↗</small></a><a class="platform" href="https://orcd.co/quintoelemento" target="_blank" rel="noopener"><span>♫ Quinto Elemento: Tierra</span><small>↗</small></a><a class="platform" href="https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299" target="_blank" rel="noopener"><span>♫ Apple Music</span><small>↗</small></a><a class="platform" href="#about"><span set:html={l("Conocer a Nathalie", "Discover Nathalie")} /><small>↗</small></a></div></div></section>

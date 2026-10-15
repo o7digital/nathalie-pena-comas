@@ -9,7 +9,7 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440
   await expect(page.locator('html')).toHaveAttribute('lang', lang);
   await expect(page.locator('h1')).toHaveText('NathaliePeña-Comas');
   await expect(page.locator('.release-feature h3')).toContainText('Quinto Elemento:');
-  await expect(page.locator('.language-switch a[aria-current="page"]')).toHaveText(lang.toUpperCase());
+  await expect(page.locator('.language-switch a[aria-current="page"]')).toHaveText(lang === 'es' ? 'Español' : 'English');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   for (const image of await page.locator('img').all()) { await image.scrollIntoViewIfNeeded(); await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true); }
   await page.evaluate(() => window.scrollTo(0,0));
@@ -41,7 +41,7 @@ test('video loads on confirmation, traps focus, and restores focus on Escape', a
 });
 test('language routes work without JavaScript; localized SEO and sitemap exist', async ({ browser, request }) => {
  const context = await browser.newContext({ javaScriptEnabled: false, baseURL: process.env.TEST_BASE_URL || "http://localhost:4322" }); const page = await context.newPage();
- await page.goto('/es/'); await page.locator('.language-switch a[lang="en"]').click();
+ await page.goto('/es/'); await page.locator('.language-switch summary').click(); await page.locator('.language-switch a[lang="en"]').click();
  await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a').first()).toContainText('Discover Nathalie');
  await expect(page.locator('link[hreflang="es"]')).toHaveCount(1);
  const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
@@ -98,7 +98,7 @@ test('official NPC identity, complete navigation and editorial sections are reta
  await expect(page.locator('.concert time').first()).toHaveAttribute('datetime','2026-10-24');
  await expect(page.locator('#spirituosi')).toContainText('Ensemble');
  await expect(page.locator('.repertoire')).toContainText('Violetta');
- await expect(page.locator('#gallery figure')).toHaveCount(3);
+ await expect(page.locator('#gallery figure:not([data-gallery-clone])')).toHaveCount(3);
  await expect(page.locator('#newsletter a, #newsletter button, #newsletter form')).toHaveCount(0);
  await expect(page.locator('#newsletter')).toContainText('unavailable in this demonstration');
  await expect(page.locator('.classical-grid [data-video]')).toHaveCount(4);

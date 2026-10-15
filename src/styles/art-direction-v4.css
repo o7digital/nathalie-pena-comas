@@ -237,3 +237,15 @@ body { background:var(--cream); color:var(--ink); font-size:18px; line-height:1.
 .concert:hover { padding-inline:0; background:transparent; }
 .representation .text-link { text-transform:none; letter-spacing:0; overflow-wrap:anywhere; }
 @media(max-width:780px) { .press-feature p { font-size:16px; } }
+
+/* Keep every language reachable without crowding the navigation. */
+details.language-switch { position:relative; display:block; flex-shrink:0; }
+.language-switch summary { cursor:pointer; list-style:none; padding:6px 9px; }
+.language-switch summary::-webkit-details-marker { display:none; }
+.language-switch .language-options { position:absolute; top:calc(100% + 8px); right:0; width:230px; max-height:70vh; overflow:auto; background:var(--cream, #f7f3ec); border:1px solid #14161930; box-shadow:0 8px 24px #0002; padding:8px; display:grid; gap:2px; }
+.language-options a { display:block; font-size:13px; }
+html:lang(ru) { --serif: Georgia, 'Times New Roman', serif; }
+html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Mincho', serif; }
+/* Longer localized words must fit the same responsive grid. */
+.story-copy, .story-visual, .ensemble-copy, .section-top > *, .hero-inner { min-width:0; }
+.story h2, .section-title, .hero-sub, .newsletter h2, .ensemble-copy h2 { overflow-wrap:anywhere; hyphens:auto; }

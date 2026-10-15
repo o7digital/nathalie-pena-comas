@@ -50,10 +50,10 @@ test('language switching retains every section and follows manual scrolling',asy
  for(const id of [...ids,'voice','music','collection','music-films','newsletter']){
   await page.goto(`/es/#${id}`);
   await expect(page.locator('.language-switch a[lang="en"]')).toHaveAttribute('href',`/en/#${id}`);
-  await page.locator('.language-switch a[lang="en"]').click();await expect(page).toHaveURL(new RegExp(`/en/#${id}$`));
+  await page.locator('.language-switch summary').click();await page.locator('.language-switch a[lang="en"]').click();await expect(page).toHaveURL(new RegExp(`/en/#${id}$`));
   await expect(page.locator('.language-switch a[lang="es"]')).toHaveAttribute('href',`/es/#${id}`);
  }
  await page.goto('/en/#about');await page.locator('#gallery').scrollIntoViewIfNeeded();
  await expect(page.locator('.language-switch a[lang="es"]')).toHaveAttribute('href','/es/#gallery');
- await page.locator('.language-switch a[lang="es"]').click();await expect(page).toHaveURL(/\/es\/#gallery$/);
+ await page.locator('.language-switch summary').click();await page.locator('.language-switch a[lang="es"]').click();await expect(page).toHaveURL(/\/es\/#gallery$/);
 });

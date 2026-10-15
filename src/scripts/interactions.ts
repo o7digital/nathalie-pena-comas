@@ -10,6 +10,16 @@ function closeMenu() { links?.classList.remove('open'); menu?.setAttribute('aria
 menu?.addEventListener('click', () => { const open = links?.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); menu.textContent = open ? '✕' : '☰'; });
 links?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+const languageMenu = document.querySelector<HTMLDetailsElement>('details.language-switch');
+document.addEventListener('click', event => {
+ if (languageMenu?.open && !languageMenu.contains(event.target as Node)) languageMenu.open = false;
+});
+document.addEventListener('keydown', event => {
+ if (event.key === 'Escape' && languageMenu?.open) {
+  languageMenu.open = false;
+  languageMenu.querySelector<HTMLElement>('summary')?.focus();
+ }
+});
 const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 24);
 onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 const motion = window.matchMedia('(prefers-reduced-motion: reduce)');

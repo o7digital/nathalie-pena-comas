@@ -1,5 +1,6 @@
 ---
+import { localizer } from '../data/locales';
 import type {Locale} from '../data/translations';
-interface Props {lang:Locale}const {lang}=Astro.props;const es=lang==='es';
+interface Props {lang:Locale}const {lang}=Astro.props;const l = localizer(lang);
 ---
-<section class="newsletter section" id="newsletter"><div><div class="kicker">{es?'La correspondencia de Nathalie':'Correspondence from Nathalie'}</div><h2>{es?'Sigamos':'Let’s stay'} <em>{es?'en contacto.':'in touch.'}</em></h2><p>{es?'Conciertos, proyectos y noticias de la artista.':'Concerts, projects and news from the artist.'}</p></div><p class="newsletter-status">{es?'La inscripción a la newsletter no está disponible en esta demostración.':'Newsletter subscriptions are unavailable in this demonstration.'}</p></section>
+<section class="newsletter section" id="newsletter"><div><div class="kicker">{l("La correspondencia de Nathalie", "Correspondence from Nathalie")}</div><h2>{l("Sigamos", "Let’s stay")} <em>{l("en contacto.", "in touch.")}</em></h2><p>{l("Conciertos, proyectos y noticias de la artista.", "Concerts, projects and news from the artist.")}</p></div><p class="newsletter-status">{l("La inscripción a la newsletter no está disponible en esta demostración.", "Newsletter subscriptions are unavailable in this demonstration.")}</p></section>

@@ -5,18 +5,20 @@ import '../styles/art-direction-v4.css';
 import { getImage } from 'astro:assets';
 import hero from '../assets/official/hero.jpg';
 import { translations, type Locale } from '../data/translations';
+import { locales, localizer } from '../data/locales';
 import { artist, recordings } from '../data/music';
 interface Props { lang: Locale; privacy?: boolean }
 const { lang, privacy = false } = Astro.props;
 const t = translations[lang];
+const l = localizer(lang);
 const heroWidths = [640, 960, 1440, 1920, 2560];
 const heroImages = privacy ? [] : await Promise.all(heroWidths.map(width => getImage({src:hero,width,format:'webp',quality:90})));
 const heroSrcset = heroImages.map((image,i) => `${image.src} ${heroWidths[i]}w`).join(', ');
 const origin = Astro.site ?? new URL('https://nathalie-pena-comas.vercel.app');
 const path = privacy ? 'privacy/' : '';
 const canonical = new URL(`/${lang}/${path}`, origin);
-const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${lang === 'es' ? 'Soprano y actriz' : 'Soprano & actress'}`;
-const description = lang === 'es' ? 'Nathalie Peña-Comas, soprano y actriz dominicana formada en Viena. Descubre su trayectoria, repertorio de ópera, conciertos, discografía y Ensemble Spirituosi.' : 'Nathalie Peña-Comas, Dominican soprano and actress trained in Vienna. Discover her operatic career, performances, recordings and Ensemble Spirituosi.';
+const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${l('Soprano y actriz', 'Soprano & actress')}`;
+const description = t.storyP1;
 const graph = { '@context': 'https://schema.org', '@graph': [
  { '@type': 'Person', '@id': new URL('/#artist', origin).href, name: artist, url: new URL('/es/', origin).href, sameAs: ['https://www.nathaliepenacomas.net/', 'https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299'], genre: ['Latin', 'Classical'], description },
  ...recordings.map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),
@@ -27,10 +29,10 @@ const graph = { '@context': 'https://schema.org', '@graph': [
 <head>
  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#141619" />
  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} />
- <link rel="alternate" hreflang="es" href={new URL(`/es/${path}`, origin)} /><link rel="alternate" hreflang="en" href={new URL(`/en/${path}`, origin)} /><link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
+ {locales.map(locale => <link rel="alternate" hreflang={locale.code} href={new URL(`/${locale.code}/${path}`, origin)} />)}<link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
  <meta property="og:type" content="website" /><meta property="og:site_name" content={artist} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} />
- <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} /><meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
- <meta property="og:image" content={new URL('/social-v3.jpg', origin)} /><meta property="og:image:alt" content="Nathalie Peña-Comas — soprano & actress" /><meta name="twitter:card" content="summary_large_image" />
+ <meta property="og:locale" content={locales.find(locale => locale.code === lang)?.og} />{locales.filter(locale => locale.code !== lang).map(locale => <meta property="og:locale:alternate" content={locale.og} />)}
+ <meta property="og:image" content={new URL('/social-v3.jpg', origin)} /><meta property="og:image:alt" content={title} /><meta name="twitter:card" content="summary_large_image" />
  {!privacy && <link rel="preload" as="image" imagesrcset={heroSrcset} imagesizes="(max-width: 780px) 1440px, 75vw" fetchpriority="high" />}
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  {!privacy && <script type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\u003c')} />}
