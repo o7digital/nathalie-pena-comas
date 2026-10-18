@@ -68,3 +68,16 @@ Avant d’activer de vrais identifiants publicitaires, compléter la politique a
 Astro 5 est conservé conformément au brief. L’audit npm signale encore des avis concernant Astro nécessitant une migration majeure pour disparaître. La publication est statique : aucun serveur Astro, server island, View Transition ou entrée HTML non fiable ; seules des images JPEG vérifiées et locales sont optimisées au build. Les dépendances sharp/esbuild sont mises à jour par overrides. Ne pas ajouter d’optimisation distante ou de rendu serveur sans réexaminer ces avis et envisager une migration Astro.
 
 Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement et l’absence de requêtes tierces initiales. Ils simulent le document vidéo pour vérifier l’intégration ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
+
+### Two artistic worlds
+
+The Spanish and English entrances live at `/es/` and `/en/`. Each has two ordinary, server-rendered links:
+
+- `/{lang}/classical/` preserves the previous hero and all existing landing content.
+- `/{lang}/popular/` has a dedicated hero and the existing releases, official videos, streaming links and contact section.
+
+A fixed navigation bar links both worlds and the entrance. Language links preserve the current world. Canonical URLs, language alternates and the sitemap cover all eight localized pages. Previous entrance URLs with shared section fragments (`#music`, `#story`, `#videos`, `#listen`, `#contact`, `#hero-title`) are forwarded with `location.replace` to the preserved classical page; fragments are not sent to the hosting server. No existing standalone page was removed.
+
+Only repository media and music references are used: Sombras Nada Más, Esclavo y Amo, and Quinto Elemento: Tierra. There are no additional popular recordings or project descriptions available locally. The repository also has no dedicated classical performance photos, opera recordings or classical repertoire list; existing portraits are reused and no repertoire is invented.
+
+`tests/universes.spec.ts` covers the entrance layout at 390, 768 and 1440 pixels, both languages, both worlds, language and universe changes, browser back, direct links, keyboard navigation, reduced motion, JavaScript-free navigation, legacy fragment links and SEO routes.

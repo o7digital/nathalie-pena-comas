@@ -2,14 +2,16 @@
 import '../styles/global.css';
 import { translations, type Locale } from '../data/translations';
 import { artist, recordings } from '../data/music';
-interface Props { lang: Locale; privacy?: boolean }
-const { lang, privacy = false } = Astro.props;
+import { universeCopy, type Universe } from '../data/universes';
+interface Props { lang: Locale; privacy?: boolean; universe?: Universe }
+const { lang, privacy = false, universe } = Astro.props;
 const t = translations[lang];
 const origin = Astro.site ?? new URL('https://nathalie-pena-comas.vercel.app');
-const path = privacy ? 'privacy/' : '';
+const path = privacy ? 'privacy/' : universe ? `${universe}/` : '';
+const u = universeCopy[lang];
 const canonical = new URL(`/${lang}/${path}`, origin);
-const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${lang === 'es' ? 'El arte de sentir' : 'The art of feeling'}`;
-const description = lang === 'es' ? 'Descubre Quinto Elemento: Tierra, la música y los videos oficiales de Nathalie Peña-Comas. Una voz de soprano entre la ópera y las raíces latinas.' : 'Discover Quinto Elemento: Tierra, music and official videos by Nathalie Peña-Comas. A soprano voice connecting opera and Latin roots.';
+const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${universe ? u[universe] : u.invitation}`;
+const description = !privacy && !universe ? u.entryDescription : universe === 'popular' ? u.popularDesc : lang === 'es' ? 'Conoce a Nathalie Peña-Comas, soprano dominicana formada en Viena. Su trayectoria, entre la ópera, los escenarios internacionales y las raíces latinas.' : 'Meet Nathalie Peña-Comas, a Dominican soprano trained in Vienna. Explore her journey through opera, international stages and Latin roots.';
 const graph = { '@context': 'https://schema.org', '@graph': [
  { '@type': 'MusicGroup', '@id': new URL('/#artist', origin).href, name: artist, url: new URL('/es/', origin).href, sameAs: ['https://www.nathaliepenacomas.net/', 'https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299'], genre: ['Latin', 'Classical'], description },
  ...recordings.map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),

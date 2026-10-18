@@ -1,0 +1,14 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/esclavo-video.jpg';
+import { universeCopy } from '../data/universes';
+import { translations, type Locale } from '../data/translations';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = universeCopy[lang];
+---
+<section class="popular-hero" aria-labelledby="popular-title">
+ <Image class="popular-photo" src={portrait} alt="Nathalie Peña-Comas — Esclavo y Amo" loading="eager" fetchpriority="high" widths={[480, 800, 1280]} sizes="100vw" format="webp" />
+ <div class="popular-copy"><p class="eyebrow">Nathalie Peña-Comas</p><p class="popular-kicker">{t.popularIntro}</p><h1 id="popular-title">{t.popular}</h1><p class="popular-description">{t.popularDesc}</p><div class="hero-ctas"><a class="btn-gold" href="#music">{translations[lang].heroListen} ↗</a><a class="btn-outline" href="#videos">{translations[lang].heroWatch} ▷</a></div></div>
+ <span class="popular-signature">{lang === 'es' ? 'El arte de sentir' : 'The art of feeling'}</span>
+</section>

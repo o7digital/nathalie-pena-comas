@@ -1,0 +1,7 @@
+import type { Locale } from './translations';
+export type Universe = 'classical' | 'popular';
+export const universeCopy = {
+ es: { classical: 'Soprano clásica', popular: 'Canciones populares', classicalSub: 'Ópera y música clásica', popularSub: 'Otro universo de su voz', explore: 'Explorar', home: 'Inicio', shortClassical: 'Clásica', shortPopular: 'Popular', invitation: 'Una voz. Dos universos.', popularIntro: 'El corazón de la música latina', popularDesc: 'Sombras Nada Más, Esclavo y Amo y el proyecto Quinto Elemento: Tierra. Un encuentro con la emoción y las raíces latinas.', entryDescription: 'Explora los dos universos de Nathalie Peña-Comas: soprano clásica y canciones populares.' },
+ en: { classical: 'Classical soprano', popular: 'Popular songs', classicalSub: 'Opera & classical music', popularSub: 'Another world in her voice', explore: 'Explore', home: 'Home', shortClassical: 'Classical', shortPopular: 'Popular', invitation: 'One voice. Two worlds.', popularIntro: 'The heart of Latin music', popularDesc: 'Sombras Nada Más, Esclavo y Amo and the project Quinto Elemento: Tierra. An encounter with emotion and Latin roots.', entryDescription: 'Explore the two worlds of Nathalie Peña-Comas: classical soprano and popular songs.' }
+} as const;
+export const universePath = (lang: Locale, universe?: Universe) => `/${lang}/${universe ? (universe === 'classical' ? 'classical/' : 'popular/') : ''}`;

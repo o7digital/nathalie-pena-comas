@@ -10,7 +10,10 @@ import Contact from "./Contact.astro";
 import Footer from "./Footer.astro";
 import Dialogs from "./Dialogs.astro";
 import type { Locale } from "../data/translations";
-interface Props { lang: Locale }
-const { lang } = Astro.props;
+import UniverseNav from "./UniverseNav.astro";
+import PopularHero from "./PopularHero.astro";
+import type { Universe } from "../data/universes";
+interface Props { lang: Locale; universe: Universe }
+const { lang, universe } = Astro.props;
 ---
-<Base lang={lang}><Header lang={lang}/><main id="main"><Hero lang={lang} /><Releases lang={lang} /><Story lang={lang} /><Videos lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>
+<Base lang={lang} universe={universe}><Header lang={lang} universe={universe}/><UniverseNav lang={lang} universe={universe}/><main id="main">{universe === 'classical' ? <Hero lang={lang} /> : <PopularHero lang={lang} />}<Releases lang={lang} />{universe === 'classical' && <Story lang={lang} />}<Videos lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>

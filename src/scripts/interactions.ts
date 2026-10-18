@@ -1,3 +1,7 @@
+// Existing shared section URLs continue to reach their original content.
+if (/^\/(es|en)\/$/.test(location.pathname) && ['#music', '#story', '#videos', '#listen', '#contact', '#hero-title'].includes(location.hash)) {
+ location.replace(`${location.pathname}classical/${location.hash}`);
+}
 export {};
 type Consent = { analytics: boolean; marketing: boolean; time: number };
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; fbq?: ((...args: unknown[]) => void) & { queue?: unknown[][]; loaded?: boolean; version?: string; push?: unknown; callMethod?: (...args: unknown[]) => void } };
