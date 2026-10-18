@@ -7,7 +7,7 @@ Périmètre : tous les contenus suivis par Git sur `dev`, composants, traduction
 | Sombras Nada Más — titre, date, durée, Apple Music | Populaire | Présenté dans les textes existants comme une interprétation du répertoire latino ; pas un air d'opéra ou un récital. Toutes ses métadonnées conservées. |
 | Sombras Nada Más — vidéo `HbRmwVkSP8Q` | Populaire | Vidéo officielle du même titre. Retirée du hero classique et de ses liens. |
 | `sombras-cover.jpg` | Populaire | Pochette du single, conservée dans sa carte musicale. |
-| `sombras-video.jpg` | Populaire | Capture de cette vidéo : conservée dans la section vidéos, retirée du panneau d'entrée classique et du hero classique. |
+| `sombras-video.jpg` | Populaire | Capture de cette vidéo : conservée dans la section vidéos, retirée du hero classique. Le portrait est conservé sur le panneau d’entrée à la demande du propriétaire, selon la capture de référence ; cet usage éditorial ne classe pas la vidéo comme classique. |
 | Esclavo y Amo — titre, date, durée, Spotify / Apple Music | Populaire | Même contexte de répertoire latino dans la présentation existante ; métadonnées et liens conservés. |
 | Esclavo y Amo — vidéo `otT5_7vJYv4` | Populaire | Captation officielle du single ; lecteur conservé avec confirmation de lecture. |
 | `esclavo-cover.jpg` | Populaire | Pochette du single, conservée dans sa carte. |

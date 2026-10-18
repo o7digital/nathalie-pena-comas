@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
+import classical from '../assets/sombras-video.jpg';
 import popular from '../assets/esclavo-video.jpg';
 import { universeCopy, universePath } from '../data/universes';
 import type { Locale } from '../data/translations';
@@ -12,8 +13,8 @@ const t = universeCopy[lang];
  <main id="main" class="entry">
   <header class="entry-header"><h1>Nathalie Peña-Comas</h1><div class="language-switch" aria-label={lang === 'es' ? 'Idioma' : 'Language'}><a href="/es/" lang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a></div></header>
   <div class="entry-panels">
-   {[{ universe: 'classical' as const, image: null, title: t.classical, subtitle: t.classicalSub }, { universe: 'popular' as const, image: popular, title: t.popular, subtitle: t.popularSub }].map((panel, index) => <a class:list={['entry-panel', `entry-${panel.universe}`]} href={universePath(lang, panel.universe)}>
-    {panel.image ? <Image src={panel.image} alt="" loading="eager" fetchpriority={index === 0 ? 'high' : 'auto'} widths={[480, 800, 1280]} sizes="(max-width: 700px) 100vw, 50vw" format="webp" /> : <div class="entry-classical-ornament" aria-hidden="true">N<span>PC</span></div>}
+   {[{ universe: 'classical' as const, image: classical, title: t.classical, subtitle: t.classicalSub }, { universe: 'popular' as const, image: popular, title: t.popular, subtitle: t.popularSub }].map((panel, index) => <a class:list={['entry-panel', `entry-${panel.universe}`]} href={universePath(lang, panel.universe)}>
+    <Image src={panel.image} alt="" loading="eager" fetchpriority={index === 0 ? 'high' : 'auto'} widths={[480, 800, 1280]} sizes="(max-width: 700px) 100vw, 50vw" format="webp" />
     <div class="entry-copy"><span class="entry-number">0{index + 1} /</span><p class="entry-subtitle">{panel.subtitle}</p><h2>{panel.title}</h2><span class="entry-explore">{t.explore}<span aria-hidden="true">↗</span></span></div>
    </a>)}
   </div>
