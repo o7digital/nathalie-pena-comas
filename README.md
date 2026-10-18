@@ -69,17 +69,17 @@ Astro 5 est conservé conformément au brief. L’audit npm signale encore des a
 
 Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement et l’absence de requêtes tierces initiales. Ils simulent le document vidéo pour vérifier l’intégration ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
 
-### Two artistic worlds
+### Deux parcours, un seul site complet
 
-The Spanish and English entrances live at `/es/` and `/en/`. Each has two ordinary, server-rendered links:
+La version complète présente dans `feat/premium-homepage-v2` (`4f329a8`) est reprise dans `dev` derrière l'entrée visuelle. Les 11 langues, le menu complet et les sections Agenda, Noticias, Prensa, Videos, Spirituosi, Galería et Contacto sont conservés dans chaque parcours. Aucun lien « site officiel » ne renvoie vers un autre site de l'artiste.
 
-- `/{lang}/classical/` presents the documented lyrical career with typographic artwork, a shared biography and general professional links.
-- `/{lang}/popular/` has a dedicated hero, all existing releases, official videos, streaming links, the shared biography and contact section.
+- `/{lang}/` : entrée avec les deux portraits.
+- `/{lang}/classical/` : parcours classique et menu complet.
+- `/{lang}/popular/` : parcours populaire et menu complet.
+- `/{lang}/privacy/` : informations de confidentialité.
 
-A fixed navigation bar links both worlds and the entrance. Language links preserve the current world. Canonical URLs, language alternates and the sitemap cover all eight localized pages. Previous entrance URLs with shared section fragments (`#music`, `#story`, `#videos`, `#listen`, `#contact`, `#hero-title`) are forwarded with `location.replace` to the relevant world (music and video fragments to popular, biography and contact to classical); fragments are not sent to the hosting server. No existing standalone page was removed.
+Les langues conservent l'univers et la section active. Le sitemap et les métadonnées couvrent les 44 pages localisées. Les biographies, contacts professionnels, archives générales, Spirituosi, galerie et Olivia sont intégrés au site. Les contenus musicaux spécifiques sont sélectionnés par univers.
 
-Only repository media and music references are used: Sombras Nada Más, Esclavo y Amo, and Quinto Elemento: Tierra. There are no additional popular recordings or project descriptions available locally. The existing Alta Gracia reference is now featured in the classical selection after confirming its Best Classical Album nomination with the Latin Recording Academy. The repository has no dedicated classical performance photos, opera recordings or detailed classical repertoire list; popular-video portraits stay in the popular world, classical artwork uses typography and no repertoire is invented.
+L'audit corrigé et détaillé, incluant les contenus de la version complète et les classements à valider, est dans [CONTENT_AUDIT.md](CONTENT_AUDIT.md). Les anciennes observations d'absence de médias classiques ne décrivaient que l'ancienne landing sur main ; la source complète comprend bien les pochettes, captations et photos classiques.
 
-`tests/universes.spec.ts` covers the entrance layout at 390, 768 and 1440 pixels, both languages, both worlds, language and universe changes, browser back, direct links, keyboard navigation, reduced motion, JavaScript-free navigation, legacy fragment links and SEO routes.
-
-Full item-by-item editorial classification, missing source material and validation questions: [CONTENT_AUDIT.md](CONTENT_AUDIT.md). Work and deployments remain on `dev` / Vercel preview; do not use `--prod` for this iteration.
+**Travail exclusivement sur dev. Preview uniquement : `vercel --yes --scope olivier-steineur`. Ne jamais modifier main/main2 ni publier ou promouvoir en production sans ordre explicite du propriétaire.**

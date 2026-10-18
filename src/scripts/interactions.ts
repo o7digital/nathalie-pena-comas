@@ -1,11 +1,11 @@
-if (/^\/(es|en)\/classical\/$/.test(location.pathname) && location.hash === '#videos') {
- location.replace(location.pathname.replace('/classical/', '/popular/') + '#videos');
-}
-// Existing shared section URLs continue to reach their original content.
-if (/^\/(es|en)\/$/.test(location.pathname) && ['#music', '#story', '#videos', '#listen', '#contact', '#hero-title'].includes(location.hash)) {
- const destination = ['#music', '#videos', '#listen', '#hero-title'].includes(location.hash) ? 'popular' : 'classical';
- const fragment = location.hash === '#hero-title' ? '#popular-title' : location.hash;
- location.replace(`${location.pathname}${destination}/${fragment}`);
+// Preserve old section URLs within the two internal artist journeys.
+const legacy: Record<string,string> = {story:'about', videos:'media', listen:'collection', 'hero-title':'home', 'popular-title':'home'};
+if (/^\/[^/]+\/$/.test(location.pathname) && location.hash && location.hash !== '#main') {
+ const oldId=location.hash.slice(1);const id=legacy[oldId]??oldId;
+ const universe=['music','music-films','videos','listen','collection'].includes(oldId)?'popular':'classical';
+ location.replace(`${location.pathname}${universe}/#${id}`);
+} else if (document.body.dataset.universe && legacy[location.hash.slice(1)]) {
+ location.replace(`${location.pathname}#${legacy[location.hash.slice(1)]}`);
 }
 export {};
 type Consent = { analytics: boolean; marketing: boolean; time: number };
@@ -19,22 +19,32 @@ function closeMenu() { links?.classList.remove('open'); menu?.setAttribute('aria
 menu?.addEventListener('click', () => { const open = links?.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); menu.textContent = open ? '✕' : '☰'; });
 links?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+const languageMenu = document.querySelector<HTMLDetailsElement>('details.language-switch');
+document.addEventListener('click', event => {
+ if (languageMenu?.open && !languageMenu.contains(event.target as Node)) languageMenu.open = false;
+});
+document.addEventListener('keydown', event => {
+ if (event.key === 'Escape' && languageMenu?.open) {
+  languageMenu.open = false;
+  languageMenu.querySelector<HTMLElement>('summary')?.focus();
+ }
+});
 const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 24);
 onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 if (!motion.matches && 'IntersectionObserver' in window) {
  const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: .08 });
- document.querySelectorAll('.section-top, .song-card, .story-copy, .video, .listen-inner, .contact h2').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
+ document.querySelectorAll('.section-top, .honor, .album, .release-feature, .story-copy, .video, .listen-inner, .contact h2, .ensemble-copy, .concert, .press-feature, .news-list, .newsletter').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
  motion.addEventListener('change', () => { if (motion.matches) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')); observer.disconnect(); } });
 }
 const video = $<HTMLDialogElement>('#video-modal');
 const container = $('#video-container');
 let currentVideo = ''; let videoTrigger: HTMLElement | null = null;
-const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4']);
+const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4', 'pG7lJPLcO-g', 'NrGZajhOGAc', 'U1QDrRtdnAI', 'Ept9wg2IlDo']);
 document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.addEventListener('click', () => {
  const id = button.dataset.video ?? ''; if (!validVideos.has(id) || !video) return;
  currentVideo = id; videoTrigger = button;
- const title = id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo';
+ const title = button.dataset.title ?? (id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo');
  const heading = $('#video-title'); if (heading) heading.textContent = title;
  const fallback = $<HTMLAnchorElement>('#video-fallback'); if (fallback) fallback.href = `https://www.youtube.com/watch?v=${id}`;
  $('.video-consent')?.removeAttribute('hidden');
@@ -107,3 +117,46 @@ document.addEventListener('keydown', event => {
  if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
  else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
 });
+
+// Small compositor-only drift, active solely while the hero is in view.
+const heroPhoto = document.querySelector<HTMLElement>('.hero-photo');
+let heroInView = true, framePending = false;
+if (heroPhoto && !document.querySelector('.signature-hero') && 'IntersectionObserver' in window) {
+ const heroObserver = new IntersectionObserver(entries => { heroInView = entries[0].isIntersecting; });
+ heroObserver.observe(heroPhoto);
+ window.addEventListener('scroll', () => {
+  if (motion.matches || !heroInView || framePending) return;
+  framePending = true; requestAnimationFrame(() => { heroPhoto.style.transform = `translateY(${Math.min(window.scrollY * .07, 55)}px) scale(1.02)`; framePending = false; });
+ }, { passive: true });
+ motion.addEventListener('change', () => { if (motion.matches) heroPhoto.style.transform = ''; });
+}
+
+// Keep each language link on the section the visitor is currently reading.
+if (document.getElementById('home')) {
+ const destinations = [...document.querySelectorAll<HTMLElement>('main section[id], main #press, main #music-films, footer #contact')];
+ const languageLinks = [...document.querySelectorAll<HTMLAnchorElement>('.language-switch a[lang]')];
+ function currentSection() {
+  if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) return 'contact';
+  const edge = (header?.getBoundingClientRect().height ?? 104) + 48;
+  return destinations.filter(el => el.getBoundingClientRect().top <= edge).sort((a,b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top).at(-1)?.id ?? 'home';
+ }
+ function updateSectionLinks() {
+  const id = currentSection();
+  const navId = ({voice:'about',music:'media',collection:'media','music-films':'media',newsletter:'contact'} as Record<string,string>)[id] ?? id;
+  languageLinks.forEach(link => { link.href = `/${link.lang}/${document.body.dataset.universe}/#${id}`; });
+  links?.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
+   if (link.hash === `#${navId}`) link.setAttribute('aria-current','location');
+   else link.removeAttribute('aria-current');
+  });
+ }
+ let sectionFrame = false;
+ window.addEventListener('scroll', () => {
+  if (sectionFrame) return;
+  sectionFrame = true;
+  requestAnimationFrame(() => { updateSectionLinks(); sectionFrame = false; });
+ }, {passive:true});
+ window.addEventListener('hashchange', updateSectionLinks);
+ window.addEventListener('resize', updateSectionLinks);
+ languageLinks.forEach(link => link.addEventListener('click', updateSectionLinks));
+ updateSectionLinks();
+}

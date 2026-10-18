@@ -1,4 +1,5 @@
 ---
+import { locales, localizer } from '../data/locales';
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import classical from '../assets/sombras-video.jpg';
@@ -8,16 +9,17 @@ import type { Locale } from '../data/translations';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = universeCopy[lang];
+const l = localizer(lang);
 ---
 <Base lang={lang}>
  <main id="main" class="entry">
-  <header class="entry-header"><h1>Nathalie Peña-Comas</h1><div class="language-switch" aria-label={lang === 'es' ? 'Idioma' : 'Language'}><a href="/es/" lang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a><span>/</span><a href="/en/" lang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a></div></header>
+  <header class="entry-header"><h1>Nathalie Peña-Comas</h1><details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={`/${locale.code}/`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details></header>
   <div class="entry-panels">
    {[{ universe: 'classical' as const, image: classical, title: t.classical, subtitle: t.classicalSub }, { universe: 'popular' as const, image: popular, title: t.popular, subtitle: t.popularSub }].map((panel, index) => <a class:list={['entry-panel', `entry-${panel.universe}`]} href={universePath(lang, panel.universe)}>
     <Image src={panel.image} alt="" loading="eager" fetchpriority={index === 0 ? 'high' : 'auto'} widths={[480, 800, 1280]} sizes="(max-width: 700px) 100vw, 50vw" format="webp" />
     <div class="entry-copy"><span class="entry-number">0{index + 1} /</span><p class="entry-subtitle">{panel.subtitle}</p><h2>{panel.title}</h2><span class="entry-explore">{t.explore}<span aria-hidden="true">↗</span></span></div>
    </a>)}
   </div>
-  <footer class="entry-footer"><span>{t.invitation}</span><a href={`/${lang}/privacy/`}>{lang === 'es' ? 'Privacidad' : 'Privacy'}</a></footer>
+  <footer class="entry-footer"><span>{t.invitation}</span><a href={`/${lang}/privacy/`}>{l('Privacidad', 'Privacy')}</a></footer>
  </main>
 </Base>

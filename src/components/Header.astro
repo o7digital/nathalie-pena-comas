@@ -1,16 +1,17 @@
 ---
-import { translations, type Locale } from "../data/translations";
-import { universePath, type Universe } from "../data/universes";
-interface Props { lang: Locale; universe: Universe }
-const { lang, universe } = Astro.props;
+import { locales, localizer } from '../data/locales';
+import { translations, type Locale } from '../data/translations';
+import { navigation, sectionHref } from '../data/navigation';
+import { universePath, type Universe } from '../data/universes';
+interface Props { lang: Locale; universe?: Universe }
+const { lang, universe } = Astro.props;const l = localizer(lang);
 const t = translations[lang];
-import { classicalCopy } from "../data/classification";
-const c = classicalCopy[lang];
+const isHome = !!universe;
 ---
-
-  <div class="announcement" set:html={universe === "classical" ? c.announcement : t.announcement} />
-  <header class="nav" id="site-header">
-    <a class="brand" href="#top" aria-label="Nathalie Peña-Comas">NATHALIE<br/>PEÑA-COMAS<span>SOPRANO · ARTIST</span></a>
-    <nav class="navlinks" id="navlinks" aria-label={t.navLabel}><a href="#music" set:html={t.navMusic} /><a href="#story" set:html={t.navStory} />{universe === "popular" && <a href="#videos" set:html={t.navVideos} />}<a href="#listen" set:html={t.navListen} /><a href="#contact" set:html={t.navContact} /></nav>
-    <div class="navright"><div class="language-switch" aria-label="Language"><a href={universePath("es", universe)} lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a><span>/</span><a href={universePath("en", universe)} lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a></div><a class="navcta" href={universe === "classical" ? "#story" : "#music"} set:html={universe === "classical" ? c.journey : t.navNew} /><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
-  </header>
+<header class="nav" id="site-header">
+  <a class="brand official-brand" href={sectionHref('home',lang,isHome,universe)} aria-label={`Nathalie Peña-Comas — ${l("Inicio", "Home")}`}><img src="/logo-npc.png" alt="Nathalie Peña Comas — NPC" width="529" height="330" /></a>
+  <nav class="navlinks" id="navlinks" aria-label={t.navLabel}>
+    {navigation.map(({id,...labels}) => <a href={sectionHref(id,lang,isHome,universe)} aria-current={isHome && id==='home'?'location':undefined}>{l(labels.es, labels.en)}</a>)}
+  </nav>
+  <div class="navright"><details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={universe ? universePath(locale.code, universe) : `/${locale.code}/privacy/`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
+</header>

@@ -1,0 +1,24 @@
+---
+import { oliviaCopy } from '../data/olivia';
+import type { Locale } from '../data/translations';
+import '../styles/olivia.css';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = oliviaCopy(lang);
+---
+<div data-olivia data-language={lang} data-greeting={t.greeting} data-error={t.error} data-thinking={t.thinking} data-manual={t.manual}>
+ <button class="olivia-launcher" data-olivia-open aria-label={t.open} aria-haspopup="dialog" aria-controls="olivia-dialog"><span aria-hidden="true">O</span><span>Olivia AI</span><span class="olivia-spark" aria-hidden="true">✧</span></button>
+ <dialog id="olivia-dialog" class="olivia-dialog" aria-labelledby="olivia-title" aria-describedby="olivia-subtitle">
+  <div class="olivia-header"><div><h2 id="olivia-title">Olivia <span>AI</span></h2><p id="olivia-subtitle">{t.subtitle}</p></div><button data-olivia-close aria-label={t.close} type="button">✕</button></div>
+  <div class="olivia-messages" data-olivia-messages role="log" aria-live="polite" aria-relevant="additions" aria-label="Olivia AI"></div>
+  <p class="olivia-status" data-olivia-status role="status"></p>
+  <a class="olivia-contact" href={Astro.url.pathname.endsWith("/privacy/") ? `/${lang}/classical/#contact` : "#contact"}>{t.contact} ↗</a>
+  <form data-olivia-form class="olivia-form">
+   <label class="olivia-consent"><input type="checkbox" data-olivia-consent required /><span>{t.consent} <a href={`/${lang}/privacy/`}>{t.privacy} ↗</a></span></label>
+   <label for="olivia-message" class="visually-hidden">{t.placeholder}</label>
+   <div class="olivia-composer"><textarea id="olivia-message" name="message" rows="2" maxlength="2000" placeholder={t.placeholder} required></textarea><button type="submit">{t.send} ↗</button></div>
+  </form>
+  <div class="olivia-bottom"><span>Olivia AI · v2</span><button type="button" data-olivia-reset>{t.clear}</button></div>
+ </dialog>
+</div>
+<script>import '../scripts/olivia';</script>
