@@ -1,0 +1,8 @@
+---
+import { classicalCopy } from '../data/classification';
+import type { Locale } from '../data/translations';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const c = classicalCopy[lang];
+---
+<section class="classical-repertoire section" id="music"><div class="section-top"><div><div class="kicker">{c.repertoire}</div><h2 class="section-title" set:html={c.title} /></div><p class="section-intro">{c.intro}</p></div><div class="classical-repertoire-copy"><p>{c.body}</p><a class="btn-outline" href="https://www.nathaliepenacomas.net/bio" target="_blank" rel="noopener">{c.journey} ↗</a></div><article class="classical-album" data-classical-album="alta-gracia"><div class="classical-album-mark" aria-hidden="true">AG</div><div><p class="kicker">{c.albumKicker}</p><h3>Alta Gracia</h3><p>{c.albumDesc}</p><a class="text-link" href={`https://www.latingrammy.com/${lang}/artists/nathalie-pena-comas-32921/`} target="_blank" rel="noopener">{c.albumLink} ↗</a></div></article></section>

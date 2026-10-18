@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Header from "./Header.astro";
 import Hero from "./Hero.astro";
+import ClassicalRepertoire from "./ClassicalRepertoire.astro";
 import Releases from "./Releases.astro";
 import Story from "./Story.astro";
 import Videos from "./Videos.astro";
@@ -16,4 +17,4 @@ import type { Universe } from "../data/universes";
 interface Props { lang: Locale; universe: Universe }
 const { lang, universe } = Astro.props;
 ---
-<Base lang={lang} universe={universe}><Header lang={lang} universe={universe}/><UniverseNav lang={lang} universe={universe}/><main id="main">{universe === 'classical' ? <Hero lang={lang} /> : <PopularHero lang={lang} />}<Releases lang={lang} />{universe === 'classical' && <Story lang={lang} />}<Videos lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>
+<Base lang={lang} universe={universe}><Header lang={lang} universe={universe}/><UniverseNav lang={lang} universe={universe}/><main id="main">{universe === 'classical' ? <Hero lang={lang} /> : <PopularHero lang={lang} />}{universe === 'popular' ? <Releases lang={lang} /> : <ClassicalRepertoire lang={lang} />}<Story lang={lang} universe={universe} />{universe === 'popular' && <Videos lang={lang} />}<Platforms lang={lang} universe={universe} /><Contact lang={lang} /></main><Footer lang={lang} universe={universe}/><Dialogs lang={lang}/></Base>

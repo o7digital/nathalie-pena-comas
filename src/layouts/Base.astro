@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { translations, type Locale } from '../data/translations';
+import { recordingsFor } from '../data/classification';
 import { artist, recordings } from '../data/music';
 import { universeCopy, type Universe } from '../data/universes';
 interface Props { lang: Locale; privacy?: boolean; universe?: Universe }
@@ -14,7 +15,8 @@ const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${universe
 const description = !privacy && !universe ? u.entryDescription : universe === 'popular' ? u.popularDesc : lang === 'es' ? 'Conoce a Nathalie Peña-Comas, soprano dominicana formada en Viena. Su trayectoria, entre la ópera, los escenarios internacionales y las raíces latinas.' : 'Meet Nathalie Peña-Comas, a Dominican soprano trained in Vienna. Explore her journey through opera, international stages and Latin roots.';
 const graph = { '@context': 'https://schema.org', '@graph': [
  { '@type': 'MusicGroup', '@id': new URL('/#artist', origin).href, name: artist, url: new URL('/es/', origin).href, sameAs: ['https://www.nathaliepenacomas.net/', 'https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299'], genre: ['Latin', 'Classical'], description },
- ...recordings.map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),
+ ...(universe === 'classical' ? [{ '@type': 'MusicAlbum', name: 'Alta Gracia', genre: 'Classical', byArtist: { '@id': new URL('/#artist', origin).href }, url: `https://www.latingrammy.com/${lang}/artists/nathalie-pena-comas-32921/` }] : []),
+ ...recordings.filter(song => recordingsFor(universe).has(song.video)).map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),
 ] };
 ---
 <!doctype html>
@@ -25,7 +27,7 @@ const graph = { '@context': 'https://schema.org', '@graph': [
  <link rel="alternate" hreflang="es" href={new URL(`/es/${path}`, origin)} /><link rel="alternate" hreflang="en" href={new URL(`/en/${path}`, origin)} /><link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
  <meta property="og:type" content="website" /><meta property="og:site_name" content={artist} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} />
  <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} /><meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
- <meta property="og:image" content={new URL('/social.jpg', origin)} /><meta property="og:image:alt" content="Nathalie Peña-Comas — Sombras Nada Más" /><meta name="twitter:card" content="summary_large_image" />
+ <meta property="og:image" content={new URL(universe === "popular" ? "/social.jpg" : "/classical-social.png", origin)} /><meta property="og:image:alt" content={universe === "popular" ? "Nathalie Peña-Comas — Sombras Nada Más" : artist} /><meta name="twitter:card" content="summary_large_image" />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  {!privacy && <script type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\u003c')} />}
 </head>

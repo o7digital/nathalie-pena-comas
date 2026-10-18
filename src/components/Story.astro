@@ -1,10 +1,11 @@
 ---
 import { translations, type Locale } from "../data/translations";
-interface Props { lang: Locale }
-const { lang } = Astro.props;
+import type { Universe } from "../data/universes";
+interface Props { lang: Locale; universe: Universe }
+const { lang, universe } = Astro.props;
 const t = translations[lang];
 import { Image } from "astro:assets";
 import esclavoVideo from "../assets/esclavo-video.jpg";
 ---
     <section class="quote-band"><p set:html={t.quote} /><small set:html={t.quoteSub} /></section>
-    <section class="story section" id="story"><div class="story-visual"><Image loading="lazy" src={esclavoVideo} alt="Nathalie Peña-Comas en el video Esclavo y Amo" widths={[480, 800, 1280]} sizes="(max-width: 780px) 100vw, 65vw" format="webp" /><span class="story-caption">Nathalie Peña-Comas · Soprano</span></div><div class="story-copy"><div class="kicker" set:html={t.storyKicker} /><h2 set:html={t.storyTitle} /><p set:html={t.storyP1} /><p set:html={t.storyP2} /><div class="facts"><div class="fact"><strong>Latin Grammy</strong><span set:html={t.factOne} /></div><div class="fact"><strong>Worldwide</strong><span set:html={t.factTwo} /></div></div><a class="btn-outline" href="https://www.nathaliepenacomas.net/bio" target="_blank" rel="noopener"><span set:html={t.storyCTA} /><span class="btn-arrow">↗</span></a></div></section>
+    <section class="story section" id="story"><div class="story-visual">{universe === "popular" ? <Image loading="lazy" src={esclavoVideo} alt="Nathalie Peña-Comas en el video Esclavo y Amo" widths={[480, 800, 1280]} sizes="(max-width: 780px) 100vw, 65vw" format="webp" /> : <div class="story-monogram" aria-hidden="true">N<span>Peña-Comas</span></div>}<span class="story-caption">Nathalie Peña-Comas · Soprano</span></div><div class="story-copy"><div class="kicker" set:html={t.storyKicker} /><h2 set:html={t.storyTitle} /><p set:html={t.heroDesc} /><p set:html={t.storyP1} /><p set:html={t.storyP2} /><div class="facts"><div class="fact"><strong>Latin Grammy</strong><span set:html={t.factOne} /></div><div class="fact"><strong>Worldwide</strong><span set:html={t.factTwo} /></div></div><a class="btn-outline" href="https://www.nathaliepenacomas.net/bio" target="_blank" rel="noopener"><span set:html={t.storyCTA} /><span class="btn-arrow">↗</span></a></div></section>

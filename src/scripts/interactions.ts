@@ -1,6 +1,11 @@
+if (/^\/(es|en)\/classical\/$/.test(location.pathname) && location.hash === '#videos') {
+ location.replace(location.pathname.replace('/classical/', '/popular/') + '#videos');
+}
 // Existing shared section URLs continue to reach their original content.
 if (/^\/(es|en)\/$/.test(location.pathname) && ['#music', '#story', '#videos', '#listen', '#contact', '#hero-title'].includes(location.hash)) {
- location.replace(`${location.pathname}classical/${location.hash}`);
+ const destination = ['#music', '#videos', '#listen', '#hero-title'].includes(location.hash) ? 'popular' : 'classical';
+ const fragment = location.hash === '#hero-title' ? '#popular-title' : location.hash;
+ location.replace(`${location.pathname}${destination}/${fragment}`);
 }
 export {};
 type Consent = { analytics: boolean; marketing: boolean; time: number };

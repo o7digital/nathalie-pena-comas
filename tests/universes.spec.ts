@@ -18,7 +18,7 @@ for (const lang of ['es', 'en']) {
   await expect(page).toHaveURL(new RegExp(`/${lang}/popular/$`));
   await expect(page.locator('.popular-hero h1')).toBeVisible();
   await expect(page.locator('.song-card')).toHaveCount(2);
-  await expect(page.locator('#story')).toHaveCount(0);
+  await expect(page.locator('#story')).toHaveCount(1);
   await expect(page.locator('.universe-nav')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   for (const image of await page.locator('img').all()) {
@@ -63,4 +63,28 @@ test('previous shared section URLs reach the preserved content', async ({ page }
  await page.goto('/es/#story');
  await expect(page).toHaveURL(/\/es\/classical\/#story$/);
  await expect(page.locator('#story')).toBeInViewport();
+});
+
+for (const lang of ['es', 'en']) test(`${lang} repertoire and media stay with their world`, async ({ page }) => {
+ await page.goto(`/${lang}/classical/`);
+ await expect(page.locator('.song-card, .video, [data-video], img')).toHaveCount(0);
+ await expect(page.locator('a[href*="4BE0KqF21ot4HCBzuWR6aA"], a[href*="OLAK5uy"], a[href*="HbRmwVkSP8Q"]')).toHaveCount(0);
+ await expect(page.locator('.announcement')).not.toContainText('2026');
+ await expect(page.locator('[data-classical-album]')).toContainText('Alta Gracia');
+ await expect(page.locator('[data-classical-album] a')).toHaveAttribute('href', /latingrammy.com/);
+ const classicalGraph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
+ expect(classicalGraph['@graph'].filter((item: { '@type': string }) => item['@type'] === 'MusicRecording')).toHaveLength(0);
+ const biography = await page.locator('.story-copy').textContent();
+ // Every in-page navigation link resolves to a real section.
+ for (const href of await page.locator('.navlinks a').evaluateAll(els => els.map(el => el.getAttribute('href')!))) await expect(page.locator(href)).toHaveCount(1);
+ await page.screenshot({ path: `test-results/classical-curated-${lang}.png`, fullPage: true });
+ await page.goto(`/${lang}/popular/`);
+ await expect(page.locator('.song-card')).toHaveCount(2);
+ await expect(page.locator('.video')).toHaveCount(2);
+ await expect(page.locator('.release-feature')).toContainText('Quinto Elemento:');
+ expect(await page.locator('.story-copy').textContent()).toBe(biography);
+ const popularGraph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
+ expect(popularGraph['@graph'].filter((item: { '@type': string }) => item['@type'] === 'MusicRecording')).toHaveLength(2);
+ await page.goto(`/${lang}/#music`); await expect(page).toHaveURL(new RegExp(`/${lang}/popular/#music$`));
+ await page.goto(`/${lang}/classical/#videos`); await expect(page).toHaveURL(new RegExp(`/${lang}/popular/#videos$`));
 });

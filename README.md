@@ -48,7 +48,7 @@ Le dépôt est connecté au projet Vercel `nathalie-pena-comas`, scope `olivier-
 
 ```sh
 vercel link --project nathalie-pena-comas --scope olivier-steineur
-vercel --prod
+vercel --yes
 ```
 
 `vercel.json` définit le build Astro, la sortie `dist`, la redirection ES et des en-têtes de sécurité. En cas de domaine personnalisé, définir `PUBLIC_SITE_URL` dans Vercel puis redéployer pour actualiser canonical, Open Graph, robots et sitemap. Aucune configuration DNS du domaine existant de l’artiste n’est modifiée.
@@ -73,11 +73,13 @@ Les tests vérifient les routes, le responsive, les images, le menu, le clavier,
 
 The Spanish and English entrances live at `/es/` and `/en/`. Each has two ordinary, server-rendered links:
 
-- `/{lang}/classical/` preserves the previous hero and all existing landing content.
-- `/{lang}/popular/` has a dedicated hero and the existing releases, official videos, streaming links and contact section.
+- `/{lang}/classical/` presents the documented lyrical career with typographic artwork, a shared biography and general professional links.
+- `/{lang}/popular/` has a dedicated hero, all existing releases, official videos, streaming links, the shared biography and contact section.
 
-A fixed navigation bar links both worlds and the entrance. Language links preserve the current world. Canonical URLs, language alternates and the sitemap cover all eight localized pages. Previous entrance URLs with shared section fragments (`#music`, `#story`, `#videos`, `#listen`, `#contact`, `#hero-title`) are forwarded with `location.replace` to the preserved classical page; fragments are not sent to the hosting server. No existing standalone page was removed.
+A fixed navigation bar links both worlds and the entrance. Language links preserve the current world. Canonical URLs, language alternates and the sitemap cover all eight localized pages. Previous entrance URLs with shared section fragments (`#music`, `#story`, `#videos`, `#listen`, `#contact`, `#hero-title`) are forwarded with `location.replace` to the relevant world (music and video fragments to popular, biography and contact to classical); fragments are not sent to the hosting server. No existing standalone page was removed.
 
-Only repository media and music references are used: Sombras Nada Más, Esclavo y Amo, and Quinto Elemento: Tierra. There are no additional popular recordings or project descriptions available locally. The repository also has no dedicated classical performance photos, opera recordings or classical repertoire list; existing portraits are reused and no repertoire is invented.
+Only repository media and music references are used: Sombras Nada Más, Esclavo y Amo, and Quinto Elemento: Tierra. There are no additional popular recordings or project descriptions available locally. The existing Alta Gracia reference is now featured in the classical selection after confirming its Best Classical Album nomination with the Latin Recording Academy. The repository has no dedicated classical performance photos, opera recordings or detailed classical repertoire list; popular-video portraits stay in the popular world, classical artwork uses typography and no repertoire is invented.
 
 `tests/universes.spec.ts` covers the entrance layout at 390, 768 and 1440 pixels, both languages, both worlds, language and universe changes, browser back, direct links, keyboard navigation, reduced motion, JavaScript-free navigation, legacy fragment links and SEO routes.
+
+Full item-by-item editorial classification, missing source material and validation questions: [CONTENT_AUDIT.md](CONTENT_AUDIT.md). Work and deployments remain on `dev` / Vercel preview; do not use `--prod` for this iteration.

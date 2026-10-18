@@ -4,11 +4,13 @@ import { universePath, type Universe } from "../data/universes";
 interface Props { lang: Locale; universe: Universe }
 const { lang, universe } = Astro.props;
 const t = translations[lang];
+import { classicalCopy } from "../data/classification";
+const c = classicalCopy[lang];
 ---
 
-  <div class="announcement" set:html={t.announcement} />
+  <div class="announcement" set:html={universe === "classical" ? c.announcement : t.announcement} />
   <header class="nav" id="site-header">
     <a class="brand" href="#top" aria-label="Nathalie Peña-Comas">NATHALIE<br/>PEÑA-COMAS<span>SOPRANO · ARTIST</span></a>
-    <nav class="navlinks" id="navlinks" aria-label={t.navLabel}><a href="#music" set:html={t.navMusic} />{universe === 'classical' && <a href="#story" set:html={t.navStory} />}<a href="#videos" set:html={t.navVideos} /><a href="#listen" set:html={t.navListen} /><a href="#contact" set:html={t.navContact} /></nav>
-    <div class="navright"><div class="language-switch" aria-label="Language"><a href={universePath("es", universe)} lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a><span>/</span><a href={universePath("en", universe)} lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a></div><a class="navcta" href="#music" set:html={t.navNew} /><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
+    <nav class="navlinks" id="navlinks" aria-label={t.navLabel}><a href="#music" set:html={t.navMusic} /><a href="#story" set:html={t.navStory} />{universe === "popular" && <a href="#videos" set:html={t.navVideos} />}<a href="#listen" set:html={t.navListen} /><a href="#contact" set:html={t.navContact} /></nav>
+    <div class="navright"><div class="language-switch" aria-label="Language"><a href={universePath("es", universe)} lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a><span>/</span><a href={universePath("en", universe)} lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a></div><a class="navcta" href={universe === "classical" ? "#story" : "#music"} set:html={universe === "classical" ? c.journey : t.navNew} /><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
   </header>
