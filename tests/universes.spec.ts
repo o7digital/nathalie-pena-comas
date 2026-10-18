@@ -35,3 +35,18 @@ test('keyboard and no-JavaScript links reach complete content directly',async({b
  await page.locator('.language-switch summary').click();await page.locator('.language-options a[lang="fr"]').click();await expect(page).toHaveURL(/\/fr\/popular\/$/);
  await context.close();
 });
+
+for(const width of [390,768,1440])test(`entrance language menu stays above photos and switches every language at ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ for(const lang of languages){
+  await page.goto('/es/');
+  await page.locator('.entry-header summary').click();
+  const link=page.locator(`.entry-header .language-options a[lang="${lang}"]`);
+  await link.scrollIntoViewIfNeeded();
+  expect(await link.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})).toBe(true);
+  await link.click();
+  await expect(page).toHaveURL(new RegExp(`/${lang}/$`));
+  await expect(page.locator('html')).toHaveAttribute('lang',lang);
+  await expect(page.locator('.entry-panel')).toHaveCount(2);
+ }
+});
