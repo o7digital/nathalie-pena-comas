@@ -66,3 +66,23 @@ for(const width of [390,1440])test(`gallery wraps forward seamlessly at ${width}
   await expect.poll(()=>page.locator('#gallery-track').evaluate((el,index)=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[index].getBoundingClientRect().left-el.getBoundingClientRect().left),index)).toBeLessThan(3);
  }
 });
+
+for(const lang of ['es','en'])for(const width of [390,1440])test(`${lang} popular gallery excludes classical performances at ${width}px`,async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width,height:900});
+ await page.goto(`/${lang}/popular/#gallery`);
+ const gallery=page.locator('#gallery');
+ await expect(gallery.locator('[data-gallery-photo]')).toHaveCount(2);
+ await expect(gallery).not.toContainText('IMAGO Sloveniae');await expect(gallery).not.toContainText('Musikverein');await expect(gallery).not.toContainText('La Traviata');
+ for(const image of await gallery.locator('img').all())await expect(image).not.toHaveAttribute('src',/recital\.|musikverein\.|portrait\./);
+ await expect(gallery.locator('[data-gallery-count]')).toHaveText('01 / 02');
+ await gallery.locator('[data-gallery-next]').click();await expect(gallery.locator('[data-gallery-count]')).toHaveText('02 / 02');
+ await gallery.locator('[data-gallery-next]').click();await expect(gallery.locator('[data-gallery-count]')).toHaveText('01 / 02');
+ const trigger=gallery.locator('[data-gallery-photo]').first();await trigger.click();
+ await expect(page.locator('#gallery-lightbox-caption')).toContainText('Sombras Nada Más');
+ await page.locator('[data-lightbox-next]').click();await expect(page.locator('#gallery-lightbox-caption')).toContainText('Esclavo y Amo');
+ await expect(page.locator('[data-lightbox-count]')).toHaveText('02 / 02');
+ await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
+ await gallery.screenshot({path:`test-results/popular-gallery-${lang}-${width}.png`});
+ await page.goto(`/${lang}/classical/#gallery`);
+ await expect(page.locator('#gallery')).toContainText('IMAGO Sloveniae');await expect(page.locator('#gallery')).toContainText('Musikverein');await expect(page.locator('#gallery')).toContainText('La Traviata');
+});

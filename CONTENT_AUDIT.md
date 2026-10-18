@@ -35,7 +35,8 @@ Les liens « sitio oficial », les renvois de biographie/contact vers `nathaliep
 | Actualité documentaire Larimar Films, 6 décembre 2024 | Commun : projet cinématographique et culturel ; aucune catégorie musicale supposée. |
 | Presse Oh! Magazine, En Sociedad, Corriere Romagna | Archive générale commune, image `press-oh.jpeg`, texte existant et contact presse interne. Pas d'articles complets inventés. |
 | Ensemble Spirituosi et photo du sextet | Commun : projet explicitement présenté comme reliant musique classique et traditions latino-américaines ; membres, album et distinction conservés. |
-| Galerie La Traviata / IMAGO Sloveniae / Musikverein | Archive photographique de la carrière commune, légendes originales et crédits conservés ; aucune légende transformée pour présenter ces scènes comme populaires. Carrousel et visionneuse repris. |
+| Galerie La Traviata / IMAGO Sloveniae / Musikverein | Classique uniquement : photos d’opéra, récital et concert classique, légendes et crédits conservés. Aucun de ces visuels dans la galerie populaire. |
+| Galerie populaire | Captures des vidéos Sombras Nada Más et Esclavo y Amo uniquement. Titres et provenance vidéo explicites ; carrousel et visionneuse adaptés à deux images. |
 | `artist.jpg`, `closing.jpg`, `portrait.jpg`, `recital.jpg`, `musikverein.jpg`, autres visuels et logo NPC | Tous les médias de la source complète récupérés localement ; métadonnées et provenance dans `docs/official-media.json`. Aucune photo inventée. |
 | Contact et représentation | Commun, directement dans chaque parcours : Künstlersekretariat Buchmann (`office@buchmann.at`), Opera Connection (`info@opera-connection.com`). |
 | Cinq liens sociaux, confidentialité, Olivia AI v2, newsletter de démonstration | Fonctionnalités existantes reprises, avec leurs traductions. Aucune inscription newsletter fictive ni démarrage automatique de musique. |
@@ -44,7 +45,7 @@ Les liens « sitio oficial », les renvois de biographie/contact vers `nathaliep
 
 - Programme exact du concert inaugural du 24 octobre : laissé partagé, sans genre attribué.
 - Répertoire piste par piste de Souvenir Latino : album partagé, musique de chambre/croisement de traditions, pas une affectation populaire automatique.
-- Pertinence d'une sélection plus restrictive de l'archive photographique commune dans le parcours populaire. Les légendes de scène restent exactes et tous les médias sont conservés.
+- Galerie corrigée selon la validation du propriétaire : récital IMAGO Sloveniae, Musikverein et La Traviata appartiennent exclusivement au classique. Aucun classement photographique partagé pour ces éléments.
 
 ## Livraison
 
