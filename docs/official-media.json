@@ -1,0 +1,114 @@
+{
+  "retrieved": "2026-10-14",
+  "rights": "Publicly accessible official assets selected for demonstration; reuse rights pending artist/photographer approval. Originals preserved.",
+  "assets": [
+    {
+      "file": "src/assets/official/hero.jpg",
+      "url": "https://static.wixstatic.com/media/425057_ab640560acaa4e8bbe5a8da4eb553c77~mv2_d_5760_3840_s_4_2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": false
+    },
+    {
+      "file": "src/assets/official/artist.jpg",
+      "url": "https://static.wixstatic.com/media/425057_76a2b1c843f042059a05bfbf79b58b00~mv2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/portrait.jpg",
+      "url": "https://static.wixstatic.com/media/425057_08d3dd76221346e1b6ec3cd69f75a40d~mv2.jpeg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/closing.jpg",
+      "url": "https://static.wixstatic.com/media/425057_0d841315f40641a9b1b54cf86df8043a~mv2.jpeg",
+      "credit": "Not identified in source; confirmation required",
+      "used": false
+    },
+    {
+      "file": "src/assets/official/souvenir.jpg",
+      "url": "https://static.wixstatic.com/media/425057_e973403c3eaf4f26a582749c827295ef~mv2_d_3780_3287_s_4_2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/una-mujer.jpg",
+      "url": "https://static.wixstatic.com/media/425057_6aac6a60c5da41739c6cd12faf3b1f78~mv2_d_4230_4159_s_4_2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/alta-gracia.jpg",
+      "url": "https://static.wixstatic.com/media/425057_c2ec14290fd342c1be0b62deef5b7793~mv2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/musikverein.jpg",
+      "url": "https://static.wixstatic.com/media/425057_5b156d2173a44786a62cdd364b422611~mv2_d_5760_3840_s_4_2.jpg",
+      "credit": "David Moser",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/tierra.jpg",
+      "url": "https://i.ffmcdn.com/v1/ffm-delivery-1/kWafJg53SRiNQfzSe83tzYOrh9LcOgSi/w_1108,h_1108,c_lfill,f_jpg/link/6a3542322c000011005d1e4e/6ac52af52600003000206a2c_021965e69307cc339f1d9892bfd493f7.png.img",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/rusalka.jpg",
+      "url": "https://i.ytimg.com/vi/pG7lJPLcO-g/hqdefault.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/boheme.jpg",
+      "url": "https://i.ytimg.com/vi/NrGZajhOGAc/hqdefault.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/logo-npc.png",
+      "url": "https://static.wixstatic.com/media/425057_2ca7d9118fcb43d9b0598ad04247d17f~mv2.png",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/spirituosi.jpg",
+      "url": "https://static.wixstatic.com/media/425057_2bd4eeb730a6499c8315f428df6e74be~mv2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/editorial.jpg",
+      "url": "https://static.wixstatic.com/media/425057_46aa01bdab4442d491d88777b7220b2a~mv2.jpg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/recital.jpg",
+      "url": "https://static.wixstatic.com/media/425057_7be68f5a494740f48c6697841323e532~mv2.jpg",
+      "credit": "Mankica Kranjec",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/press-oh.jpeg",
+      "url": "https://static.wixstatic.com/media/425057_694e23d2a8d0432da176e65f3075008e~mv2.jpeg",
+      "credit": "Not identified in source; confirmation required",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/traviata.jpg",
+      "url": "https://i.ytimg.com/vi/U1QDrRtdnAI/hqdefault.jpg",
+      "credit": "Nathalie Peña-Comas / official YouTube channel",
+      "used": true
+    },
+    {
+      "file": "src/assets/official/carmina.jpg",
+      "url": "https://i.ytimg.com/vi/Ept9wg2IlDo/hqdefault.jpg",
+      "credit": "Nathalie Peña-Comas / official YouTube channel",
+      "used": true
+    }
+  ]
+}

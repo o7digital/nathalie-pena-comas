@@ -1,0 +1,27 @@
+---
+import { localizer } from '../data/locales';
+import {Image,getImage} from 'astro:assets';
+import recital from '../assets/official/recital.jpg';
+import opera from '../assets/official/portrait.jpg';
+import stage from '../assets/official/musikverein.jpg';
+import type {Locale} from '../data/translations';
+import '../styles/gallery.css';
+interface Props {lang:Locale}
+const {lang}=Astro.props;const l = localizer(lang);
+const photos=[
+ {src:opera,title:'La Traviata',credit:l("Galería oficial", "Official gallery")},
+ {src:recital,title:'IMAGO Sloveniae',credit:'© Mankica Kranjec'},
+ {src:stage,title:'Musikverein, Wien',credit:'© David Moser'},
+];
+const fullImages=await Promise.all(photos.map(photo=>getImage({src:photo.src,width:Math.min(2400,photo.src.width),format:'webp',quality:90})));
+const labels={prev:l("Fotografía anterior", "Previous photograph"),next:l("Fotografía siguiente", "Next photograph"),pause:l("Pausar el carrusel", "Pause slideshow"),resume:l("Reanudar el carrusel", "Resume slideshow"),reduced:l("Reproducción automática desactivada: movimiento reducido", "Autoplay disabled: reduced motion"),close:l("Cerrar fotografía", "Close photograph"),open:l("Ampliar fotografía", "Enlarge photograph")};
+---
+<section class="photo-gallery section" id="gallery" aria-labelledby="gallery-title" aria-roledescription={l("Carrusel", "Carousel")} data-gallery data-pause={labels.pause} data-resume={labels.resume} data-reduced={labels.reduced} data-reduced-short={l("Movimiento reducido", "Reduced motion")}>
+ <div class="section-top"><div><div class="kicker">{l("Galería / Instantes de una vida artística", "Gallery / Moments of an artistic life")}</div><h2 class="section-title" id="gallery-title">{l("El escenario.", "The stage.")}<br/><em>{l("La emoción.", "The emotion.")}</em></h2></div>
+ <div class="gallery-controls" hidden><span data-gallery-count aria-hidden="true">01 / 03</span><button type="button" data-gallery-prev aria-label={labels.prev} aria-controls="gallery-track">←</button><button type="button" data-gallery-next aria-label={labels.next} aria-controls="gallery-track">→</button><button type="button" class="gallery-pause" data-gallery-pause aria-pressed="false">{labels.pause}</button></div></div>
+ <div class="photographs" id="gallery-track" tabindex="0" aria-label={l("Fotografías oficiales, desliza para explorar", "Official photographs, swipe to explore")}>
+ {photos.map((photo,i)=><figure role="group" aria-label={`${i+1} / ${photos.length}`}><a class="gallery-photo" href={fullImages[i].src} data-gallery-photo data-title={photo.title} data-credit={photo.credit} aria-label={`${labels.open}: ${photo.title}`}><Image src={photo.src} width={1280} widths={[480,800,1280]} sizes="(max-width:780px) 85vw, 55vw" alt={`${photo.title} — Nathalie Peña-Comas · ${photo.credit}`} format="webp" loading="lazy"/><span class="gallery-enlarge" aria-hidden="true">↗</span></a><figcaption><span>{photo.title}</span><small>{photo.credit}</small></figcaption></figure>)}
+ </div>
+ <dialog class="gallery-lightbox" id="gallery-lightbox" aria-labelledby="gallery-lightbox-title" aria-describedby="gallery-lightbox-caption"><h2 id="gallery-lightbox-title" class="visually-hidden">{l("Galería de fotografías", "Photograph gallery")}</h2><button type="button" class="gallery-lightbox-close" data-gallery-close aria-label={labels.close}>✕</button><div class="gallery-lightbox-image" data-gallery-image></div><div class="gallery-lightbox-bottom"><p id="gallery-lightbox-caption" aria-live="polite"></p><div><button type="button" data-lightbox-prev aria-label={labels.prev}>←</button><span data-lightbox-count></span><button type="button" data-lightbox-next aria-label={labels.next}>→</button></div></div></dialog>
+</section>
+<script>import '../scripts/gallery';</script>

@@ -1,0 +1,7 @@
+---
+import { localizer } from '../data/locales';
+import type {Locale} from '../data/translations';
+interface Props {lang:Locale} const {lang}=Astro.props;const l = localizer(lang);const es=lang==='es';
+const rows=es?[['Latin Grammy','Nominada · Alta Gracia'],['Ebe Stignani','Primer premio · Concurso internacional de ópera, 2022'],['Sin fronteras','Europa · América · Asia'],['En diálogo','Andrea Bocelli · Ramón Vargas · Ensemble Spirituosi']]:[['Latin Grammy','Nominee · Alta Gracia'],['Ebe Stignani','First prize · International opera competition, 2022'],['Beyond borders','Europe · The Americas · Asia'],['In conversation','Andrea Bocelli · Ramón Vargas · Ensemble Spirituosi']];
+---
+<section class="international section" id="voice"><div class="section-top"><div><div class="kicker">{l("Una voz internacional", "An international voice")}</div><h2 class="section-title">{l("La voz de", "The voice of")}<br/><em>{l("una trayectoria.", "an artist.")}</em></h2></div><p class="section-intro">{l("De la tradición operística europea al alma de la música latinoamericana. Una trayectoria que une culturas.", "From the European operatic tradition to the soul of Latin American music. A career connecting cultures.")}</p></div><div class="honors">{rows.map(([title,desc],i)=><div class="honor"><span class="honor-index">0{i+1}</span><h3>{l(title)}</h3><p>{l(desc)}</p></div>)}</div></section>

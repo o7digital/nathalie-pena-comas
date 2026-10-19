@@ -1,0 +1,30 @@
+---
+import { localizer } from '../data/locales';
+import type {Locale} from '../data/translations';
+interface Props {lang:Locale}
+const {lang}=Astro.props;const l = localizer(lang);
+// Exact destinations published in the official artist site's footer (14 October 2026).
+const profiles=[
+ {name:'YouTube',href:'https://www.youtube.com/channel/UCV9Oc0ONMX89lx1z-4vGZmQ',icon:'youtube'},
+ {name:'Instagram',href:'https://www.instagram.com/nathaliesoprano/',icon:'instagram'},
+ {name:'Facebook',href:'https://www.facebook.com/nathalie.penacomas/',icon:'facebook'},
+ {name:'X / Twitter',href:'https://twitter.com/penacomasoprano',icon:'twitter'},
+ {name:'Spotify',href:'https://open.spotify.com/artist/3lDJkwtZmncXJuv2BUpB80',icon:'spotify'},
+];
+---
+<nav class="footer-social" aria-label={l("Redes sociales de Nathalie", "Nathalie’s social media")}>
+ {profiles.map(profile=><a class:list={['social-link',{'platform':profile.icon==='spotify'}]} href={profile.href} target="_blank" rel="noopener noreferrer" aria-label={`${profile.name} — ${l("abrir en una pestaña nueva", "open in a new tab")}`}><span class="social-symbol"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+ {profile.icon==='youtube'&&<><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></>}
+ {profile.icon==='instagram'&&<><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></>}
+ {profile.icon==='facebook'&&<path d="M14 22v-9h3l.5-4H14V7c0-1.1.4-2 2-2h2V1.5C17.2 1.2 16 1 15 1c-3.1 0-5 1.9-5 5v3H7v4h3v9Z" fill="currentColor" stroke="none"/>}
+ {profile.icon==='twitter'&&<><path d="m4 3 16 18h-4L0 3Z" transform="translate(2) scale(.9 1)"/><path d="M20 3 4 21"/></>}
+ {profile.icon==='spotify'&&<><circle cx="12" cy="12" r="10"/><path d="M6.5 9c4-1.4 8.3-1.1 11 1M7 12c3.5-1.1 6.9-.9 10 1M8 15c2.7-.8 5.2-.6 8 1"/></>}
+ </svg></span><span>{profile.name}</span></a>)}
+</nav>
+<style>
+:global(.footer) .footer-social{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;flex-wrap:wrap;gap:30px;margin:45px 0 0}
+:global(.footer) .footer-social .social-link{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;min-width:66px;padding:0;border:0;color:var(--cream);background:none;font-size:12px;line-height:1.5;white-space:nowrap}
+.social-symbol{display:grid;place-items:center;width:54px;height:54px;border:1px solid var(--gold);border-radius:50%;color:var(--cream);transition:background .25s,color .25s,transform .25s}
+.social-link:hover .social-symbol,.social-link:focus-visible .social-symbol{background:var(--gold);color:var(--bg);transform:translateY(-3px)}
+@media(max-width:780px){:global(.footer) .footer-social{gap:12px;margin-top:35px}:global(.footer) .footer-social .social-link{min-width:50px;font-size:11px}.social-symbol{width:48px;height:48px}}
+</style>

@@ -1,0 +1,7 @@
+---
+import { localizer } from '../data/locales';
+import {Image} from 'astro:assets';import stage from '../assets/official/musikverein.jpg';import type {Locale} from '../data/translations';
+interface Props {lang:Locale}const {lang}=Astro.props;const l = localizer(lang);
+const venues=[['Musikverein','VIENNA'],['Accademia di Santa Cecilia','ROMA'],['Auditorio Nacional de Música','MADRID'],['National Concert Hall','TAIPEI'],['Teatro Nacional Eduardo Brito','SANTO DOMINGO']];
+---
+<section class="stages section"><div class="stage-image"><Image src={stage} width={1920} alt="Nathalie Peña-Comas — Beethoven, Musikverein Wien. © David Moser" widths={[640,1280,1920]} sizes="100vw" loading="lazy" format="webp" /><span>Musikverein, Wien · © David Moser</span></div><div class="stages-copy"><div class="kicker">06 / {l("Escenarios del mundo", "On the world’s stages")}</div><h2 class="section-title">{l("Donde la voz", "Where a voice")}<br/><em>{l("deja huella.", "leaves its mark.")}</em></h2><div class="venue-list">{venues.map(([name,city])=><div><h3>{name}</h3><span>{city}</span></div>)}</div></div></section>
