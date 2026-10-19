@@ -1,34 +1,28 @@
 ---
-import { localizer } from '../data/locales';
-import { oliviaCopy } from '../data/olivia';
-import Header from './Header.astro';
 import Base from '../layouts/Base.astro';
 import Footer from './Footer.astro';
 import Dialogs from './Dialogs.astro';
 import { translations, type Locale } from '../data/translations';
 interface Props { lang: Locale }
-const { lang } = Astro.props;const l = localizer(lang);
+const { lang } = Astro.props;
 const t = translations[lang];
-const olivia = oliviaCopy(lang);
-
+const es = lang === 'es';
 ---
 <Base lang={lang} privacy>
- <Header lang={lang} />
  <main id="main" class="privacy-page">
   <a href={`/${lang}/`}>← Nathalie Peña-Comas</a>
   <h1>{t.privacy}</h1>
-  <p>{l("Este sitio presenta la música de Nathalie Peña-Comas y dirige a los visitantes hacia plataformas externas.", "This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms.")}</p>
-  <h2>Olivia AI v2</h2><p>{olivia.privacyDetails}</p>
-  <h2>{l("Medición y publicidad", "Measurement and advertising")}</h2>
-  <p>{l("La medición de audiencia y la publicidad están desactivadas por defecto. Cuando se configuren, Google Analytics 4 y Meta Pixel solo se cargarán después de tu consentimiento para la categoría correspondiente. Podrán registrar visitas y clics hacia plataformas musicales, con el destino, idioma y sección del enlace. Puedes rechazar ambas categorías sin limitar la navegación.", "Audience measurement and advertising are disabled by default. If configured, Google Analytics 4 and Meta Pixel load only after you consent to the relevant category. They may record visits and music platform clicks, including destination, language and link section. You can reject both categories without limiting navigation.")}</p>
-  <h2>{l("Tus preferencias", "Your preferences")}</h2>
-  <p>{l("Si guardas una elección, este navegador conserva tus preferencias en almacenamiento local durante un máximo de 180 días. Puedes cambiarlas o retirar tu consentimiento aquí o en el pie de página. Si el almacenamiento está bloqueado, tu elección solo se aplica a la sesión actual.", "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.")}</p>
+  <p>{es ? 'Este sitio presenta la música de Nathalie Peña-Comas y dirige a los visitantes hacia plataformas externas. No incluye formularios ni recoge datos de contacto.' : 'This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms. It has no forms and collects no contact details.'}</p>
+  <h2>{es ? 'Medición y publicidad' : 'Measurement and advertising'}</h2>
+  <p>{es ? 'La medición de audiencia y la publicidad están desactivadas por defecto. Cuando se configuren, Google Analytics 4 y Meta Pixel solo se cargarán después de tu consentimiento para la categoría correspondiente. Podrán registrar visitas y clics hacia plataformas musicales, con el destino, idioma y sección del enlace. Puedes rechazar ambas categorías sin limitar la navegación.' : 'Audience measurement and advertising are disabled by default. If configured, Google Analytics 4 and Meta Pixel load only after you consent to the relevant category. They may record visits and music platform clicks, including destination, language and link section. You can reject both categories without limiting navigation.'}</p>
+  <h2>{es ? 'Tus preferencias' : 'Your preferences'}</h2>
+  <p>{es ? 'Si guardas una elección, este navegador conserva tus preferencias en almacenamiento local durante un máximo de 180 días. Puedes cambiarlas o retirar tu consentimiento aquí o en el pie de página. Si el almacenamiento está bloqueado, tu elección solo se aplica a la sesión actual.' : 'If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.'}</p>
   <button class="btn-outline" data-preferences>{t.preferences}</button>
-  <h2>{l("Videos y enlaces externos", "Videos and external links")}</h2>
-  <p>{l("Las imágenes y las fuentes se sirven desde este sitio. YouTube no se carga al visitar la página: primero eliges un video y después confirmas su reproducción. El reproductor usa youtube-nocookie.com; al reproducirlo, YouTube recibe datos de conexión y aplica sus propias condiciones. Spotify, Apple Music y otros destinos externos también aplican sus políticas al abrirlos.", "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.")}</p>
-  <h2>{l("Alojamiento y consultas", "Hosting and enquiries")}</h2>
-  <p>{l("Vercel aloja el sitio y puede procesar datos técnicos de conexión para entregar las páginas. Para consultas sobre la artista o el uso de sus contenidos, utiliza los contactos de representación de la sección Contacto.", "Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the representation details in the Contact section.")}</p>
-  <a href={`/${lang}/classical/#contact`}>{t.contactCTA} ↗</a>
+  <h2>{es ? 'Videos y enlaces externos' : 'Videos and external links'}</h2>
+  <p>{es ? 'Las imágenes y las fuentes se sirven desde este sitio. YouTube no se carga al visitar la página: primero eliges un video y después confirmas su reproducción. El reproductor usa youtube-nocookie.com; al reproducirlo, YouTube recibe datos de conexión y aplica sus propias condiciones. Spotify, Apple Music y otros destinos externos también aplican sus políticas al abrirlos.' : 'Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.'}</p>
+  <h2>{es ? 'Alojamiento y consultas' : 'Hosting and enquiries'}</h2>
+  <p>{es ? 'Vercel aloja el sitio y puede procesar datos técnicos de conexión para entregar las páginas. Para consultas sobre la artista o el uso de sus contenidos, utiliza los contactos publicados en su sitio oficial.' : 'Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the contacts published on her official website.'}</p>
+  <a href="https://www.nathaliepenacomas.net/contact" target="_blank" rel="noopener">{t.contactCTA} ↗</a>
  </main>
  <Footer lang={lang} /><Dialogs lang={lang} />
 </Base>

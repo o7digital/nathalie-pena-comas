@@ -1,46 +1,34 @@
 ---
 import '../styles/global.css';
-import Olivia from '../components/Olivia.astro';
-import '../styles/official-v3.css';
-import '../styles/art-direction-v4.css';
-import '../styles/universes.css';
-import { universeCopy, type Universe } from '../data/universes';
-import { getImage } from 'astro:assets';
-import hero from '../assets/official/hero.jpg';
 import { translations, type Locale } from '../data/translations';
-import { locales } from '../data/locales';
 import { artist, recordings } from '../data/music';
-interface Props { lang: Locale; privacy?: boolean; universe?: Universe }
-const { lang, privacy = false, universe } = Astro.props;
+interface Props { lang: Locale; privacy?: boolean }
+const { lang, privacy = false } = Astro.props;
 const t = translations[lang];
-const heroWidths = [640, 960, 1440, 1920, 2560];
-const heroImages = universe !== 'classical' ? [] : await Promise.all(heroWidths.map(width => getImage({src:hero,width,format:'webp',quality:90})));
-const heroSrcset = heroImages.map((image,i) => `${image.src} ${heroWidths[i]}w`).join(', ');
 const origin = Astro.site ?? new URL('https://nathalie-pena-comas.vercel.app');
-const path = privacy ? 'privacy/' : universe ? `${universe}/` : '';
+const path = privacy ? 'privacy/' : '';
 const canonical = new URL(`/${lang}/${path}`, origin);
-const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${universe ? universeCopy[lang][universe] : universeCopy[lang].invitation}`;
-const description = universe === "popular" ? universeCopy[lang].popularDesc : !privacy && !universe ? universeCopy[lang].entryDescription : t.storyP1;
+const title = privacy ? `${t.privacy} — ${artist}` : `${artist} — ${lang === 'es' ? 'El arte de sentir' : 'The art of feeling'}`;
+const description = lang === 'es' ? 'Descubre Quinto Elemento: Tierra, la música y los videos oficiales de Nathalie Peña-Comas. Una voz de soprano entre la ópera y las raíces latinas.' : 'Discover Quinto Elemento: Tierra, music and official videos by Nathalie Peña-Comas. A soprano voice connecting opera and Latin roots.';
 const graph = { '@context': 'https://schema.org', '@graph': [
- { '@type': 'Person', '@id': new URL('/#artist', origin).href, name: artist, url: new URL('/es/', origin).href, sameAs: ['https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299'], genre: ['Latin', 'Classical'], description },
- ...recordings.filter(() => universe === 'popular').map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),
+ { '@type': 'MusicGroup', '@id': new URL('/#artist', origin).href, name: artist, url: new URL('/es/', origin).href, sameAs: ['https://www.nathaliepenacomas.net/', 'https://music.apple.com/us/artist/nathalie-pe%C3%B1a-comas/1223241299'], genre: ['Latin', 'Classical'], description },
+ ...recordings.map(song => ({ '@type': 'MusicRecording', name: song.name, byArtist: { '@id': new URL('/#artist', origin).href }, duration: song.duration, datePublished: song.date, url: song.url })),
 ] };
 ---
 <!doctype html>
 <html lang={lang}>
 <head>
- <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#141619" />
+ <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#171310" />
  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} />
- {locales.map(locale => <link rel="alternate" hreflang={locale.code} href={new URL(`/${locale.code}/${path}`, origin)} />)}<link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
+ <link rel="alternate" hreflang="es" href={new URL(`/es/${path}`, origin)} /><link rel="alternate" hreflang="en" href={new URL(`/en/${path}`, origin)} /><link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
  <meta property="og:type" content="website" /><meta property="og:site_name" content={artist} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} />
- <meta property="og:locale" content={locales.find(locale => locale.code === lang)?.og} />{locales.filter(locale => locale.code !== lang).map(locale => <meta property="og:locale:alternate" content={locale.og} />)}
- <meta property="og:image" content={new URL('/social-v3.jpg', origin)} /><meta property="og:image:alt" content={title} /><meta name="twitter:card" content="summary_large_image" />
- {universe === "classical" && <link rel="preload" as="image" imagesrcset={heroSrcset} imagesizes="(max-width: 780px) 1440px, 75vw" fetchpriority="high" />}
+ <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} /><meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
+ <meta property="og:image" content={new URL('/social.jpg', origin)} /><meta property="og:image:alt" content="Nathalie Peña-Comas — Sombras Nada Más" /><meta name="twitter:card" content="summary_large_image" />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  {!privacy && <script type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\u003c')} />}
 </head>
-<body id="top" data-lang={lang} data-universe={universe} data-ga={import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? ''} data-pixel={import.meta.env.PUBLIC_META_PIXEL_ID ?? ''}>
- <a class="skip-link" href="#main">{t.skip}</a><slot />{(universe || privacy) && <Olivia lang={lang} />}
+<body id="top" data-lang={lang} data-ga={import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? ''} data-pixel={import.meta.env.PUBLIC_META_PIXEL_ID ?? ''}>
+ <a class="skip-link" href="#main">{t.skip}</a><slot />
  <script>import '../scripts/interactions';</script>
 </body>
 </html>

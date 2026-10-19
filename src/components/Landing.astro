@@ -1,23 +1,16 @@
 ---
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Hero from './Hero.astro';
-import International from './International.astro';
-import Story from './Story.astro';
-import Releases from './Releases.astro';
-import PopularSingles from './PopularSingles.astro';
-import Schedule from './Schedule.astro';
-import Videos from './Videos.astro';
-import Editorial from './Editorial.astro';
-import Spirituosi from './Spirituosi.astro';
-import Gallery from './Gallery.astro';
-import Newsletter from './Newsletter.astro';
-import Footer from './Footer.astro';
-import Dialogs from './Dialogs.astro';
-import UniverseNav from './UniverseNav.astro';
-import PopularHero from './PopularHero.astro';
-import type { Universe } from '../data/universes';
-import type {Locale} from '../data/translations';
-interface Props {lang:Locale; universe:Universe}const {lang, universe}=Astro.props;
+import Base from "../layouts/Base.astro";
+import Header from "./Header.astro";
+import Hero from "./Hero.astro";
+import Releases from "./Releases.astro";
+import Story from "./Story.astro";
+import Videos from "./Videos.astro";
+import Platforms from "./Platforms.astro";
+import Contact from "./Contact.astro";
+import Footer from "./Footer.astro";
+import Dialogs from "./Dialogs.astro";
+import type { Locale } from "../data/translations";
+interface Props { lang: Locale }
+const { lang } = Astro.props;
 ---
-<Base lang={lang} universe={universe}><Header lang={lang} universe={universe}/><UniverseNav lang={lang} universe={universe}/><main id="main">{universe === 'classical' ? <Hero lang={lang}/> : <PopularHero lang={lang}/>} <Story lang={lang}/><International lang={lang}/><Releases lang={lang} universe={universe}/>{universe === "popular" && <PopularSingles lang={lang}/>}<Schedule lang={lang} universe={universe}/><Videos lang={lang} universe={universe}/><Editorial lang={lang} universe={universe}/><Spirituosi lang={lang}/><Gallery lang={lang} universe={universe}/><Newsletter lang={lang}/></main><Footer lang={lang} universe={universe}/><Dialogs lang={lang}/></Base>
+<Base lang={lang}><Header lang={lang}/><main id="main"><Hero lang={lang} /><Releases lang={lang} /><Story lang={lang} /><Videos lang={lang} /><Platforms lang={lang} /><Contact lang={lang} /></main><Footer lang={lang}/><Dialogs lang={lang}/></Base>

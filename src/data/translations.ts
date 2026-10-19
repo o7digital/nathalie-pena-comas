@@ -1,5 +1,4 @@
-import localized from './localized.json';
-const originalTranslations = {
+export const translations = {
   "es": {
     "announcement": "ESTRENO 2026 ✦ EL ARTE DE SENTIR ✦ NUEVA MÚSICA",
     "navMusic": "Música",
@@ -46,7 +45,7 @@ const originalTranslations = {
     "platformOfficial": "✧ Sitio oficial",
     "contactKicker": "Prensa · Colaboraciones · Booking",
     "contactTitle": "La música nos<br/>encuentra.",
-    "contactDesc": "Prensa, conciertos y colaboraciones: consulta los contactos de representación de Nathalie.",
+    "contactDesc": "Prensa, conciertos y colaboraciones: consulta los contactos de representación y la información para profesionales en el sitio oficial.",
     "contactCTA": "Contacto y representación",
     "footerNote": "Ópera · Raíces latinas · Una voz sin fronteras",
     "skip": "Ir al contenido",
@@ -118,7 +117,7 @@ const originalTranslations = {
     "platformOfficial": "✧ Official website",
     "contactKicker": "Press · Collaborations · Booking",
     "contactTitle": "Music brings<br/>us together.",
-    "contactDesc": "For press, concerts and collaborations, contact Nathalie’s representation team.",
+    "contactDesc": "For press, concerts and collaborations, find representation contacts and professional information on the artist’s official website.",
     "contactCTA": "Contact & representation",
     "footerNote": "Opera · Latin roots · A voice beyond borders",
     "skip": "Skip to content",
@@ -145,9 +144,4 @@ const originalTranslations = {
     "single": "Single"
   }
 } as const;
-export type Locale = 'es' | 'en' | 'de' | 'fr' | 'it' | 'sv' | 'hu' | 'hr' | 'ru' | 'zh-TW' | 'ja';
-type Copy = { [K in keyof typeof originalTranslations.en]: string };
-export const translations = { ...originalTranslations } as Record<Locale, Copy>;
-for (const lang of Object.keys(localized) as (keyof typeof localized)[]) {
- translations[lang] = Object.fromEntries(Object.entries(originalTranslations.en).map(([key, value]) => [key, localized[lang][value as keyof typeof localized[typeof lang]]])) as Copy;
-}
+export type Locale = keyof typeof translations;

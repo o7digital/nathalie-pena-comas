@@ -1,9 +1,0 @@
----
-import Component from '../../components/Entry.astro';
-import { locales } from '../../data/locales';
-export function getStaticPaths() {
- return locales.filter(locale => !['es', 'en'].includes(locale.code)).map(locale => ({ params: { lang: locale.code }, props: { lang: locale.code } }));
-}
-const { lang } = Astro.props;
----
-<Component lang={lang} />
