@@ -249,3 +249,34 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
 /* Longer localized words must fit the same responsive grid. */
 .story-copy, .story-visual, .ensemble-copy, .section-top > *, .hero-inner { min-width:0; }
 .story h2, .section-title, .hero-sub, .newsletter h2, .ensemble-copy h2 { overflow-wrap:anywhere; hyphens:auto; }
+
+/* The portrait and the latest record share the home hero. */
+.hero-slide { position:absolute; inset:0; opacity:0; transition:opacity .8s ease; pointer-events:none; }
+.hero-slide.is-active { opacity:1; pointer-events:auto; }
+.hero-album-slide { background:radial-gradient(ellipse at 70% 40%,#655546,#141619 75%); }
+.hero-album-link { position:absolute; inset:5% 5% 8% 42%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+.hero-album-link img { width:100%; max-width:460px; max-height:65%; height:auto; object-fit:contain; box-shadow:0 20px 65px #0008; }
+.hero-album-caption { display:flex; flex-direction:column; gap:10px; text-align:center; color:var(--gold2); font-size:12px; letter-spacing:.06em; }
+.hero-album-caption strong { font:clamp(22px,2.2vw,34px)/1.15 var(--serif); color:#fff; }
+.hero-portrait:after { pointer-events:none; }
+.hero-portrait:has(.hero-album-slide.is-active):after { opacity:0; }
+.signature-hero .hero-inner { pointer-events:none; }
+.signature-hero .hero-inner a { pointer-events:auto; }
+.hero-biography { margin-top:14px; font-size:16px; line-height:1.65; max-width:470px; }
+.signature-hero h1 { font-size:clamp(60px,7.4vw,126px); }
+.signature-hero { min-height:max(1120px,100svh); }
+.hero-slider-controls { position:absolute; right:6.5%; bottom:105px; z-index:4; display:flex; gap:10px; }
+.hero-slider-controls[hidden] { display:none; }
+.hero-slider-controls button { width:44px; height:44px; border:1px solid #ffffff70; background:#141619dc; color:#fff; font:13px var(--sans); cursor:pointer; }
+.hero-slider-controls button[aria-pressed="true"] { border-color:var(--gold2); color:var(--gold2); }
+@media(max-width:780px) {
+ .signature-hero { min-height:950px; }
+ .signature-hero .hero-inner { margin-top:450px; }
+ .signature-hero h1 { font-size:clamp(61px,12.9vw,100px); }
+ .hero-album-link { inset:20px 13% 130px; gap:14px; }
+ .hero-album-link img { max-height:72%; max-width:300px; }
+ .hero-album-caption { gap:6px; font-size:10px; }
+ .hero-slider-controls { top:110px; bottom:auto; right:24px; }
+ .hero-biography { font-size:15px; }
+}
+@media(prefers-reduced-motion:reduce) { .hero-slide { transition:none; } }
