@@ -2,10 +2,9 @@
 import { localizer } from '../data/locales';
 import {schedule} from '../data/schedule';
 import type {Locale} from '../data/translations';
-import type {Universe} from '../data/universes';
-interface Props {lang:Locale;universe:Universe} const {lang,universe}=Astro.props;const l = localizer(lang);const es=lang==='es';
+interface Props {lang:Locale} const {lang}=Astro.props;const l = localizer(lang);const es=lang==='es';
 const today = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const upcoming=schedule.filter(event=>event.date>=today && (universe==='classical' || event.title==='Inaugural Concert'));
+const upcoming=schedule.filter(event=>event.date>=today);
 const localize = (text:string) => !es ? l(text) : text
  .replace('Inaugural Concert','Concierto inaugural')
  .replace('National Symphony Orchestra','Orquesta Sinfónica Nacional')
@@ -15,4 +14,4 @@ const localize = (text:string) => !es ? l(text) : text
  .replace('Dominican Republic','República Dominicana')
  .replace('Hungary','Hungría').replace('Vienna','Viena');
 ---
-<section class="agenda section" id="schedule"><div class="section-top"><div><div class="kicker">{l("Agenda / En el escenario", "Schedule / On stage")}</div><h2 class="section-title">{l("Próximas", "Upcoming")}<br/><em>{l("actuaciones.", "performances.")}</em></h2></div><a href="#contact" class="text-link">{l("Consultar sobre conciertos", "Concert enquiries")} ↗</a></div><div class="concert-list">{upcoming.map(event=><article class="concert"><time datetime={event.date}><strong>{event.date.slice(8)}</strong><span>{new Intl.DateTimeFormat(lang,{month:'short',timeZone:'UTC'}).format(new Date(event.date))} / {event.date.slice(0,4)}</span></time><div class="concert-program"><h3>{localize(event.title)}</h3><p>{localize(event.ensemble)}</p></div><div class="concert-place"><span>{localize(event.venue)}</span><small>{localize(event.city)}</small></div></article>)}</div>{!upcoming.length&&<p>{l("Las próximas fechas se anunciarán aquí.", "Upcoming dates will be announced here.")}</p>}<p class="source-note">{l("Agenda de la artista. Fechas y programas sujetos a actualización.", "Artist’s schedule. Dates and programmes subject to updates.")}</p></section>
+<section class="agenda section" id="schedule"><div class="section-top"><div><div class="kicker">{l("Agenda / En el escenario", "Schedule / On stage")}</div><h2 class="section-title">{l("Próximas", "Upcoming")}<br/><em>{l("actuaciones.", "performances.")}</em></h2></div><a href="#contact" class="text-link">{l("Consultar sobre conciertos", "Concert enquiries")} ↗</a></div><div class="concert-list">{upcoming.map(event=><article class="concert"><time datetime={event.date}><strong>{event.date.slice(8)}</strong><span>{new Intl.DateTimeFormat(lang,{month:'short',timeZone:'UTC'}).format(new Date(event.date))} / {event.date.slice(0,4)}</span></time><div class="concert-program"><h3>{localize(event.title)}</h3><p>{localize(event.ensemble)}</p></div><div class="concert-place"><span>{localize(event.venue)}</span><small>{localize(event.city)}</small></div></article>)}</div>{!upcoming.length&&<p>{l("Las próximas fechas se anunciarán aquí.", "Upcoming dates will be announced here.")}</p>}<p class="source-note">{l("Programa anunciado en el sitio oficial. Fechas sujetas a actualización.", "Programme announced on the official website. Dates subject to updates.")}</p></section>

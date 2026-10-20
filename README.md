@@ -1,6 +1,6 @@
 # Nathalie Peña-Comas — El arte de sentir
 
-Landing musicale bilingue, réalisée à partir du prototype fourni. Astro 5, TypeScript, CSS et JavaScript natifs ; sortie entièrement statique pour Vercel. Aucun portrait généré, aucune adresse de contact inventée.
+Site artistique en 11 langues, réalisée à partir du prototype fourni. Astro 5, TypeScript, CSS et JavaScript natifs ; sortie entièrement statique pour Vercel. Aucun portrait généré, aucune adresse de contact inventée.
 
 ## Installation et prévisualisation
 
@@ -25,7 +25,7 @@ Les tests utilisent Google Chrome installé sur le Mac. Sans Chrome : `npx playw
 ## Organisation
 
 - `src/components/` : header, hero, musique, biographie, vidéos, plateformes, contact, footer et dialogues.
-- `src/data/translations.ts` : textes ES/EN, rendus côté serveur ; HTML limité aux textes éditoriaux internes.
+- `src/data/translations.ts` : textes des 11 langues, rendus côté serveur ; HTML limité aux textes éditoriaux internes.
 - `src/data/music.ts` : métadonnées vérifiées pour les données structurées.
 - `src/layouts/Base.astro` : SEO localisé, canonical, hreflang, Open Graph, MusicGroup et MusicRecording.
 - `src/scripts/interactions.ts` : menu mobile, header au scroll, animations, lecteur vidéo et consentement.
@@ -48,7 +48,7 @@ Le dépôt est connecté au projet Vercel `nathalie-pena-comas`, scope `olivier-
 
 ```sh
 vercel link --project nathalie-pena-comas --scope olivier-steineur
-vercel --yes
+vercel --prod
 ```
 
 `vercel.json` définit le build Astro, la sortie `dist`, la redirection ES et des en-têtes de sécurité. En cas de domaine personnalisé, définir `PUBLIC_SITE_URL` dans Vercel puis redéployer pour actualiser canonical, Open Graph, robots et sitemap. Aucune configuration DNS du domaine existant de l’artiste n’est modifiée.
@@ -69,17 +69,16 @@ Astro 5 est conservé conformément au brief. L’audit npm signale encore des a
 
 Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement et l’absence de requêtes tierces initiales. Ils simulent le document vidéo pour vérifier l’intégration ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
 
-### Deux parcours, un seul site complet
+## Versions internationales
 
-La version complète présente dans `feat/premium-homepage-v2` (`4f329a8`) est reprise dans `dev` derrière l'entrée visuelle. Les 11 langues, le menu complet et les sections Agenda, Noticias, Prensa, Videos, Spirituosi, Galería et Contacto sont conservés dans chaque parcours. Aucun lien « site officiel » ne renvoie vers un autre site de l'artiste.
+Routes : `/es/`, `/en/`, `/de/` (Autriche et Allemagne), `/fr/`, `/it/`, `/sv/`, `/hu/`, `/hr/`, `/ru/`, `/zh-TW/` (chinois traditionnel) et `/ja/`. Chaque langue dispose aussi de `/privacy/`, de métadonnées traduites et de liens hreflang dans le HTML et le sitemap. Le menu conserve la section consultée, y compris sur mobile, et fonctionne sans JavaScript.
 
-- `/{lang}/` : entrée avec les deux portraits.
-- `/{lang}/classical/` : parcours classique et menu complet.
-- `/{lang}/popular/` : parcours populaire et menu complet.
-- `/{lang}/privacy/` : informations de confidentialité.
+Les traductions de démonstration sont issues d’une base automatique avec révision éditoriale ; une validation par des locuteurs natifs est recommandée avant une communication officielle. Les titres des œuvres, albums, noms propres et crédits restent dans leur forme officielle. Les textes additionnels se trouvent dans `src/data/localized.json` et le registre des langues dans `src/data/locales.ts`. Le référencement de chaque marché nécessite un travail de localisation complémentaire.
 
-Les langues conservent l'univers et la section active. Le sitemap et les métadonnées couvrent les 44 pages localisées. Les biographies, contacts professionnels, archives générales, Spirituosi, galerie et Olivia sont intégrés au site. Les contenus musicaux spécifiques sont sélectionnés par univers.
+## Olivia AI v2
 
-L'audit corrigé et détaillé, incluant les contenus de la version complète et les classements à valider, est dans [CONTENT_AUDIT.md](CONTENT_AUDIT.md). Les anciennes observations d'absence de médias classiques ne décrivaient que l'ancienne landing sur main ; la source complète comprend bien les pochettes, captations et photos classiques.
+Le widget artistique est disponible sur les 11 versions et leurs pages de confidentialité. Son interface et la langue de chaque requête suivent la route actuelle. L’historique et l’identifiant visiteur sont conservés dans `sessionStorage` entre les langues ; les messages déjà reçus gardent leur langue d’origine. Une nouvelle conversation efface l’historique local et crée un nouvel identifiant, sans prétendre supprimer les données du service.
 
-**Travail exclusivement sur dev. Preview uniquement : `vercel --yes --scope olivier-steineur`. Ne jamais modifier main/main2 ni publier ou promouvoir en production sans ordre explicite du propriétaire.**
+Le widget ne contacte aucun service avant l’envoi d’un message avec la case d’accord cochée. Il obtient ensuite une identité signée pour le client `nathalie` auprès de `https://suitesmine-bot.vercel.app/api/widget/identity` et appelle `/api/olivia/chat`. Les clés restent dans le backend [suitesmine-bot](https://github.com/o7digital/suitesmine-bot), dont le profil Nathalie est lié au domaine de production. Le moteur Python doit également être déployé avec le profil et les 11 langues. Un changement de domaine exige de mettre à jour cette liaison côté serveur.
+
+Les conversations peuvent être enregistrées dans l’inbox Olivia ; lorsqu’un opérateur prend la main, le widget suspend les réponses IA et récupère ses messages pendant que le dialogue reste ouvert. Les demandes professionnelles disposent d’un lien vers les contacts de représentation. En cas de panne ou de refus d’identité, un message localisé s’affiche et la question reste dans le champ. Aucun faux échange IA n’est affiché. Les tests `tests/olivia.spec.ts` couvrent les 11 langues, l’accord préalable, le contexte entre langues, le rendu sûr du texte et les erreurs réseau.

@@ -1,4 +1,3 @@
-import type { Universe } from './universes';
 import type { Locale } from './translations';
 export const navigation = [
   { id: 'home', en: 'Home', es: 'Inicio' },
@@ -12,4 +11,4 @@ export const navigation = [
   { id: 'contact', en: 'Contact', es: 'Contacto' },
 ] as const;
 // Secondary utility pages return to the same localized homepage section.
-export const sectionHref = (id: string, lang: Locale, isHome = true, universe: Universe = 'classical') => isHome ? `#${id}` : `/${lang}/${universe}/#${id}`;
+export const sectionHref = (id: string, lang: Locale, isHome = true) => isHome ? `#${id}` : `/${lang}/#${id}`;

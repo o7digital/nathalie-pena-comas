@@ -2,16 +2,15 @@
 import { locales, localizer } from '../data/locales';
 import { translations, type Locale } from '../data/translations';
 import { navigation, sectionHref } from '../data/navigation';
-import { universePath, type Universe } from '../data/universes';
-interface Props { lang: Locale; universe?: Universe }
-const { lang, universe } = Astro.props;const l = localizer(lang);
+interface Props { lang: Locale }
+const { lang } = Astro.props;const l = localizer(lang);
 const t = translations[lang];
-const isHome = !!universe;
+const isHome = Astro.url.pathname === `/${lang}/`;
 ---
 <header class="nav" id="site-header">
-  <a class="brand official-brand" href={sectionHref('home',lang,isHome,universe)} aria-label={`Nathalie Peña-Comas — ${l("Inicio", "Home")}`}><img src="/logo-npc.png" alt="Nathalie Peña Comas — NPC" width="529" height="330" /></a>
+  <a class="brand official-brand" href={sectionHref('home',lang,isHome)} aria-label={`Nathalie Peña-Comas — ${l("Inicio", "Home")}`}><img src="/logo-npc.png" alt="Nathalie Peña Comas — NPC" width="529" height="330" /></a>
   <nav class="navlinks" id="navlinks" aria-label={t.navLabel}>
-    {navigation.map(({id,...labels}) => <a href={sectionHref(id,lang,isHome,universe)} aria-current={isHome && id==='home'?'location':undefined}>{l(labels.es, labels.en)}</a>)}
+    {navigation.map(({id,...labels}) => <a href={sectionHref(id,lang,isHome)} aria-current={isHome && id==='home'?'location':undefined}>{l(labels.es, labels.en)}</a>)}
   </nav>
-  <div class="navright"><details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={universe ? universePath(locale.code, universe) : `/${locale.code}/privacy/`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
+  <div class="navright"><details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={`/${locale.code}/${isHome ? '' : 'privacy/'}`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
 </header>

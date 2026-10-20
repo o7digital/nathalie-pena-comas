@@ -1,12 +1,3 @@
-// Preserve old section URLs within the two internal artist journeys.
-const legacy: Record<string,string> = {story:'about', videos:'media', listen:'collection', 'hero-title':'home', 'popular-title':'home'};
-if (/^\/[^/]+\/$/.test(location.pathname) && location.hash && location.hash !== '#main') {
- const oldId=location.hash.slice(1);const id=legacy[oldId]??oldId;
- const universe=['music','music-films','videos','listen','collection'].includes(oldId)?'popular':'classical';
- location.replace(`${location.pathname}${universe}/#${id}`);
-} else if (document.body.dataset.universe && legacy[location.hash.slice(1)]) {
- location.replace(`${location.pathname}#${legacy[location.hash.slice(1)]}`);
-}
 export {};
 type Consent = { analytics: boolean; marketing: boolean; time: number };
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; fbq?: ((...args: unknown[]) => void) & { queue?: unknown[][]; loaded?: boolean; version?: string; push?: unknown; callMethod?: (...args: unknown[]) => void } };
@@ -143,7 +134,7 @@ if (document.getElementById('home')) {
  function updateSectionLinks() {
   const id = currentSection();
   const navId = ({voice:'about',music:'media',collection:'media','music-films':'media',newsletter:'contact'} as Record<string,string>)[id] ?? id;
-  languageLinks.forEach(link => { link.href = `/${link.lang}/${document.body.dataset.universe}/#${id}`; });
+  languageLinks.forEach(link => { link.href = `/${link.lang}/#${id}`; });
   links?.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
    if (link.hash === `#${navId}`) link.setAttribute('aria-current','location');
    else link.removeAttribute('aria-current');

@@ -12,7 +12,7 @@ const t = oliviaCopy(lang);
   <div class="olivia-header"><div><h2 id="olivia-title">Olivia <span>AI</span></h2><p id="olivia-subtitle">{t.subtitle}</p></div><button data-olivia-close aria-label={t.close} type="button">✕</button></div>
   <div class="olivia-messages" data-olivia-messages role="log" aria-live="polite" aria-relevant="additions" aria-label="Olivia AI"></div>
   <p class="olivia-status" data-olivia-status role="status"></p>
-  <a class="olivia-contact" href={Astro.url.pathname.endsWith("/privacy/") ? `/${lang}/classical/#contact` : "#contact"}>{t.contact} ↗</a>
+  <a class="olivia-contact" href={`/${lang}/#contact`}>{t.contact} ↗</a>
   <form data-olivia-form class="olivia-form">
    <label class="olivia-consent"><input type="checkbox" data-olivia-consent required /><span>{t.consent} <a href={`/${lang}/privacy/`}>{t.privacy} ↗</a></span></label>
    <label for="olivia-message" class="visually-hidden">{t.placeholder}</label>

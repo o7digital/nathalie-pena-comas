@@ -1,66 +1,111 @@
-import {test, expect} from '@playwright/test';
-const ids=['home','about','schedule','news','press','media','spirituosi','gallery','contact'];
-const labels={es:['Inicio','La artista','Agenda','Noticias','Prensa','Videos','Spirituosi','Galería','Contacto'],en:['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact']};
-for(const lang of ['es','en'] as const)for(const world of ['classical','popular'])for(const width of [390,1440]) {
- test(`${lang}/${world} full source menu and internal content at ${width}`,async({page})=>{
-  await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width,height:900});
-  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(`/${lang}/${world}/`);
-  await expect(page.locator('#navlinks a')).toHaveText(labels[lang]);
-  await expect(page.locator('.footer-navigation a')).toHaveText(labels[lang]);
-  for(const group of ['#navlinks','.footer-navigation'])for(const id of ids){
-   if(group==='#navlinks'&&width<1251)await page.locator('#menu-btn').click();
-   await page.locator(`${group} a[href="#${id}"]`).click();
-   await expect(page).toHaveURL(new RegExp(`/${lang}/${world}/#${id}$`));
-   await expect(page.locator(`#${id}`)).toHaveCount(1);
-   await expect(page.locator(`#${id}`)).toBeInViewport();
+import { test, expect } from '@playwright/test';
+for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440]) {
+ test(`${lang} responsive at ${width}px`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  const errors: string[] = []; const thirdParty: string[] = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('request', r => { if (new URL(r.url()).origin !== new URL(process.env.TEST_BASE_URL || 'http://localhost:4322').origin) thirdParty.push(r.url()); });
+  await page.goto(`/${lang}/`); await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator('html')).toHaveAttribute('lang', lang);
+  await expect(page.locator('h1')).toHaveText('NathaliePeña-Comas');
+  await expect(page.locator('.release-feature h3')).toContainText('Quinto Elemento:');
+  await expect(page.locator('.language-switch a[aria-current="page"]')).toHaveText(lang === 'es' ? 'Español' : 'English');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  for (const image of await page.locator('img').all()) { await image.scrollIntoViewIfNeeded(); await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true); }
+  await page.evaluate(() => window.scrollTo(0,0));
+  expect(await page.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  const ids = await page.locator('[id]').evaluateAll(elements => elements.map(e => e.id)); expect(new Set(ids).size).toBe(ids.length);
+  expect(thirdParty).toEqual([]); expect(errors).toEqual([]);
+  if (width <= 1250) {
+   await page.locator('#menu-btn').click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'true');
+   const about = page.locator('#navlinks a[href="#about"]');
+   await about.click(); await expect(page.locator('#menu-btn')).toHaveAttribute('aria-expanded', 'false');
+   await expect(page.locator('.nav .official-brand img')).toBeVisible();
   }
-  const broken=await page.locator('a[href]').evaluateAll(links=>links.flatMap(el=>{
-   const a=el as HTMLAnchorElement;const url=new URL(a.href);
-   if(/nathaliepenacomas\.net$/.test(url.hostname))return [a.href];
-   if(url.origin===location.origin&&url.pathname===location.pathname&&url.hash&&!document.getElementById(decodeURIComponent(url.hash.slice(1))))return [a.href];
-   return [];
-  }));expect(broken).toEqual([]);
-  await expect(page.locator('#contact a[href="mailto:office@buchmann.at"]')).toBeVisible();
-  await expect(page.locator('#contact a[href="mailto:info@opera-connection.com"]')).toBeVisible();
-  await expect(page.locator('#spirituosi')).toContainText('Souvenir Latino');
-  await expect(page.locator('#press')).toContainText('Oh! Magazine');
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  expect(errors).toEqual([]);
-  await page.goto(`/${lang}/${world}/`);await page.evaluate(()=>document.fonts.ready);
-  await page.screenshot({path:`test-results/full-${lang}-${world}-${width}.png`});
+  await page.screenshot({ path: `test-results/${lang}-${width}.png` });
  });
 }
-for(const world of ['classical','popular'])test(`${world} videos retain real playback, confirmation and keyboard focus`,async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});
- await page.route('https://www.youtube-nocookie.com/**',route=>route.fulfill({body:'<html>Video</html>',contentType:'text/html'}));
- await page.goto(`/en/${world}/`);
- const buttons=page.locator('[data-video]');expect(await buttons.count()).toBe(world==='classical'?5:4);
- for(const button of await buttons.all()){
-  const id=await button.getAttribute('data-video');await button.click();
-  await expect(page.locator('#video-modal')).toBeVisible();await expect(page.locator('iframe')).toHaveCount(0);
-  await expect(page.locator('#video-fallback')).toHaveAttribute('href',`https://www.youtube.com/watch?v=${id}`);
-  await page.locator('#load-video').click();await expect(page.locator('iframe')).toHaveAttribute('src',new RegExp(`/embed/${id}\\?`));
-  await page.keyboard.press('Escape');await expect(page.locator('#video-modal')).not.toBeVisible();await expect(button).toBeFocused();
- }
+test('video loads on confirmation, traps focus, and restores focus on Escape', async ({ page }) => {
+ await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ body: '<html><body>Video embed</body></html>', contentType: 'text/html' }));
+ await page.goto('/en/'); const trigger = page.locator('.hero [data-video]'); await trigger.click();
+ await expect(page.locator('#video-modal')).toBeVisible(); await expect(page.locator('iframe')).toHaveCount(0);
+ await page.keyboard.press('Shift+Tab');
+ expect(await page.evaluate(() => !!document.activeElement?.closest('#video-modal'))).toBe(true);
+ await page.locator('#load-video').click();
+ await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/pG7lJPLcO-g/);
+ await page.keyboard.press('Escape'); await expect(page.locator('#video-modal')).not.toBeVisible();
+ await expect(page.locator('iframe')).toHaveCount(0); await expect(trigger).toBeFocused();
+ await page.locator('.video [data-video="otT5_7vJYv4"]').click();
+ await expect(page.locator('#video-title')).toHaveText('Esclavo y Amo');
+ await expect(page.locator('#video-fallback')).toHaveAttribute('href', /otT5_7vJYv4/);
 });
-test('repertoire, images, projects and press are rendered within the correct journey',async({page})=>{
- await page.goto('/es/classical/');
- await expect(page.locator('#collection')).toContainText('Alta Gracia');await expect(page.locator('#collection')).toContainText('Souvenir Latino');
- await expect(page.locator('#media')).toContainText('In trutina');await expect(page.locator('#media')).not.toContainText('Esclavo y Amo');
- await expect(page.locator('#news')).toContainText('Don Giovanni');
- await expect(page.locator('#home img')).toHaveAttribute('alt',/Nathalie/);
- await page.goto('/es/popular/');
- await expect(page.locator('#collection')).toContainText('Una Mujer');await expect(page.locator('#collection')).not.toContainText('Alta Gracia');
- await expect(page.locator('#media')).toContainText('Esclavo y Amo');await expect(page.locator('#media')).toContainText('Sombras Nada Más');
- await expect(page.locator('#media')).not.toContainText('In trutina');await expect(page.locator('#news')).toContainText('Quinto Elemento');
+test('language routes work without JavaScript; localized SEO and sitemap exist', async ({ browser, request }) => {
+ const context = await browser.newContext({ javaScriptEnabled: false, baseURL: process.env.TEST_BASE_URL || "http://localhost:4322" }); const page = await context.newPage();
+ await page.goto('/es/'); await page.locator('.language-switch summary').click(); await page.locator('.language-switch a[lang="en"]').click();
+ await expect(page).toHaveURL(/\/en\/$/); await expect(page.locator('.hero-ctas a').first()).toContainText('Discover Nathalie');
+ await expect(page.locator('link[hreflang="es"]')).toHaveCount(1);
+ const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || '{}');
+ expect(graph['@graph'].filter((item: { '@type': string }) => item['@type'] === 'MusicRecording')).toHaveLength(2);
+ for (const path of ['/es/privacy/', '/en/privacy/', '/robots.txt', '/sitemap.xml']) expect((await request.get(path)).ok()).toBe(true);
+ await context.close();
+});
+test('analytics and advertising require separate consent; withdrawal persists', async ({ page }) => {
+ const gaEvents: string[] = []; const pixelEvents: string[] = [];
+ await page.route('**/en/', async route => {
+  const response = await route.fetch(); const body = (await response.text()).replace(/data-ga(?:="")?(?=[ >])/, 'data-ga="G-TEST123"').replace(/data-pixel(?:="")?(?=[ >])/, 'data-pixel="123456"');
+  await route.fulfill({ response, body });
+ });
+ await page.route('https://www.googletagmanager.com/**', route => { gaEvents.push(route.request().url()); return route.fulfill({body:'',contentType:'text/javascript'}); });
+ await page.route('https://connect.facebook.net/**', route => { pixelEvents.push(route.request().url()); return route.fulfill({body:'',contentType:'text/javascript'}); });
+ await page.goto('/en/'); await expect(page.locator('#consent-modal')).toBeVisible(); expect(gaEvents).toHaveLength(0); expect(pixelEvents).toHaveLength(0);
+ await page.locator('[data-consent="reject"]').click(); await page.reload(); await expect(page.locator('#consent-modal')).not.toBeVisible(); expect(gaEvents).toHaveLength(0);
+ await page.locator('footer [data-preferences]').click(); await page.locator('#consent-analytics').check(); await page.locator('[data-consent="save"]').click();
+ await expect.poll(() => gaEvents.length).toBe(1); expect(pixelEvents).toHaveLength(0);
+ await page.locator('.platform[href*="spotify"]').evaluate((el: HTMLAnchorElement) => { el.addEventListener('click', e => e.preventDefault()); el.click(); });
+ const events = await page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer);
+ expect(events.some(item => item[0] === 'event' && item[1] === 'music_platform_click')).toBe(true);
+ await page.locator('footer [data-preferences]').click(); await page.locator('[data-consent="reject"]').click(); await page.waitForLoadState('networkidle');
+ expect(await page.evaluate(() => JSON.parse(localStorage.getItem('npc-consent-v1') || '{}').analytics)).toBe(false);
+ expect(gaEvents).toHaveLength(1);
+});
+test('reduced motion keeps content visible', async ({ page }) => {
+ await page.emulateMedia({ reducedMotion: 'reduce' }); await page.goto('/es/');
+ expect(await page.locator('.story-copy').evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+ expect(await page.locator('html').evaluate(el => getComputedStyle(el).scrollBehavior)).toBe('auto');
 });
 
-for(const world of ['classical','popular'])test(`${world} initial page remains local without automatic media`,async({page})=>{
- const external:string[]=[];page.on('request',r=>{if(new URL(r.url()).origin!==new URL(process.env.TEST_BASE_URL||'http://localhost:4322').origin)external.push(r.url());});
- await page.goto(`/es/${world}/`);await expect(page.locator('iframe')).toHaveCount(0);expect(external).toEqual([]);
- await page.setViewportSize({width:390,height:900});
- const switcher=await page.locator('.universe-nav').boundingBox();const assistant=await page.locator('.olivia-launcher').boundingBox();
- expect(assistant!.y+assistant!.height).toBeLessThan(switcher!.y);
- expect(await page.locator('.universe-nav a').first().evaluate(el=>getComputedStyle(el).color)).toBe('rgb(229, 217, 200)');
+test('official album gallery and opera performances open the correct destinations', async ({page}) => {
+ await page.goto('/en/');
+ await expect(page.locator('.album')).toHaveCount(4);
+ await expect(page.locator('.release-feature a')).toHaveAttribute('href','https://orcd.co/quintoelemento');
+ for (const [id,title] of [['pG7lJPLcO-g','Song to the Moon'],['NrGZajhOGAc','O soave fanciulla']]) {
+  await page.locator(`.video [data-video="${id}"]`).click();
+  await expect(page.locator('#video-title')).toHaveText(title);
+  await expect(page.locator('#video-fallback')).toHaveAttribute('href',`https://www.youtube.com/watch?v=${id}`);
+  await page.keyboard.press('Escape');
+ }
+});
+
+test('official NPC identity, complete navigation and editorial sections are retained', async ({page}) => {
+ await page.goto('/en/');
+ const nav=page.locator('#navlinks a');
+ await expect(nav).toHaveText(['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact']);
+ const paths=['#home','#about','#schedule','#news','#press','#media','#spirituosi','#gallery','#contact'];
+ for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', paths[i]);
+ await expect(page.locator('.nav .brand img')).toHaveAttribute('src','/logo-npc.png');
+ await expect(page.locator('footer .brand img')).toHaveAttribute('src','/logo-npc.png');
+ await expect(page.locator('.concert')).toHaveCount(4);
+ await expect(page.locator('.concert time').first()).toHaveAttribute('datetime','2026-10-24');
+ await expect(page.locator('#spirituosi')).toContainText('Ensemble');
+ await expect(page.locator('.repertoire')).toContainText('Violetta');
+ await expect(page.locator('#gallery figure:not([data-gallery-clone])')).toHaveCount(3);
+ await expect(page.locator('#newsletter a, #newsletter button, #newsletter form')).toHaveCount(0);
+ await expect(page.locator('#newsletter')).toContainText('unavailable in this demonstration');
+ await expect(page.locator('.classical-grid [data-video]')).toHaveCount(4);
+ await expect(page.locator('.classical-grid [data-video]').first()).toHaveAttribute('data-video','pG7lJPLcO-g');
+ for(const [id,title] of [['U1QDrRtdnAI','Addio del passato'],['Ept9wg2IlDo','In trutina']]) {
+  await page.locator(`.video [data-video="${id}"]`).click();
+  await expect(page.locator('#video-title')).toHaveText(title);
+  await page.keyboard.press('Escape');
+ }
 });

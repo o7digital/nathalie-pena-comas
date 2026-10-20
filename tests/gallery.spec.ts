@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 for(const lang of ['es','en'])for(const width of [390,1440]){
  test(`${lang} gallery carousel and lightbox at ${width}px`,async({page})=>{
-  await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width,height:900});await page.goto(`/${lang}/classical/#gallery`);
+  await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width,height:900});await page.goto(`/${lang}/#gallery`);
   await expect(page.locator('[data-gallery-pause]')).toBeDisabled();
   await page.locator('[data-gallery-next]').click();await expect(page.locator('[data-gallery-count]')).toHaveText('02 / 03');
   await page.locator('[data-gallery-prev]').click();await expect(page.locator('[data-gallery-count]')).toHaveText('01 / 03');
@@ -28,7 +28,7 @@ for(const lang of ['es','en'])for(const width of [390,1440]){
 }
 test('gallery autoplay keeps moving on hover and focus, and respects pause and reduced motion',async({page})=>{
  test.setTimeout(45000);
- await page.goto('/en/classical/#gallery');await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.mouse.move(0,0);
+ await page.goto('/en/#gallery');await page.locator('#gallery-track').scrollIntoViewIfNeeded();await page.mouse.move(0,0);
  const count=page.locator('[data-gallery-count]');
  await expect(count).toHaveText('02 / 03',{timeout:8000});
  // Wait until smooth scrolling has actually reached the second image.
@@ -45,7 +45,7 @@ test('gallery autoplay keeps moving on hover and focus, and respects pause and r
 });
 
 for(const width of [390,1440])test(`gallery wraps forward seamlessly at ${width}px`,async({page})=>{
- await page.setViewportSize({width,height:900});await page.goto('/es/classical/#gallery');
+ await page.setViewportSize({width,height:900});await page.goto('/es/#gallery');
  await page.locator('#gallery-track').scrollIntoViewIfNeeded();
  await page.locator('[data-gallery-pause]').click();
  const next=page.locator('[data-gallery-next]');
@@ -65,24 +65,4 @@ for(const width of [390,1440])test(`gallery wraps forward seamlessly at ${width}
   const index=Number(label.slice(0,2))-1;
   await expect.poll(()=>page.locator('#gallery-track').evaluate((el,index)=>Math.abs(el.querySelectorAll('figure:not([data-gallery-clone])')[index].getBoundingClientRect().left-el.getBoundingClientRect().left),index)).toBeLessThan(3);
  }
-});
-
-for(const lang of ['es','en'])for(const width of [390,1440])test(`${lang} popular gallery excludes classical performances at ${width}px`,async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width,height:900});
- await page.goto(`/${lang}/popular/#gallery`);
- const gallery=page.locator('#gallery');
- await expect(gallery.locator('[data-gallery-photo]')).toHaveCount(2);
- await expect(gallery).not.toContainText('IMAGO Sloveniae');await expect(gallery).not.toContainText('Musikverein');await expect(gallery).not.toContainText('La Traviata');
- for(const image of await gallery.locator('img').all())await expect(image).not.toHaveAttribute('src',/recital\.|musikverein\.|portrait\./);
- await expect(gallery.locator('[data-gallery-count]')).toHaveText('01 / 02');
- await gallery.locator('[data-gallery-next]').click();await expect(gallery.locator('[data-gallery-count]')).toHaveText('02 / 02');
- await gallery.locator('[data-gallery-next]').click();await expect(gallery.locator('[data-gallery-count]')).toHaveText('01 / 02');
- const trigger=gallery.locator('[data-gallery-photo]').first();await trigger.click();
- await expect(page.locator('#gallery-lightbox-caption')).toContainText('Sombras Nada Más');
- await page.locator('[data-lightbox-next]').click();await expect(page.locator('#gallery-lightbox-caption')).toContainText('Esclavo y Amo');
- await expect(page.locator('[data-lightbox-count]')).toHaveText('02 / 02');
- await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
- await gallery.screenshot({path:`test-results/popular-gallery-${lang}-${width}.png`});
- await page.goto(`/${lang}/classical/#gallery`);
- await expect(page.locator('#gallery')).toContainText('IMAGO Sloveniae');await expect(page.locator('#gallery')).toContainText('Musikverein');await expect(page.locator('#gallery')).toContainText('La Traviata');
 });

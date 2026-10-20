@@ -14,7 +14,7 @@ for(const lang of languages){
    expect(request.headers()['x-olivia-widget-identity']).toBe('test-signed-identity');
    return route.fulfill({json:{clientCode:'nathalie',language:lang,reply:`Nathalie · ${lang} <script>alert(1)</script>`,model:'test-model'},headers});
   });
-  await page.setViewportSize({width:390,height:844});await page.goto(`/${lang}/classical/`);
+  await page.setViewportSize({width:390,height:844});await page.goto(`/${lang}/`);
   expect(calls).toHaveLength(0);
   await page.locator('[data-olivia-open]').click();
   await expect(page.locator('#olivia-dialog')).toBeVisible();
@@ -28,7 +28,7 @@ for(const lang of languages){
   await expect(page.locator('[data-olivia-messages] script')).toHaveCount(0);
   const sent=calls.find(call=>call.url==='/api/olivia/chat')!.data;
   expect(sent.clientCode).toBe('nathalie');expect(sent.language).toBe(lang);expect(sent.metadata.language).toBe(lang);
-  expect(sent.metadata.dataConsent).toBe(true);expect(sent.metadata.pageUrl).toContain(`/${lang}/classical/`);
+  expect(sent.metadata.dataConsent).toBe(true);expect(sent.metadata.pageUrl).toContain(`/${lang}/`);
   expect(await page.locator('#olivia-dialog').evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight;})).toBe(true);
   await page.keyboard.press('Escape');await expect(page.locator('#olivia-dialog')).not.toBeVisible();
  });
@@ -43,7 +43,7 @@ test('Olivia keeps context and visitor identity after changing site language',as
   if(r.url().endsWith('/chat')){bodies.push(d);return route.fulfill({headers,json:{clientCode:'nathalie',language:d.language,reply:'Response '+d.language,model:'test'}});}
   return route.fulfill({headers,json:{conversation:{status:'ai'},messages:[]}});
  });
- await page.goto('/fr/classical/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Son parcours ?');await page.locator('[type=submit]').click();await expect(page.locator('[data-role=assistant]').last()).toHaveText('Response fr');
+ await page.goto('/fr/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Son parcours ?');await page.locator('[type=submit]').click();await expect(page.locator('[data-role=assistant]').last()).toHaveText('Response fr');
  await page.locator('[data-olivia-close]').click();await page.locator('.language-switch summary').click();await page.locator('.language-options a[lang=ja]').click();
  await page.locator('[data-olivia-open]').click();await expect(page.locator('[data-olivia-consent]')).toBeChecked();
  await expect(page.locator('[data-role=assistant]').first()).toContainText('こんにちは');await expect(page.locator('[data-role=assistant]').last()).toHaveText('Response fr');
@@ -52,7 +52,7 @@ test('Olivia keeps context and visitor identity after changing site language',as
  await page.locator('[data-olivia-reset]').click();await expect(page.locator('[data-role=user]')).toHaveCount(0);await expect(page.locator('[data-olivia-consent]')).not.toBeChecked();
 });
 test('Olivia displays a localized error when the service fails',async({page})=>{
- await page.route(host+'/**',route=>route.abort());await page.goto('/fr/classical/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Bonjour');await page.locator('[type=submit]').click();
+ await page.route(host+'/**',route=>route.abort());await page.goto('/fr/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Bonjour');await page.locator('[type=submit]').click();
  await expect(page.locator('[data-olivia-status]')).toContainText('momentanément indisponible');await expect(page.locator('#olivia-message')).toHaveValue('Bonjour');await expect(page.locator('[type=submit]')).toBeEnabled();
 });
 test('manual takeover pauses AI replies and receives operator messages',async({page})=>{
@@ -66,7 +66,7 @@ test('manual takeover pauses AI replies and receives operator messages',async({p
   if(r.method()==='GET')return route.fulfill({headers,json:{status:'manual',messages:[{id:'operator-1',role:'operator',content:'Bonjour, comment puis-je vous aider ?'}]}});
   return route.fulfill({headers,json:{conversation:{status:'manual'}}});
  });
- await page.goto('/fr/classical/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Je souhaite parler à votre équipe.');await page.locator('[type=submit]').click();
+ await page.goto('/fr/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Je souhaite parler à votre équipe.');await page.locator('[type=submit]').click();
  await expect(page.locator('[data-olivia-status]')).toContainText('L’équipe a pris le relais');expect(aiCalls).toBe(0);
  await page.clock.fastForward(8500);await expect(page.locator('[data-role=operator]')).toHaveText('Bonjour, comment puis-je vous aider ?');
 });
