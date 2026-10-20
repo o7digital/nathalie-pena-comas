@@ -254,8 +254,8 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
 .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity .8s ease; pointer-events:none; }
 .hero-slide.is-active { opacity:1; pointer-events:auto; }
 .hero-album-slide { background:radial-gradient(ellipse at 70% 40%,#655546,#141619 75%); }
-.hero-album-link { position:absolute; inset:5% 5% 8% 42%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
-.hero-album-link img { width:100%; max-width:460px; max-height:65%; height:auto; object-fit:contain; box-shadow:0 20px 65px #0008; }
+.hero-album-link { position:absolute; inset:5% 0 8% 30%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+.hero-album-link img { width:100%; max-width:1100px; max-height:75%; height:auto; object-fit:contain; box-shadow:0 20px 65px #0008; }
 .hero-album-caption { display:flex; flex-direction:column; gap:10px; text-align:center; color:var(--gold2); font-size:12px; letter-spacing:.06em; }
 .hero-album-caption strong { font:clamp(22px,2.2vw,34px)/1.15 var(--serif); color:#fff; }
 .hero-portrait:after { pointer-events:none; }
@@ -273,8 +273,8 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
  .signature-hero { min-height:950px; }
  .signature-hero .hero-inner { margin-top:450px; }
  .signature-hero h1 { font-size:clamp(61px,12.9vw,100px); }
- .hero-album-link { inset:20px 13% 130px; gap:14px; }
- .hero-album-link img { max-height:72%; max-width:300px; }
+ .hero-album-link { inset:20px 4% 130px; gap:14px; }
+ .hero-album-link img { max-height:75%; max-width:none; }
  .hero-album-caption { gap:6px; font-size:10px; }
  .hero-slider-controls { top:110px; bottom:auto; right:24px; }
  .hero-biography { font-size:15px; }

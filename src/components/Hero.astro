@@ -12,7 +12,7 @@ const {lang}=Astro.props;const l = localizer(lang);const t = translations[lang];
   <div class="hero-slide is-active" data-hero-slide><Image src={hero} class="hero-photo" width={2560} alt="Nathalie Peña-Comas — fotografía oficial, retrato profesional" widths={[640,960,1440,1920,2560]} sizes="(max-width: 780px) 1440px, 75vw" format="webp" quality={90} loading="eager" fetchpriority="high" /></div>
   <div class="hero-slide hero-album-slide" data-hero-slide aria-hidden="true" inert>
     <a href={albums[0].url} target="_blank" rel="noopener" class="hero-album-link">
-      <Image src={albums[0].image} width={960} widths={[400,640,960]} sizes="(max-width:780px) 75vw, 35vw" format="webp" loading="eager" alt={l("Quinto Elemento: Tierra — portada oficial", "Quinto Elemento: Tierra — official cover")} />
+      <Image src={albums[0].image} width={960} widths={[400,640,960]} sizes="(max-width:780px) 92vw, 53vw" format="webp" loading="eager" alt={l("Quinto Elemento: Tierra — portada oficial", "Quinto Elemento: Tierra — official cover")} />
       <span class="hero-album-caption"><span>{l("Proyecto destacado", "Featured release")}</span><strong>Quinto Elemento: Tierra</strong><span>{l("Escuchar el álbum", "Listen to the album")} ↗</span></span>
     </a>
   </div>
