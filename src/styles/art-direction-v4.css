@@ -280,3 +280,34 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
  .hero-biography { font-size:15px; }
 }
 @media(prefers-reduced-motion:reduce) { .hero-slide { transition:none; } }
+
+.repertoire-section { padding:110px 6.5%; background:#eee9e1; }
+.repertoire-columns { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:7%; }
+.repertoire-column { min-width:0; }
+.repertoire-column-heading { border-top:1px solid #867054; padding:26px 0; }
+.repertoire-column-heading h3 { font:clamp(30px,3vw,46px)/1.15 var(--serif); overflow-wrap:anywhere; }
+.repertoire-column-heading p { margin-top:10px; color:#655444; font-size:14px; }
+.repertoire-recording { display:flex; align-items:center; gap:24px; padding:24px 0; border-bottom:1px solid #14161926; }
+.repertoire-recording img { width:120px; height:120px; flex-shrink:0; object-fit:contain; background:#e3ddd3; }
+.repertoire-recording-copy { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.repertoire-recording strong { font:clamp(23px,2.1vw,32px)/1.15 var(--serif); overflow-wrap:anywhere; }
+.repertoire-recording small,.repertoire-performances small { font-size:13px; color:#655444; line-height:1.6; }
+.repertoire-listen { font-size:12px; color:#725326; }
+.repertoire-performances { list-style:none; padding:0; margin:24px 0 0; }
+.repertoire-performances a { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 0; border-bottom:1px solid #14161926; }
+.repertoire-performances a>span:first-child { display:flex; flex-direction:column; gap:5px; }
+.repertoire-performances strong { font:25px/1.2 var(--serif); }
+.repertoire-section a:hover strong { color:#725326; }
+.repertoire-section :focus-visible { outline:2px solid #725326; outline-offset:5px; }
+@media(min-width:1251px) and (max-width:1500px) {
+ .nav { gap:18px; }
+ .nav .official-brand img { width:120px; }
+ .navlinks { gap:14px; }
+ .navlinks a { font-size:14px; }
+}
+@media(max-width:780px) {
+ .repertoire-section { padding:70px 24px; }
+ .repertoire-columns { grid-template-columns:1fr; gap:48px; }
+ .repertoire-recording { gap:18px; }
+ .repertoire-recording img { width:90px; height:90px; }
+}

@@ -3,6 +3,7 @@ export const navigation = [
   { id: 'home', en: 'Home', es: 'Inicio' },
   { id: 'about', en: 'About', es: 'La artista' },
   { id: 'schedule', en: 'Schedule', es: 'Agenda' },
+  { id: 'repertorio', en: 'Repertoire', es: 'Repertorio' },
   { id: 'news', en: 'News', es: 'Noticias' },
   { id: 'press', en: 'Press', es: 'Prensa' },
   { id: 'media', en: 'Media', es: 'Videos' },

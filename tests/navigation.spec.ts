@@ -1,12 +1,22 @@
 import {test,expect} from '@playwright/test';
-const ids=['home','about','schedule','news','press','media','spirituosi','gallery','contact'];
-const labels={en:['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact'],es:['Inicio','La artista','Agenda','Noticias','Prensa','Videos','Spirituosi','Galería','Contacto']};
+const ids=['home','about','schedule','repertorio','news','press','media','spirituosi','gallery','contact'];
+const labels={en:['Home','About','Schedule','Repertoire','News','Press','Media','Spirituosi','Gallery','Contact'],es:['Inicio','La artista','Agenda','Repertorio','Noticias','Prensa','Videos','Spirituosi','Galería','Contacto']};
 for(const lang of ['es','en'] as const) for(const width of [390,1440]) {
  test(`${lang} all menu and footer entries stay inside Astro at ${width}px`,async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.setViewportSize({width,height:900});await page.goto(`/${lang}/`);
   await expect(page.locator('#navlinks a')).toHaveText(labels[lang]);
   await expect(page.locator('.footer-navigation a')).toHaveText(labels[lang]);
+  const classical = page.locator('[data-repertoire="classical"]');
+  const contemporary = page.locator('[data-repertoire="contemporary"]');
+  await expect(classical).toContainText('Alta Gracia');
+  await expect(classical.locator('a[href^="https://www.youtube.com/watch"]')).toHaveCount(4);
+  await expect(contemporary).toContainText('Quinto Elemento: Tierra');
+  await expect(contemporary.locator('a[href="https://orcd.co/quintoelemento"]')).toHaveCount(1);
+  const left = await classical.boundingBox(), right = await contemporary.boundingBox();
+  expect(left).not.toBeNull(); expect(right).not.toBeNull();
+  if(width > 780) { expect(right!.x).toBeGreaterThan(left!.x); expect(right!.y).toBe(left!.y); }
+  else expect(right!.y).toBeGreaterThan(left!.y + left!.height);
   for(const group of ['#navlinks','.footer-navigation'])for(const id of ids){
    if(group==='#navlinks'&&width<1251)await page.locator('#menu-btn').click();
    const link=page.locator(`${group} a[href="#${id}"]`);await link.click();

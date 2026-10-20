@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { albums } from '../data/albums';
+import { recordings } from '../data/music';
+import { localizer } from '../data/locales';
+import type { Locale } from '../data/translations';
+import sombras from '../assets/sombras-cover.jpg';
+import esclavo from '../assets/esclavo-cover.jpg';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const l = localizer(lang);
+const classical = [albums[1], albums[3]];
+const contemporary = [albums[0], albums[2], ...recordings.map((recording, i) => ({title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
+const performances = [
+ { title:'Song to the Moon', detail:'Rusalka · A. Dvořák', id:'pG7lJPLcO-g' },
+ { title:'O soave fanciulla', detail:'La Bohème · G. Puccini', id:'NrGZajhOGAc' },
+ { title:'Addio del passato', detail:'La Traviata · G. Verdi', id:'U1QDrRtdnAI' },
+ { title:'In trutina', detail:'Carmina Burana · C. Orff', id:'Ept9wg2IlDo' },
+];
+const columns = [
+ { id:'classical', title:l('Soprano · Clásico', 'Soprano · Classical'), description:l('Ópera · Oratorio · Lied', 'Opera · Oratorio · Art song'), releases:classical },
+ { id:'contemporary', title:l('Contemporáneo', 'Contemporary'), description:l('Canciones · Raíces latinas', 'Songs · Latin roots'), releases:contemporary },
+];
+---
+<section class="repertoire-section section" id="repertorio" aria-labelledby="repertoire-title">
+ <div class="section-top"><div><div class="kicker">{l('Selección de repertorio', 'Selected repertoire')}</div><h2 class="section-title" id="repertoire-title">{l('Repertorio', 'Repertoire')}</h2></div></div>
+ <div class="repertoire-columns">
+  {columns.map(column => <article class="repertoire-column" data-repertoire={column.id} aria-labelledby={`repertoire-${column.id}`}>
+   <header class="repertoire-column-heading"><h3 id={`repertoire-${column.id}`}>{column.title}</h3><p>{column.description}</p></header>
+   <div class="repertoire-recordings">
+    {column.releases.map(release => <a class="repertoire-recording" href={release.url} target="_blank" rel="noopener">
+     <Image src={release.image} width={320} widths={[160,320]} sizes="(max-width:600px) 90px, 120px" format="webp" loading="lazy" alt={release.title} />
+     <span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{release.detail}</small><span class="repertoire-listen">{l('Escuchar', 'Listen')} ↗</span></span>
+    </a>)}
+   </div>
+   {column.id === 'classical' && <ul class="repertoire-performances">{performances.map(performance => <li><a href={`https://www.youtube.com/watch?v=${performance.id}`} target="_blank" rel="noopener"><span><strong>{performance.title}</strong><small>{performance.detail}</small></span><span aria-hidden="true">↗</span></a></li>)}</ul>}
+  </article>)}
+ </div>
+</section>

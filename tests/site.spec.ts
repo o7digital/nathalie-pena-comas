@@ -89,8 +89,8 @@ test('official album gallery and opera performances open the correct destination
 test('official NPC identity, complete navigation and editorial sections are retained', async ({page}) => {
  await page.goto('/en/');
  const nav=page.locator('#navlinks a');
- await expect(nav).toHaveText(['Home','About','Schedule','News','Press','Media','Spirituosi','Gallery','Contact']);
- const paths=['#home','#about','#schedule','#news','#press','#media','#spirituosi','#gallery','#contact'];
+ await expect(nav).toHaveText(['Home','About','Schedule','Repertoire','News','Press','Media','Spirituosi','Gallery','Contact']);
+ const paths=['#home','#about','#schedule','#repertorio','#news','#press','#media','#spirituosi','#gallery','#contact'];
  for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', paths[i]);
  await expect(page.locator('.nav .brand img')).toHaveAttribute('src','/logo-npc.png');
  await expect(page.locator('footer .brand img')).toHaveAttribute('src','/logo-npc.png');
