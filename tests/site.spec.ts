@@ -94,8 +94,10 @@ test('official NPC identity, complete navigation and editorial sections are reta
  for(let i=0;i<paths.length;i++) await expect(nav.nth(i)).toHaveAttribute('href', paths[i]);
  await expect(page.locator('.nav .brand img')).toHaveAttribute('src','/logo-npc.png');
  await expect(page.locator('footer .brand img')).toHaveAttribute('src','/logo-npc.png');
- await expect(page.locator('.concert')).toHaveCount(4);
- await expect(page.locator('.concert time').first()).toHaveAttribute('datetime','2026-10-24');
+ const today = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const concertDates = await page.locator('.concert time').evaluateAll(nodes => nodes.map(node => node.getAttribute('datetime') || ''));
+ expect(concertDates.every(date => /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= today)).toBe(true);
+ expect(concertDates).toEqual([...concertDates].sort());
  await expect(page.locator('#spirituosi')).toContainText('Ensemble');
  await expect(page.locator('.repertoire')).toContainText('Violetta');
  await expect(page.locator('#gallery figure:not([data-gallery-clone])')).toHaveCount(3);

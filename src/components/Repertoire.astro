@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import Image from './ContentImage.astro';
 import { albums } from '../data/albums';
 import { recordings } from '../data/music';
 import { localizer } from '../data/locales';
@@ -9,8 +9,8 @@ import esclavo from '../assets/esclavo-cover.jpg';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const l = localizer(lang);
-const classical = [albums[1], albums[3]];
-const contemporary = [albums[0], albums[2], ...recordings.map((recording, i) => ({title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
+const classical = albums.filter(album => album.category === 'classical');
+const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
 const performances = [
  { title:'Song to the Moon', detail:'Rusalka · A. Dvořák', id:'pG7lJPLcO-g' },
  { title:'O soave fanciulla', detail:'La Bohème · G. Puccini', id:'NrGZajhOGAc' },

@@ -1,3 +1,4 @@
+import { textOverride } from '../lib/cms';
 import localized from './localized.json';
 const originalTranslations = {
   "es": {
@@ -146,8 +147,15 @@ const originalTranslations = {
   }
 } as const;
 export type Locale = 'es' | 'en' | 'de' | 'fr' | 'it' | 'sv' | 'hu' | 'hr' | 'ru' | 'zh-TW' | 'ja';
-type Copy = { [K in keyof typeof originalTranslations.en]: string };
+type Copy = { -readonly [K in keyof typeof originalTranslations.en]: string };
 export const translations = { ...originalTranslations } as Record<Locale, Copy>;
 for (const lang of Object.keys(localized) as (keyof typeof localized)[]) {
  translations[lang] = Object.fromEntries(Object.entries(originalTranslations.en).map(([key, value]) => [key, localized[lang][value as keyof typeof localized[typeof lang]]])) as Copy;
+}
+
+for (const lang of Object.keys(translations) as Locale[]) {
+ for (const key of Object.keys(originalTranslations.en) as (keyof Copy)[]) {
+  const value = textOverride(`translation:${key}`, lang);
+  if (value !== undefined) translations[lang][key] = value;
+ }
 }

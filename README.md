@@ -48,10 +48,16 @@ Le dépôt est connecté au projet Vercel `nathalie-pena-comas`, scope `olivier-
 
 ```sh
 vercel link --project nathalie-pena-comas --scope olivier-steineur
-vercel --prod
+vercel --yes
 ```
 
 `vercel.json` définit le build Astro, la sortie `dist`, la redirection ES et des en-têtes de sécurité. En cas de domaine personnalisé, définir `PUBLIC_SITE_URL` dans Vercel puis redéployer pour actualiser canonical, Open Graph, robots et sitemap. Aucune configuration DNS du domaine existant de l’artiste n’est modifiée.
+
+Le travail courant reste sur `dev` et ses previews. Toute publication en production demande une instruction explicite ; voir `AGENTS.md`.
+
+## Admin Directus
+
+Le CMS de développement fonctionne sur Railway, avec PostgreSQL et un volume persistant pour les médias. La preview Vercel de `dev` lit les fiches publiées lors du build et conserve les images sur Vercel. La production reste indépendante du CMS. Accès, édition, bouton de mise à jour de la preview, sauvegardes et migration future vers VPS3 : [guide CMS](cms/README.md).
 
 ## Mesure et confidentialité
 

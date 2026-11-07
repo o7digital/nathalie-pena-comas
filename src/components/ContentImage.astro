@@ -1,0 +1,11 @@
+---
+import { Image } from 'astro:assets';
+import type { ContentImage } from '../lib/cms';
+interface Props {
+ src: ContentImage; alt: string; width: number; widths?: number[]; sizes?: string;
+ loading?: 'lazy' | 'eager'; fetchpriority?: 'high' | 'low' | 'auto';
+ class?: string; quality?: number; format?: string;
+}
+const { src, alt, width, widths, sizes, loading = 'lazy', fetchpriority, class: className, quality } = Astro.props;
+---
+{'cms' in src ? <img src={src.src} alt={alt} width={width} height={Math.round(width * src.height / src.width)} loading={loading} fetchpriority={fetchpriority} class={className} decoding="async" /> : <Image src={src} alt={alt} width={width} widths={widths} sizes={sizes} loading={loading} fetchpriority={fetchpriority} class={className} quality={quality} format="webp" />}

@@ -1,0 +1,11 @@
+{
+ "project": "nathalie-cms",
+ "projectId": "1601ae79-f088-42ca-b8d9-0700627bb4c3",
+ "environment": "dev",
+ "environmentId": "454e0ae9-6166-48c5-9617-1b742824d38d",
+ "directusServiceId": "d2fa99f4-350d-4e1d-931e-2220337f2162",
+ "databaseServiceId": "25dc557d-73b2-4649-b87c-a334e108d7c4",
+ "directusImage": "directus/directus:12.6.1",
+ "url": "https://directus-dev-9ae1.up.railway.app",
+ "uploadsMountPath": "/directus/uploads"
+}

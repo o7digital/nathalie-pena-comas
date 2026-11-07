@@ -31,9 +31,9 @@ if (!motion.matches && 'IntersectionObserver' in window) {
 const video = $<HTMLDialogElement>('#video-modal');
 const container = $('#video-container');
 let currentVideo = ''; let videoTrigger: HTMLElement | null = null;
-const validVideos = new Set(['HbRmwVkSP8Q', 'otT5_7vJYv4', 'pG7lJPLcO-g', 'NrGZajhOGAc', 'U1QDrRtdnAI', 'Ept9wg2IlDo']);
+const validVideo = (id: string) => /^[A-Za-z0-9_-]{11}$/.test(id);
 document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.addEventListener('click', () => {
- const id = button.dataset.video ?? ''; if (!validVideos.has(id) || !video) return;
+ const id = button.dataset.video ?? ''; if (!validVideo(id) || !video) return;
  currentVideo = id; videoTrigger = button;
  const title = button.dataset.title ?? (id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo');
  const heading = $('#video-title'); if (heading) heading.textContent = title;
@@ -42,7 +42,7 @@ document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.
  video.showModal(); document.body.style.overflow = 'hidden';
 }));
 $('#load-video')?.addEventListener('click', () => {
- if (!validVideos.has(currentVideo) || !container) return;
+ if (!validVideo(currentVideo) || !container) return;
  const iframe = document.createElement('iframe'); iframe.title = $('#video-title')?.textContent ?? 'Nathalie Peña-Comas';
  iframe.src = `https://www.youtube-nocookie.com/embed/${currentVideo}?autoplay=1&rel=0`;
  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; iframe.allowFullscreen = true; iframe.referrerPolicy = 'strict-origin-when-cross-origin';

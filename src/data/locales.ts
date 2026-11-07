@@ -1,3 +1,4 @@
+import { textOverride } from '../lib/cms';
 import localized from './localized.json';
 import type { Locale } from './translations';
 export const locales = [
@@ -10,6 +11,8 @@ export const locales = [
 ] as const;
 export function localizer(lang: Locale) {
  return (spanish: string, english: string = spanish): string => {
+  const override = textOverride(`copy:${english}`, lang);
+  if (override !== undefined) return override;
   if (lang === 'es') return spanish;
   if (lang === 'en') return english;
   const copy: Record<string,string> = localized[lang];

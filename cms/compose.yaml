@@ -1,0 +1,58 @@
+# Future VPS deployment. Restore the database and uploads before switching any URL.
+name: nathalie-cms
+services:
+  database:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nathalie
+      POSTGRES_USER: nathalie
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U nathalie -d nathalie']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  directus:
+    image: directus/directus:12.6.1
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8055:8055'
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      PORT: '8055'
+      PUBLIC_URL: ${PUBLIC_URL:?Set the HTTPS CMS URL}
+      SECRET: ${SECRET:?Preserve the Directus secret}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Set ADMIN_EMAIL for an empty database}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD for an empty database}
+      DB_CLIENT: pg
+      DB_HOST: database
+      DB_PORT: '5432'
+      DB_DATABASE: nathalie
+      DB_USER: nathalie
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      STORAGE_LOCATIONS: local
+      STORAGE_LOCAL_DRIVER: local
+      STORAGE_LOCAL_ROOT: /directus/uploads
+      FILES_MAX_UPLOAD_SIZE: 250mb
+      FILES_MAX_UPLOAD_CONCURRENCY: '2'
+      ASSETS_TRANSFORM_MAX_CONCURRENT: '2'
+      TUS_ENABLED: 'true'
+      WEBSOCKETS_ENABLED: 'true'
+      DB_POOL__MIN: '0'
+      DB_POOL__MAX: '5'
+    volumes:
+      - uploads:/directus/uploads
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8055/server/ping').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+volumes:
+  database:
+  uploads:

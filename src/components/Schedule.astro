@@ -4,7 +4,7 @@ import {schedule} from '../data/schedule';
 import type {Locale} from '../data/translations';
 interface Props {lang:Locale} const {lang}=Astro.props;const l = localizer(lang);const es=lang==='es';
 const today = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const upcoming=schedule.filter(event=>event.date>=today);
+const upcoming=schedule.filter(event=>event.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
 const localize = (text:string) => !es ? l(text) : text
  .replace('Inaugural Concert','Concierto inaugural')
  .replace('National Symphony Orchestra','Orquesta Sinfónica Nacional')

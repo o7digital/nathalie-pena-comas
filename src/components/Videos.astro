@@ -1,6 +1,7 @@
 ---
 import { localizer } from '../data/locales';
-import {Image} from 'astro:assets';
+import Image from './ContentImage.astro';
+import { readContent, contentImage, type ContentImage } from '../lib/cms';
 import {translations,type Locale} from '../data/translations';
 import rusalka from '../assets/official/rusalka.jpg';
 import boheme from '../assets/official/boheme.jpg';
@@ -9,12 +10,19 @@ import carmina from '../assets/official/carmina.jpg';
 import sombras from '../assets/sombras-video.jpg';
 import esclavo from '../assets/esclavo-video.jpg';
 interface Props {lang:Locale}const {lang}=Astro.props;const l = localizer(lang);const t=translations[lang];
-const opera=[
+const localOpera=[
  {id:'pG7lJPLcO-g',title:'Song to the Moon',detail:'Rusalka · A. Dvořák · MuTh, Vienna',image:rusalka},
  {id:'NrGZajhOGAc',title:'O soave fanciulla',detail:'La Bohème · G. Puccini · Ramón Vargas',image:boheme},
  {id:'U1QDrRtdnAI',title:'Addio del passato',detail:'La Traviata · G. Verdi · Santo Domingo',image:traviata},
  {id:'Ept9wg2IlDo',title:'In trutina',detail:'Carmina Burana · C. Orff · Târgu Mureș',image:carmina},
 ];
-const films=[{id:'HbRmwVkSP8Q',title:'Sombras Nada Más',image:sombras},{id:'otT5_7vJYv4',title:'Esclavo y Amo',image:esclavo}];
+const localFilms=[{id:'HbRmwVkSP8Q',title:'Sombras Nada Más',image:sombras},{id:'otT5_7vJYv4',title:'Esclavo y Amo',image:esclavo}];
+const cmsVideos = await readContent('videos');
+const videos = cmsVideos?.map(row => {
+ if (!row.youtube_id || !/^[A-Za-z0-9_-]{11}$/.test(row.youtube_id)) throw new Error('Published videos need an 11-character YouTube ID.');
+ return {id: row.youtube_id, title: row.title, detail: row.detail || '', image: contentImage(row.image), category: row.category};
+});
+const opera: {id: string; title: string; detail: string; image: ContentImage}[] = videos === undefined ? localOpera : videos.filter(row => row.category === 'opera');
+const films: {id: string; title: string; image: ContentImage}[] = videos === undefined ? localFilms : videos.filter(row => row.category === 'film');
 ---
 <section class="films section" id="media"><div class="section-top"><div><div class="kicker">{l("Media / Selección de interpretaciones", "Media / Selected performances")}</div><h2 class="section-title">{l("El arte lírico,", "The operatic art,")}<br/><em>{l("en escena.", "on stage.")}</em></h2></div><a class="text-link" href="#music-films">{l("Videos musicales", "Music films")} ↗</a></div><div class="video-grid classical-grid">{opera.map(v=><article class="video"><div class="video-frame"><Image src={v.image} width={480} alt={v.title} widths={[320,480]} sizes="(max-width:780px) 85vw, 34vw" format="webp" loading="lazy"/><button class="play" data-video={v.id} data-title={v.title} aria-label={t.play+' '+v.title}>▶</button></div><div class="video-meta"><div><h3>{v.title}</h3><span>{v.detail}</span></div><a class="arrow-link" href={'https://www.youtube.com/watch?v='+v.id} aria-label={t.play+' '+v.title} target="_blank" rel="noopener">↗</a></div></article>)}</div><div class="opera-heading section" id="music-films"><span class="kicker">{l("Otro lenguaje, la misma voz / Videos oficiales", "Another language, the same voice / Official music films")}</span></div><div class="video-grid music-film-grid">{films.map(v=><article class="video"><div class="video-frame"><Image src={v.image} width={960} widths={[480,800,1280]} sizes="(max-width:780px) 85vw, 42vw" alt={v.title} format="webp" loading="lazy"/><button class="play" data-video={v.id} data-title={v.title} aria-label={t.play+' '+v.title}>▶</button></div><div class="video-meta"><div><h3>{v.title}</h3><span>{t.officialVideo}</span></div><a class="arrow-link" href={'https://www.youtube.com/watch?v='+v.id} aria-label={t.play+' '+v.title} target="_blank" rel="noopener">↗</a></div></article>)}</div></section>
