@@ -44,3 +44,9 @@ Les secrets `SECRET`, `ADMIN_TOKEN`, `ADMIN_PASSWORD`, `WEBSITE_READ_TOKEN` et `
 4. Tester l'admin, les données, les images et la génération d'une preview avec une URL temporaire. Si une licence Directus a été ajoutée, suivre sa procédure de changement de `PUBLIC_URL`.
 5. Suspendre les éditions et les uploads, refaire l'export et la synchronisation finaux, puis modifier l'URL CMS de la seule preview `dev`. Vérifier la copie finale avant de rouvrir les éditions.
 6. Garder Railway sans nouvelles écritures pendant la validation. Toute connexion au site de production exige une demande explicite distincte.
+
+## Commits vérifiés pour les mises à jour
+
+Le projet Vercel exige des commits vérifiés par GitHub pour les déploiements Git et les Deploy Hooks. Le dernier commit de `dev` doit donc être signé et reconnu par GitHub avant d'utiliser **Actualizar vista previa**. Un déploiement CLI réussi ne vérifie pas cette condition.
+
+Utiliser une clé de signature déjà enregistrée ou la mutation GitHub `createCommitOnBranch`, qui signe les commits côté GitHub. Cette mutation doit cibler exclusivement `dev`, avec `expectedHeadOid` pour empêcher l'écrasement d'une modification concurrente. Conserver l'exigence Vercel de commits vérifiés.
