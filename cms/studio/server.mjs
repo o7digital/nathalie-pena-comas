@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { createReporting, createReportingConnectors, ReportingError, toCsv } from './reporting.mjs';
 import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -42,6 +43,33 @@ export function createStudioServer(options = {}) {
  let delegatedToken = null;
  let contentQueue=Promise.resolve();
  const contentWrite=work=>{const job=contentQueue.then(work);contentQueue=job.catch(()=>undefined);return job;};
+ const reporting = createReporting({
+  connectors: options.reportingConnectors || createReportingConnectors(),
+  read: async(start,end) => {
+   const filter=encodeURIComponent(JSON.stringify({date:{_between:[start,end]}}));
+   const result=await upstream(config.cms,`/items/studio_reporting?limit=10001&sort=date,id&fields=id,date,provider,payload&filter=${filter}`,config.editorToken);
+   if(!Array.isArray(result.data))throw new ReportingError(502,'No se pudo cargar el historial.');
+   if(result.data.length>10000)throw new ReportingError(422,'Reduce el período para ver un informe completo.');
+   return result.data;
+  },
+  write: rows => contentWrite(async()=>{
+   // Stable IDs replace repeated daily metrics; never add a second copy of the same export.
+   for(let index=0;index<rows.length;index+=50) {
+    const batch=rows.slice(index,index+50);
+    const ids=encodeURIComponent(JSON.stringify({id:{_in:batch.map(r=>r.id)}}));
+    const previous=(await upstream(config.cms,`/items/studio_reporting?limit=-1&fields=id&filter=${ids}`,config.editorToken)).data;
+    const existing=new Set(previous.map(r=>r.id));
+    const creates=batch.filter(r=>!existing.has(r.id)),updates=batch.filter(r=>existing.has(r.id));
+    if(creates.length)await upstream(config.cms,'/items/studio_reporting',config.editorToken,'POST',creates);
+    if(updates.length)await upstream(config.cms,'/items/studio_reporting',config.editorToken,'PATCH',updates);
+   }
+  }),
+ });
+ async function reportingOwner(s) {
+  if(s.mode!=='cms')return false;
+  const profile=await upstream(config.cms,'/users/me?fields=id,email',s.access);
+  return Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase());
+ }
  const armReady = () => Boolean(config.tenant && config.editorToken);
  const canDelegate = email => armReady() && Boolean(config.adminEmail && config.serviceEmail && config.servicePassword) && email?.toLowerCase() === config.adminEmail.toLowerCase();
 
@@ -195,9 +223,31 @@ export function createStudioServer(options = {}) {
    const s=await authenticated(req,res);
    if(path==='/api/session' && req.method==='GET') {
     const profile=s.mode!=='arm'?await upstream(config.cms,'/users/me?fields=id,email',s.access):null;
-    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady()});
+    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady(),reportingOwner:Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase())});
    }
    if(path==='/api/site-map' && req.method==='GET')return send(res,siteMap);
+   if(path==='/api/subscription' && req.method==='GET') {
+    const token=await crmTokenFor(s);
+    return send(res,await upstream(config.crm,'/tenant/reporting-plan',token));
+   }
+   if(path.startsWith('/api/reporting')) {
+    if(!config.editorToken)throw new ApiError(503,'El reporting todavía no está configurado.');
+    await requireWrite(s.access,'studio_reporting','read');
+    if(path==='/api/reporting/import' && req.method==='POST') {
+     if(!await reportingOwner(s))throw new ApiError(403,'Solo la administración O7 puede importar informes.');
+     return send(res,await reporting.import(await jsonBody(req)));
+    }
+    if((path==='/api/reporting'||path==='/api/reporting/export') && req.method==='GET') {
+     const report=await reporting.report(url.searchParams.get('start'),url.searchParams.get('end'));
+     if(path.endsWith('/export')) {
+      res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="nathalie-reporting-${report.start}-${report.end}.csv"`,'Cache-Control':'no-store'});
+      return res.end(toCsv(report.rows));
+     }
+     return send(res,report);
+    }
+    throw new ApiError(404,'Recurso de reporting no disponible.');
+   }
+
    const section=path.match(/^\/api\/sections\/([a-z]+)$/);
    if(section && req.method==='POST')return contentWrite(async()=>{
     const definition=siteMap.sections.find(row=>row.id===section[1]);
@@ -332,7 +382,7 @@ export function createStudioServer(options = {}) {
    throw new ApiError(404,'Página no encontrada.');
   }
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const relative=staticFiles[path] || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
@@ -343,11 +393,11 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
-  const status=error instanceof ApiError?error.status:500;
+  const status=error instanceof ApiError || error instanceof ReportingError?error.status:500;
   send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message},status);
  }));
 }

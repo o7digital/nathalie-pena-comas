@@ -7,7 +7,7 @@ import siteMap from './site-map.json' with {type:'json'};
 import {targetLocales,sourceHash} from './translations.mjs';
 
 async function setup(t, overrides = {}) {
- const calls=[];const texts=structuredClone(overrides.texts||[]);const translationCalls=[];
+ const reportingRows=[];const calls=[];const texts=structuredClone(overrides.texts||[]);const translationCalls=[];
  const upstream=http.createServer(async(req,res)=>{
   const chunks=[];for await(const part of req)chunks.push(part);
   const body=Buffer.concat(chunks).toString();
@@ -15,12 +15,17 @@ async function setup(t, overrides = {}) {
   res.setHeader('Content-Type','application/json');
   if(req.url==='/auth/login')return res.end(JSON.stringify({data:{access_token:'private-access',refresh_token:'private-refresh',expires:900000}}));
   if(req.url.startsWith('/users/me'))return res.end(JSON.stringify({data:{id:'owner',email:overrides.cmsEmail || 'owner@example.test',first_name:'Owner'}}));
-  if(req.url==='/permissions/me')return res.end(JSON.stringify({data:Object.fromEntries(['gallery','albums','videos','concerts','site_images','site_texts'].map(collection=>[collection,{read:{access:'full',fields:['*']},create:{access:overrides.readOnly?'none':'full',fields:['*']},update:{access:overrides.readOnly?'none':'full',fields:['*']}}]))}));
+  if(req.url==='/permissions/me')return res.end(JSON.stringify({data:Object.fromEntries(['gallery','albums','videos','concerts','site_images','site_texts','studio_reporting'].map(collection=>[collection,{read:{access:overrides.reportingReadDenied&&collection==='studio_reporting'?'none':'full',fields:['*']},create:{access:overrides.readOnly?'none':'full',fields:['*']},update:{access:overrides.readOnly?'none':'full',fields:['*']}}]))}));
   if(req.url==='/api/auth/login')return res.end(JSON.stringify({token:'private-crm-token',user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test',name:'Artist'}}));
   if(req.url==='/api/auth/me')return res.end(JSON.stringify({user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test'}}));
   if(req.url==='/api/pipelines')return res.end(JSON.stringify([{id:'pipeline-1',name:'Artistic proposals'}]));
   if(req.url==='/api/pipelines/pipeline-1')return res.end(JSON.stringify({id:'pipeline-1',name:'Artistic proposals',stages:[{id:'stage-1',name:'New proposal',position:0}]}));
   if(req.url==='/api/clients')return res.end(JSON.stringify(req.method==='POST'?{id:'contact-1',...JSON.parse(body)}:[]));
+  if(req.url.startsWith('/items/studio_reporting')){
+   if(req.method==='GET')return res.end(JSON.stringify({data:reportingRows}));
+   for(const row of JSON.parse(body)){const previous=reportingRows.find(r=>r.id===row.id);if(previous)Object.assign(previous,row);else reportingRows.push(row);}return res.end(JSON.stringify({data:JSON.parse(body)}));
+  }
+  if(req.url==='/api/tenant/reporting-plan')return res.end(JSON.stringify({amountMinor:1250,currency:'USD',automaticBilling:false}));
   if(req.url.startsWith('/items/site_texts')){
    if(req.method==='GET')return res.end(JSON.stringify({data:req.url.includes('/site_texts/')?texts.find(row=>row.id===req.url.split('/').at(-1).split('?')[0]):texts}));
    const rows=JSON.parse(body);for(const row of Array.isArray(rows)?rows:[rows]){const current=texts.find(value=>value.id===row.id);if(current)Object.assign(current,row);else texts.push(row);}return res.end(JSON.stringify({data:rows}));
@@ -207,4 +212,35 @@ test('a failure in the final translation batch never persists earlier batches or
  const section=siteMap.sections.find(section=>section.id==='settings');
  const response=await request('/api/sections/settings',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({force:true,texts:section.fields.map(field=>({key:field.key,value:field.source}))})});
  assert.equal(response.status,503);assert.equal(calls,2);assert.equal(texts.length,0);
+});
+
+
+test('reporting imports require the designated verified administrator and reads require explicit permission',async t=>{
+ const {request,login,origin,calls}=await setup(t,{editorToken:'editor-token',adminEmail:'owner@example.test',cmsEmail:'editor@example.test'});
+ assert.equal((await request('/api/reporting?start=2026-11-01&end=2026-11-02')).status,401);
+ const {cookie}=await login();
+ const response=await request('/api/reporting/import',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({provider:'instagram',csv:'invalid',source:'Export'})});
+ assert.equal(response.status,403);assert(!calls.some(c=>c.path==='/items/studio_reporting'&&c.method==='POST'));
+ const denied=await setup(t,{editorToken:'editor-token',reportingReadDenied:true});const noRead=await denied.login();
+ assert.equal((await denied.request('/api/reporting?start=2026-11-01&end=2026-11-02',{headers:{Cookie:noRead.cookie}})).status,403);
+});
+
+test('owner reporting imports persist and repeated imports update stable IDs; exports remain private',async t=>{
+ const {request,login,origin,calls}=await setup(t,{editorToken:'editor-token',adminEmail:'owner@example.test'});const {cookie}=await login();
+ const headers={Cookie:cookie,Origin:origin,'Content-Type':'application/json'};
+ const input={provider:'apple-music',source:'Distributor',csv:'date,channel,metric,value,currency\n2026-11-01,Apple Music,royalties,20,EUR'};
+ for(const amount of [20,30])assert.equal((await request('/api/reporting/import',{method:'POST',headers,body:JSON.stringify({...input,csv:input.csv.replace(',20,',','+amount+',')})})).status,200);
+ const report=await (await request('/api/reporting?start=2026-11-01&end=2026-11-02',{headers})).json();
+ assert.equal(report.rows.length,1);assert.equal(report.rows[0].value,30);assert.equal(report.rows[0].currency,'EUR');
+ assert.equal(calls.filter(c=>c.path==='/items/studio_reporting'&&c.method==='POST').length,1);
+ assert.equal(calls.filter(c=>c.path==='/items/studio_reporting'&&c.method==='PATCH').length,1);
+ const csv=await request('/api/reporting/export?start=2026-11-01&end=2026-11-02',{headers});assert.match(csv.headers.get('content-type'),/text\/csv/);assert.match(await csv.text(),/EUR/);
+ assert.equal((await request('/api/reporting/import',{method:'POST',headers:{...headers,Origin:'https://malicious.test'},body:JSON.stringify(input)})).status,403);
+ assert.equal((await request('/api/reporting?start=bad&end=2026-11-02',{headers})).status,400);
+});
+
+test('the subscription view uses the bound CRM tenant and never accepts billing mutations',async t=>{
+ const {request,login,origin}=await setup(t,{tenant:'tenant-nathalie',editorToken:'editor-token',adminEmail:'owner@example.test',serviceEmail:'technical@example.test',servicePassword:'server-secret'});const {cookie}=await login();const headers={Cookie:cookie,Origin:origin};
+ const result=await request('/api/subscription',{headers});assert.equal(result.status,200);assert.deepEqual(await result.json(),{amountMinor:1250,currency:'USD',automaticBilling:false});
+ assert.equal((await request('/api/subscription',{method:'PATCH',headers,body:'{}'})).status,404);
 });

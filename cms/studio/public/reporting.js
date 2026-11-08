@@ -1,0 +1,89 @@
+const names={ga4:'Google Analytics 4',instagram:'Instagram',facebook:'Facebook',youtube:'YouTube',tiktok:'TikTok',linkedin:'LinkedIn',x:'X', 'apple-music':'Apple Music',shopify:'Shopify'};
+const social=['instagram','facebook','youtube','tiktok','linkedin','x'];
+const labels={sessions:'Visitas al sitio',page_views:'Páginas vistas',social_sessions:'Visitas desde redes',reach:'Alcance',impressions:'Impresiones',profile_visits:'Visitas al perfil',link_clicks:'Clics en enlaces',engagements:'Interacciones',video_views:'Visualizaciones',new_followers:'Nuevos seguidores',streams:'Escuchas',downloads:'Descargas',royalties:'Royalties declaradas',orders:'Pedidos',net_payments:'Cobros netos de pedidos'};
+const e=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const n=value=>new Intl.NumberFormat('es',{maximumFractionDigits:2}).format(value);
+const money=(value,currency)=>new Intl.NumberFormat('es',{style:'currency',currency}).format(value);
+const sum=(rows,metric)=>rows.filter(r=>r.metric===metric).reduce((a,r)=>a+Number(r.value),0);
+const date=value=>new Intl.DateTimeFormat('es',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(value));
+const head=(title,copy)=>`<header class="page-head reporting-head"><div><span class="eyebrow">O7 PULSE · ARTIST INTELLIGENCE</span><h1>${e(title)}</h1><p>${e(copy)}</p></div><span class="reporting-orbit" aria-hidden="true">↗</span></header>`;
+const empty=copy=>`<div class="report-empty"><span aria-hidden="true">↗</span><p>${e(copy)}</p></div>`;
+function totals(rows,metric){const totals=new Map();for(const r of rows.filter(r=>r.metric===metric))totals.set(r.currency,(totals.get(r.currency)||0)+Number(r.value));return [...totals].map(([currency,value])=>money(value,currency)).join(' · ')||'—';}
+function daily(rows,metric,start,end,complete=true) {
+ const days=[];for(let t=Date.parse(start);t<=Date.parse(end);t+=86400000)days.push(new Date(t).toISOString().slice(0,10));
+ const values=new Map();for(const r of rows.filter(r=>r.metric===metric))values.set(r.date,(values.get(r.date)||0)+Number(r.value));
+ return days.map(day=>({date:day,value:values.has(day)?values.get(day):(complete?0:null)}));
+}
+function chart(series,second=[]) {
+ const values=[...series,...second].map(r=>r.value).filter(v=>v!==null),max=Math.max(1,...values),width=760,height=190;
+ const lines=(rows,secondary=false)=>{
+  const segments=[];let segment=[];
+  rows.forEach((r,i)=>{if(r.value===null){if(segment.length)segments.push(segment);segment=[];}else segment.push([20+i*(width-40)/Math.max(1,rows.length-1),height-20-r.value/max*(height-45)]);});
+  if(segment.length)segments.push(segment);
+  return segments.map(points=>points.length===1?`<circle cx="${points[0][0]}" cy="${points[0][1]}" r="4" class="chart-point"/>`:`<polyline points="${points.map(p=>p.join(',')).join(' ')}" class="chart-line ${secondary?'chart-secondary':''}"/>`).join('');
+ };
+ return `<svg class="report-chart" viewBox="0 0 ${width} ${height+20}" role="img" aria-label="Evolución diaria; valores en la tabla desplegable"><path d="M20 25H740M20 97H740M20 170H740" class="chart-grid"/>${lines(series)}${lines(second,true)}<text x="20" y="205">${e(series[0]?.date)}</text><text x="740" y="205" text-anchor="end">${e(series.at(-1)?.date)}</text><text x="20" y="16">${n(max)}</text></svg>`;
+}
+function dataTable(rows) {
+ return `<details class="report-data"><summary>Ver datos y procedencia · ${rows.length} filas (vista: primeras 300; CSV completo)</summary><div class="report-table-scroll"><table class="content-table"><thead><tr><th>Fecha</th><th>Fuente / canal</th><th>Métrica</th><th>Valor</th><th>Procedencia</th></tr></thead><tbody>${rows.slice(0,300).map(r=>`<tr><td>${e(r.date)}</td><td><strong>${e(names[r.provider])}</strong>${e(r.channel)}</td><td>${e(labels[r.metric]||r.metric)}</td><td>${e(r.currency?money(r.value,r.currency):n(r.value))}</td><td>${e(r.source)}<small>${r.method==='api'?'API · lectura':'Informe importado'} · ${e(r.updatedAt?.slice(0,10))}</small></td></tr>`).join('')}</tbody></table></div></details>`;
+}
+
+export function createReportingUI({api,session,config,isCurrent,toast}) {
+ let report=null,loading=false,error='',socialMetric='profile_visits',generation=0;
+ const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+ let start=new Date(Date.parse(yesterday)-27*86400000).toISOString().slice(0,10),end=yesterday;
+ const main=()=>document.querySelector('#main');
+ function render() {
+  if(!isCurrent('analytics'))return;
+  const rows=report?.rows||[],ga=rows.filter(r=>r.provider==='ga4'),shop=rows.filter(r=>r.provider==='shopify'),apple=rows.filter(r=>r.provider==='apple-music'),native=rows.filter(r=>social.includes(r.provider));
+  const gaReady=report?.sources.some(s=>s.provider==='ga4'&&s.status==='connected');
+  main().innerHTML=head('Analytics & Reporting','Tu audiencia, tu presencia social y tu música. Una visión clara de lo que está creciendo.')+
+   `<form id="report-range" class="panel report-toolbar"><label>Desde<input name="start" type="date" value="${start}" required></label><label>Hasta<input name="end" type="date" value="${end}" required></label><button class="button primary" ${loading?'disabled':''}>${loading?'Consultando…':'Ver informe ↗'}</button>${report&&!loading?`<a class="button quiet" href="/api/reporting/export?start=${start}&end=${end}" download>Exportar CSV ↓</a>`:''}<a class="text-link" href="#subscription">Mi suscripción ↗</a></form>`+
+   (error?`<p class="report-error" role="alert">${e(error)}</p>`:'')+
+   `<div class="report-kpis">${[['01','Visitas al sitio',gaReady?n(sum(ga,'sessions')):'—','Sesiones · Google Analytics 4'],['02','Páginas vistas',gaReady?n(sum(ga,'page_views')):'—','Páginas consultadas en el sitio'],['03','Visitas desde redes',gaReady?n(sum(ga,'social_sessions')):'—','Tráfico social hacia tu sitio'],['04','Royalties Apple Music',totals(apple,'royalties'),'Importes declarados por tu distribuidor']].map(([index,title,value,note])=>`<article class="panel report-kpi"><span class="eyebrow">${index} / ${title}</span><strong>${e(value)}</strong><p>${e(note)}</p></article>`).join('')}</div>`+
+   `<div class="report-columns"><section class="panel report-panel"><div class="panel-heading"><h2>Tu sitio, día a día</h2><span class="badge accent">GA4</span></div><p class="report-legend"><span>● Visitas</span><span>● Desde redes sociales</span></p>${gaReady?chart(daily(ga,'sessions',start,end),daily(ga,'social_sessions',start,end)):empty(loading?'Estamos consultando tus fuentes.':'Conecta Google Analytics 4 para ver la evolución de las visitas.')}<p class="report-footnote">Datos de la propiedad GA4 y su zona horaria. Las visitas del día pueden tardar en consolidarse.</p></section>
+   <section class="panel report-panel"><div class="panel-heading"><h2>De las redes a tu sitio</h2><span class="badge accent">ADQUISICIÓN</span></div>${referrals(ga,gaReady)}<p class="report-footnote">Sesiones atribuidas a Organic Social y Paid Social por GA4. Son visitas al sitio, no visitas a tus perfiles.</p></section></div>`+
+   `<section class="panel report-panel"><div class="panel-heading"><div><span class="eyebrow">PRESENCIA SOCIAL</span><h2>Dentro de tus redes</h2></div><label>Métrica<select id="report-social-metric">${['profile_visits','reach','impressions','link_clicks','engagements','video_views','new_followers'].map(m=>`<option value="${m}" ${m===socialMetric?'selected':''}>${labels[m]}</option>`).join('')}</select></label></div>${native.some(r=>r.metric===socialMetric)?chart(daily(native,socialMetric,start,end,false))+`<div class="report-network-totals">${social.filter(p=>native.some(r=>r.provider===p&&r.metric===socialMetric)).map(p=>`<span><strong>${e(names[p])}</strong> ${n(sum(native.filter(r=>r.provider===p),socialMetric))}</span>`).join('')}</div>`:empty('Importa los informes de tus redes para comparar su evolución. Cada plataforma conserva sus propias definiciones.')}<p class="report-footnote">Datos declarados por las plataformas; los días sin informe se dejan vacíos. El alcance entre redes no equivale a personas únicas; las cifras pueden solaparse. Buffer se gestiona desde O7 Pulse.</p></section>`+
+   `<div class="report-columns"><section class="panel report-panel commerce-card"><span class="eyebrow">MÚSICA / APPLE MUSIC</span><h2>Escuchas y royalties</h2><strong class="report-money">${e(totals(apple,'royalties'))}</strong><div class="report-mini"><span>Escuchas<strong>${apple.some(r=>r.metric==='streams')?n(sum(apple,'streams')):'—'}</strong></span><span>Descargas<strong>${apple.some(r=>r.metric==='downloads')?n(sum(apple,'downloads')):'—'}</strong></span></div><p>Las escuchas vienen de Apple Music for Artists. Los ingresos se importan del distribuidor y pueden llegar con retraso. Las monedas se presentan por separado.</p></section>
+   <section class="panel report-panel commerce-card shopify-card"><span class="eyebrow">TIENDA / SHOPIFY</span><h2>Ventas y cobros</h2><strong class="report-money">${e(totals(shop,'net_payments'))}</strong><div class="report-mini"><span>Pedidos<strong>${report?.sources.some(s=>s.provider==='shopify'&&s.status==='connected')?n(sum(shop,'orders')):'—'}</strong></span><span>Conexión<strong>${report?.sources.some(s=>s.provider==='shopify'&&s.status==='connected')?'Activa':'Pendiente'}</strong></span></div><p>Cobros recibidos menos reembolsos de los pedidos creados en el período (UTC), a fecha de consulta. Excluye pedidos de prueba; no es un cierre contable de caja del mes.</p></section></div>`+
+   `<section class="panel report-panel"><div class="panel-heading"><h2>Mis conexiones</h2><a class="text-link" href="https://crm.o7digitalgroup.com/admin/mail" target="_blank" rel="noopener">Redes y mailing en O7 Pulse ↗</a><span class="badge accent">${loading?'CONSULTANDO':'FUENTES VERIFICABLES'}</span></div><div class="report-connections">${Object.entries(names).map(([key,title])=>{const source=report?.sources.find(s=>s.provider===key),status=source?.status;return `<article><span class="connection-dot ${status==='connected'||status==='imported'?'connected':''}"></span><h3>${e(title)}</h3><strong>${({connected:'Conectado · API',imported:'Informe importado',error:'Revisar conexión'})[status]||'Pendiente de conectar'}</strong><p>${source?.error?e(source.error):['ga4','shopify'].includes(key)?'Conector en lectura preparado. O7 configura el acceso seguro.':'Importación de informes disponible. Conexión directa por autorizar.'}</p>${source?.updatedAt?`<small>Consulta / importación: ${e(date(source.updatedAt))}</small>`:''}</article>`;}).join('')}</div></section>`+
+   (session().reportingOwner?importForm():'')+
+   (rows.length?`<section class="panel report-panel"><h2>El detalle de tu informe</h2>${dataTable(rows)}</section>`:'')+
+   `<p class="report-footnote">${report?`Informe consultado el ${e(date(report.generatedAt))}. `:''}Una fuente pendiente no significa cero actividad. Las cifras de distintas monedas nunca se suman entre sí.</p>`;
+  main().querySelector('#report-range').addEventListener('submit',event=>{event.preventDefault();const data=new FormData(event.target);start=data.get('start');end=data.get('end');report=null;load();});
+  main().querySelector('#report-social-metric').addEventListener('change',event=>{socialMetric=event.target.value;render();});
+  main().querySelector('#report-import')?.addEventListener('submit',upload);
+  main().querySelector('#report-template')?.addEventListener('click',()=>{
+   const url=URL.createObjectURL(new Blob(['date,channel,metric,value,currency\r\n'],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download='o7-reporting-template.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+ }
+ function referrals(rows,ready) {
+  const sources=new Map();for(const r of rows.filter(r=>r.metric==='social_sessions'))sources.set(r.channel,(sources.get(r.channel)||0)+r.value);
+  const items=[...sources].sort((a,b)=>b[1]-a[1]);const max=Math.max(1,...items.map(r=>r[1]));
+  return items.length?`<div class="report-bars">${items.slice(0,12).map(([name,value])=>`<div><span>${e(name)}<strong>${n(value)}</strong></span><progress max="${max}" value="${value}" aria-label="${e(name)}"></progress></div>`).join('')}</div>`:empty(ready?'Aún no hay visitas atribuidas a redes en este período.':'La atribución aparecerá al conectar GA4.');
+ }
+ function importForm() {return `<details class="panel report-panel report-import"><summary>Administración O7 · Importar un informe</summary><p>Utiliza un informe diario. Una fila por fecha, canal y métrica. Volver a importar la misma fila actualiza su valor; no lo duplica.</p><button class="button quiet" id="report-template" type="button">Descargar plantilla CSV ↓</button><form id="report-import"><label>Fuente<select name="provider">${[...social,'apple-music'].map(p=>`<option value="${p}">${e(names[p])}</option>`).join('')}</select></label><label>Nombre del informe<input name="source" maxlength="120" required placeholder="Informe del distribuidor · noviembre"></label><label>Archivo CSV<input name="file" type="file" accept=".csv,text/csv" required></label><button class="button primary" type="submit">Importar informe ↗</button><p id="report-import-status" role="status"></p></form><p class="report-footnote">Métricas sociales: profile_visits, reach, impressions, link_clicks, engagements, video_views, new_followers. Apple Music: streams, downloads, royalties. Para royalties, indica la moneda ISO; deja currency vacía en el resto. Los informes de otra periodicidad deben convertirse a diario antes de importarlos.</p></details>`;}
+ async function upload(event) {
+  event.preventDefault();const form=event.target,data=new FormData(form),button=form.querySelector('button'),status=form.querySelector('[role=status]');button.disabled=true;
+  try {
+   const file=data.get('file');if(file.size>240000)throw new Error('El CSV supera 240 KB.');
+   const result=await api('/api/reporting/import',{method:'POST',body:{provider:data.get('provider'),source:data.get('source'),csv:await file.text()}});
+   toast(`${result.rows} filas importadas. Informe actualizado.`);await load();
+  }catch(failure){status.textContent=failure.message;button.disabled=false;}
+ }
+ async function load() {
+  const current=++generation;loading=true;error='';render();
+  try{const result=await api(`/api/reporting?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);if(current===generation)report=result;}
+  catch(failure){if(current===generation)error=failure.message;}
+  finally{if(current===generation){loading=false;render();}}
+ }
+ async function subscription() {
+  main().innerHTML=head('Mi suscripción','Tus servicios O7, sus condiciones y el acompañamiento de tu equipo.')+'<section class="panel report-panel"><p>Consultando suscripción…</p></section>';
+  let plan,failed='';try{plan=await api('/api/subscription');}catch(failure){failed=failure.message;}
+  if(!isCurrent('subscription'))return;
+  const includedUntil=plan?.includedUntil||config().includedUntil;
+  main().innerHTML=head('Mi suscripción','Tus servicios O7, sus condiciones y el acompañamiento de tu equipo.')+
+   `<div class="report-columns"><section class="panel report-panel plan-card"><span class="eyebrow">TU SITIO / HOSTING</span><h2>12 meses incluidos</h2><strong class="report-money">Incluido</strong><p>${includedUntil?`Hosting incluido hasta el ${e(date(includedUntil))}.`:'El período incluido se confirma con O7.'} Renovación por definir con tu equipo O7.</p></section><section class="panel report-panel plan-card reporting-plan"><span class="eyebrow">O7 PULSE / MENSUAL</span><h2>Analytics & Reporting</h2><strong class="report-money">${plan?.amountMinor==null?'Por definir':e(money(plan.amountMinor/100,plan.currency))+' <small>/ mes</small>'}</strong><p>Audiencia del sitio, reporting social, seguimiento Apple Music y Shopify, e integraciones de tus cuentas.</p><span class="badge accent">PROPUESTA · PENDIENTE DE ACTIVACIÓN</span><p>El importe mensual lo configura O7 en la gestión de suscripciones. La propuesta no activa cobros automáticos ni modifica el hosting incluido.</p>${failed?`<p class="report-error" role="alert">No se pudo confirmar el importe: ${e(failed)}</p>`:''}${session().reportingOwner?'<a class="button quiet" href="https://crm.o7digitalgroup.com/admin/subscriptions" target="_blank" rel="noopener">Administrar suscripciones en O7 ↗</a>':''}</section></div><section class="panel report-panel"><h2>Las conexiones, siempre bajo tu control</h2><p>Tu equipo autoriza cada cuenta y puede revocar el acceso desde la plataforma correspondiente. El reporting consulta datos; las publicaciones y los envíos se gestionan en O7 Pulse.</p><a class="text-link" href="#analytics">Ver Analytics & Reporting ↗</a></section>`;
+ }
+ return {show(){load();},subscription,reset(){generation++;report=null;error='';}};
+}

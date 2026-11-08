@@ -1,3 +1,4 @@
+import {createReportingUI} from './reporting.js';
 export {};
 const $=s=>document.querySelector(s);
 const icons={home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-8h6v8"/>',photo:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3Z"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2"/>',album:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 6a6 6 0 0 1 6 6"/>',text:'<path d="M4 5h16M12 5v15M8 20h8M5 12h4m6 0h4"/>',layout:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m2-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 4v2"/>',search:'<circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/>',upload:'<path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/>',pin:'<path d="M19 10c0 6-7 11-7 11S5 16 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2"/>',check:'<path d="m5 12 4 4L19 6"/>',briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 13h18m-11 0v3h4v-3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>'};
@@ -11,7 +12,7 @@ const collectionFor={gallery:'gallery',videos:'videos',concerts:'concerts',album
 const labels={gallery:'Fotografías',videos:'Vídeos',concerts:'Actuaciones',albums:'Discografía',site_texts:'Textos e idiomas',site_images:'Mi sitio'};
 const state={data:null,session:null,config:{},filter:'all',search:'',locale:'es',editor:null,editorImage:'',arm:null,armTab:'clients',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return key==='arm'||key==='overview'||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
+const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
 const imageId=row=>typeof row?.image==='string'?row.image:row?.image?.id;
 const image=(row,width=640)=>imageId(row)?`/api/image/${encodeURIComponent(imageId(row))}?w=${width}`:'/artist.webp';
 const badge=status=>`<span class="badge ${escapeHtml(status)}">${({published:'Publicado',draft:'Borrador',archived:'Archivado'})[status]||'Borrador'}</span>`;
@@ -23,7 +24,7 @@ async function api(path,options={}){
  const data=await response.json().catch(()=>({}));
  if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;throw error;}return data;
 }
-function showLogin(error=''){state.session=null;state.data=null;state.arm=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
+function showLogin(error=''){reportingUI.reset();state.session=null;state.data=null;state.arm=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
 async function reload(){const result=await api('/api/content');state.data=result.content;renderNavigation();render();}
 function renderNavigation(){
  $('#navigation').innerHTML=nav.map(([key,title,glyph])=>`<a class="nav-item ${route()===key?'active':''} ${key==='arm'?'arm':''}" href="#${key}" ${route()===key?'aria-current="page"':''}>${icon(glyph)}<span>${title}</span>${['gallery','videos','albums'].includes(key)?`<small class="nav-count">${state.data?.[collectionFor[key]]?.filter(r=>r.status!=='archived').length??''}</small>`:''}</a>`).join('');
@@ -40,6 +41,8 @@ function render(){
  closeNav();
  if(current==='overview')return dashboard();
  if(current==='arm')return renderArm();
+ if(current==='analytics')return reportingUI.show();
+ if(current==='subscription')return reportingUI.subscription();
  const definition=state.site.sections.find(section=>section.id===current);
  if(!definition)return dashboard();
  if(!definition.collection)return renderSiteSection(definition);
@@ -264,10 +267,11 @@ async function startSession(){
  state.session=await api('/api/session');$('#login-view').hidden=true;$('#studio-view').hidden=false;
  $('#account-name').textContent=state.session.name||state.session.email?.split('@')[0]||'Mi cuenta';
  $('#today').textContent=new Intl.DateTimeFormat('es',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Mexico_City'}).format(new Date());
- state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['arm','Relaciones · ARM','people']];
+ state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['arm','Relaciones · ARM','people'],['analytics','Analytics & Reporting','layout'],['subscription','Mi suscripción','briefcase']];
  $('#sidebar-preview').href=state.config.preview;
  if(state.config.includedUntil){const date=new Date(state.config.includedUntil);if(Number.isFinite(date.getTime()))$('#workspace-plan').textContent='Hosting incluido hasta el '+new Intl.DateTimeFormat('es',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Mexico_City'}).format(date)+' · Renovación por configurar';}
  await reload();
 }
 async function init(){try{state.config=await api('/api/config');$('#login-mode-label').hidden=!state.config.armReady;await startSession();}catch(error){showLogin(error.status===401?'':error.message);}}
+const reportingUI=createReportingUI({api,session:()=>state.session||{},config:()=>state.config,isCurrent:key=>Boolean(state.session)&&route()===key,toast});
 init();
