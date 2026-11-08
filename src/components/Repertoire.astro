@@ -11,7 +11,7 @@ interface Props { lang: Locale }
 const { lang } = Astro.props;
 const l = localizer(lang);
 const classical = albums.filter(album => album.category === 'classical');
-const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({id:'recording-'+i,title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
+const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({id:'recording-'+i,title:l(recording.name), url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
 const localPerformances = [
  { title:'Song to the Moon', detail:'Rusalka · A. Dvořák', id:'pG7lJPLcO-g' },
  { title:'O soave fanciulla', detail:'La Bohème · G. Puccini', id:'NrGZajhOGAc' },

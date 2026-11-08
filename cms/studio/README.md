@@ -6,9 +6,13 @@ Interface éditoriale dédiée, hébergée dans le service Railway `studio`, env
 
 Utiliser les identifiants Directus existants pour le mode « Studio ». L'administrateur provisoire accède aussi à l'ARM depuis cette session.
 
-Le menu suit le site : **Inicio, La artista, Trayectoria, Discografía, Agenda, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont repliés sous « Textos de… ».
+Le menu suit le site : **Inicio, La artista, Trayectoria, Discografía, Agenda, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages d’Olivia. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
 
-L'**espagnol est la source éditoriale**. Modifier les textes puis choisir « Guardar y traducir » : le serveur prépare et valide les versions anglaise, allemande, française, italienne, suédoise, hongroise, croate, russe, chinoise traditionnelle (Taïwan) et japonaise, puis les enregistre dans Directus. « Ver las traducciones » permet une relecture sans changer la langue d'édition ; « Volver a traducir esta sección » régénère les versions depuis l'espagnol enregistré, notamment après une interruption ou une correction technique. Les formulaires médias appliquent le même processus à leurs textes ; les titres d'œuvres et noms propres sont conservés par les consignes de traduction.
+Le catalogue couvre les **190 textes fixes** actuellement utilisés dans le site et ses contrôles, en complément des textes des collections médias. Les textes existants sont préremplis. Le vert, le fond léger et le libellé « Editable » identifient les champs modifiables ; les traductions en relecture restent de couleur neutre.
+
+Chaque rubrique et le tableau de bord affichent onze liens vers les pages du site : espagnol et dix traductions. Les liens de rubrique conservent la bonne ancre ; ceux de confidentialité ouvrent `/<lang>/privacy/`. La relecture propose aussi « Ver página » pour la langue sélectionnée. Ces liens visent exclusivement la prévisualisation configurée du site.
+
+L'**espagnol est la source éditoriale**. Modifier les textes puis choisir « Guardar y traducir » : le serveur prépare et valide les versions anglaise, allemande, française, italienne, suédoise, hongroise, croate, russe, chinoise traditionnelle (Taïwan) et japonaise, puis les enregistre dans Directus. « Ver las traducciones » permet une relecture sans changer la langue d'édition ; Le bouton visible « Traducir a 10 idiomas » enregistre l’espagnol actuellement saisi, y compris les changements encore non enregistrés, puis régénère les dix traductions de la rubrique. Une traduction complète est préparée en plusieurs groupes si nécessaire ; aucune nouvelle source n’est écrite si un groupe échoue. Les formulaires médias appliquent le même processus à leurs textes ; les titres d'œuvres et noms propres sont conservés par les consignes de traduction.
 
 Les nouvelles fiches médias sont des brouillons par défaut. L'archivage remplace la suppression définitive. Les textes saisis restent dans le formulaire si le service de traduction échoue. Les brouillons de saisie sont conservés en mémoire pendant la navigation entre rubriques, jusqu'à l'enregistrement ou à la déconnexion ; quitter la page avec des modifications non enregistrées déclenche le rappel du navigateur.
 
@@ -20,7 +24,7 @@ Après les modifications, choisir « Actualizar vista previa » : le hook lance 
 
 `OPENAI_API_KEY` et `TRANSLATION_MODEL` sont uniquement sur le service Railway `studio`. Le modèle configuré est `gpt-5.4-mini`. Le service utilise l'API Responses et un schéma JSON strict, conformément à la [documentation officielle OpenAI](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses), puis valide les dix langues et restaure localement les balises, liens et adresses protégés. Les données envoyées sont les textes du site à traduire, sans données ARM ni secrets d'accès. `store: false` est demandé à l'API.
 
-Les traductions sont calculées **à l'enregistrement**, jamais lors d'une visite du site. Elles sont conservées dans `site_texts`, avec `source_hash`, `auto_translated` et `translated_at`. Les textes des collections utilisent des clés `content:<collection>:<id>:<champ>` ; les textes fixes gardent leurs clés existantes. Les anciennes traductions restent disponibles et sont remplacées lorsqu'on modifie leur original espagnol dans le Studio.
+Les traductions sont calculées **à l'enregistrement**, jamais lors d'une visite du site. Elles sont conservées dans `site_texts`, avec `source_hash`, `auto_translated` et `translated_at`. Les textes des collections utilisent des clés `content:<collection>:<id>:<champ>` ; les textes fixes gardent leurs clés existantes. Les anciennes traductions restent disponibles et sont remplacées lorsqu'on modifie leur original espagnol dans le Studio ou qu’on utilise le bouton de traduction.
 
 Une erreur de traduction empêche l'enregistrement de la nouvelle source. Les écritures de contenu et la publication sont mises en file. Le bouton de publication et le build Astro vérifient que chaque texte déjà suivi possède ses dix traductions correspondant à la source espagnole actuelle. Une écriture interrompue ne doit donc pas produire une preview mêlant plusieurs versions. La réédition depuis Directus technique ne déclenche pas ce processus ; passer par le Studio pour les changements éditoriaux.
 
@@ -81,6 +85,7 @@ Les sessions sont sans stockage local. Tous les contenus restent dans les volume
 ```sh
 npm --prefix cms/studio run check
 npm --prefix cms/studio test
+node cms/studio/content-browser-check.mjs
 node cms/studio/arm-browser-check.mjs
 railway run --no-local --service directus --environment dev -- node cms/studio/editor-browser-check.mjs
 railway run --no-local --service directus --environment dev -- node cms/studio/arm-live-check.mjs

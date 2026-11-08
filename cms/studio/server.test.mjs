@@ -184,3 +184,27 @@ test('incomplete translations prevent a preview deployment',async t=>{
  const response=await request('/api/publish',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:'{}'});
  assert.equal(response.status,409);assert(!calls.some(row=>row.path==='/hook'));
 });
+
+test('whole-section translation is batched and keeps all eleven locales coherent',async t=>{
+ const {request,login,origin,texts,translationCalls}=await setup(t);
+ const {cookie}=await login();
+ const section=siteMap.sections.find(section=>section.id==='settings');
+ assert(section.fields.length>40);
+ const input=section.fields.map(field=>({key:field.key,value:field.source}));
+ const response=await request('/api/sections/settings',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({force:true,texts:input})});
+ assert.equal(response.status,200);assert.equal((await response.json()).translatedLanguages,10);
+ assert(translationCalls.length>1);assert(translationCalls.every(batch=>batch.length<=16));
+ for(const source of input){const bundle=texts.filter(row=>row.key===source.key);assert.equal(bundle.length,11);assert(bundle.every(row=>row.source_hash===sourceHash(source.value)));}
+});
+
+test('a failure in the final translation batch never persists earlier batches or the new Spanish original',async t=>{
+ let calls=0;
+ const {request,login,origin,texts}=await setup(t,{translate:async sources=>{
+  if(++calls===2)throw new Error('Translation unavailable');
+  return Object.fromEntries(targetLocales.map(locale=>[locale,Object.fromEntries(sources.map(source=>[source.key,locale+': '+source.value]))]));
+ }});
+ const {cookie}=await login();
+ const section=siteMap.sections.find(section=>section.id==='settings');
+ const response=await request('/api/sections/settings',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({force:true,texts:section.fields.map(field=>({key:field.key,value:field.source}))})});
+ assert.equal(response.status,503);assert.equal(calls,2);assert.equal(texts.length,0);
+});

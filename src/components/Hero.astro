@@ -19,13 +19,13 @@ const {lang}=Astro.props;const l = localizer(lang);const t = translations[lang];
     </a>
   </div>
   </div>
-  <div class="hero-inner fade-in"><div class="eyebrow">{l("Soprano internacional · Actriz", "International soprano · Actress")}</div><h1 id="hero-title">Nathalie<br/><em>Peña-Comas</em></h1><p class="hero-sub">{l("Una vida dedicada", "A life devoted")}<br/><em>{l("al arte de la voz.", "to the art of the voice.")}</em></p><p class="hero-description">{l("Ópera, escenario y raíces. El universo artístico de una soprano dominicana formada en Viena.", "Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.")}</p><p class="hero-description hero-biography">{t.storyP2}</p><div class="hero-ctas"><a class="btn-gold" href="#about">{l("Conocer a Nathalie", "Discover Nathalie")} ↗</a><a class="btn-outline" href="#schedule">{l("Próximos conciertos", "Upcoming performances")} ↓</a></div></div>
+  <div class="hero-inner fade-in"><div class="eyebrow">{l("Soprano internacional · Actriz", "International soprano · Actress")}</div><h1 id="hero-title">{l("Nathalie")}<br/><em>{l("Peña-Comas")}</em></h1><p class="hero-sub">{l("Una vida dedicada", "A life devoted")}<br/><em>{l("al arte de la voz.", "to the art of the voice.")}</em></p><p class="hero-description">{l("Ópera, escenario y raíces. El universo artístico de una soprano dominicana formada en Viena.", "Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.")}</p><p class="hero-description hero-biography">{t.storyP2}</p><div class="hero-ctas"><a class="btn-gold" href="#about">{l("Conocer a Nathalie", "Discover Nathalie")} ↗</a><a class="btn-outline" href="#schedule">{l("Próximos conciertos", "Upcoming performances")} ↓</a></div></div>
   <div class="hero-slider-controls" hidden>
     <button type="button" data-hero-select="0" aria-label={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} aria-pressed="true">01</button>
     <button type="button" data-hero-select="1" aria-label={albums[0].title} aria-pressed="false">02</button>
     <button type="button" data-hero-pause data-pause-label={l("Pausar el carrusel", "Pause slideshow")} data-resume-label={l("Reanudar el carrusel", "Resume slideshow")} aria-label={l("Pausar el carrusel", "Pause slideshow")} aria-pressed="false">Ⅱ</button>
   </div>
-  <div class="hero-bottom"><span>{l("NOMINADA AL LATIN GRAMMY", "LATIN GRAMMY NOMINEE")}</span><a href="#voice">{l("La artista y su mundo", "The artist & her world")} ↓</a><button data-video="pG7lJPLcO-g" data-title="Song to the Moon">▷ Song to the Moon</button></div>
+  <div class="hero-bottom"><span>{l("NOMINADA AL LATIN GRAMMY", "LATIN GRAMMY NOMINEE")}</span><a href="#voice">{l("La artista y su mundo", "The artist & her world")} ↓</a><button data-video="pG7lJPLcO-g" data-title={l("Song to the Moon")}>▷ {l("Song to the Moon")}</button></div>
 </section>
 
 <script>import '../scripts/hero-slider';</script>

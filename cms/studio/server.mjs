@@ -130,10 +130,20 @@ export function createStudioServer(options = {}) {
   if(!sources.length)return [];
   await requireWrite(token,'site_texts','create',['key','locale','value','source_hash']);
   await requireWrite(token,'site_texts','update',['value','source_hash']);
-  let translated;
-  try{translated=config.translate?await config.translate(sources):await translateSpanish(sources,{key:config.translationKey,model:config.translationModel});}
-  catch(error){throw new ApiError(503,error.message);}
-  return translationWrites(sources,translated,current);
+  // Prepare every batch before persisting any source or translation.
+  // Full-page translations can exceed the provider's per-request field limit.
+  const batches=[];let batch=[],characters=0;
+  for(const source of sources){
+   if(batch.length && (batch.length>=16 || characters+source.value.length>8000)){batches.push(batch);batch=[];characters=0;}
+   batch.push(source);characters+=source.value.length;
+  }
+  if(batch.length)batches.push(batch);
+  const writes=[];
+  try{for(const group of batches){
+   const translated=config.translate?await config.translate(group):await translateSpanish(group,{key:config.translationKey,model:config.translationModel});
+   writes.push(...translationWrites(group,translated,current));
+  }}catch(error){throw new ApiError(503,error.message);}
+  return writes;
  }
  function validate(collection, input, creating) {
   const allowed = new Set([...fields[collection], 'status', 'sort']);

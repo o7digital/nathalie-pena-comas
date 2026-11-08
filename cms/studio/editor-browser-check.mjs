@@ -14,8 +14,10 @@ async function api(path,method='GET',value) {
  });
 }
 const section=siteMap.sections.find(row=>row.id==='about'),field=section.fields.find(row=>!row.auxiliary);
-const path='/items/site_texts?limit=-1&filter='+encodeURIComponent(JSON.stringify({key:{_eq:field.key}}));
-const snapshot=await api(path),original=snapshot.find(row=>row.locale==='es');assert(original);
+const keys=section.fields.map(row=>row.key);
+const path='/items/site_texts?limit=-1&filter='+encodeURIComponent(JSON.stringify({key:{_in:keys}}));
+const snapshot=await api(path),original=snapshot.find(row=>row.locale==='es'&&row.key===field.key);assert(original);
+assert(keys.every(key=>snapshot.filter(row=>row.key===key).length===11));
 const value='La artista, una voz que une culturas.';
 const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'}),errors=[];
 try {
@@ -27,20 +29,26 @@ try {
  await page.getByText('Escribe en español.',{exact:true}).waitFor();
  const input=page.locator(`[data-text-key=${JSON.stringify(field.key)}]`);assert.equal(await input.inputValue(),original.value);
  await input.fill(value);const saved=page.waitForResponse(response=>response.url().endsWith('/api/sections/about')&&response.request().method()==='POST',{timeout:150000});
- await page.getByRole('button',{name:/Guardar y traducir/}).click();const response=await saved;assert.equal(response.status(),200);assert.equal((await response.json()).translatedLanguages,10);await page.locator('#toast').filter({hasText:/10 idiomas actualizados/}).waitFor();
- const translated=await api(path);assert.equal(translated.length,11);assert(translated.every(row=>row.source_hash===sourceHash(value)));
- assert.match(translated.find(row=>row.locale==='fr').value,/voix/i);assert.match(translated.find(row=>row.locale==='zh-TW').value,/\p{Script=Han}/u);
- await page.locator('.translation-review>summary').click();await page.locator('#review-locale').selectOption('fr');await page.locator('.translated-copy').first().getByText(translated.find(row=>row.locale==='fr').value,{exact:true}).waitFor();
+ assert.equal(await input.evaluate(node=>getComputedStyle(node).color),'rgb(36, 99, 70)');
+ assert.equal(await page.locator('[data-preview-locale]').count(),11);
+ assert.match(await page.locator('[data-preview-locale=fr]').getAttribute('href'),/\/fr\/#about$/);
+ await page.getByRole('button',{name:'Traducir a 10 idiomas ↗',exact:true}).click();const response=await saved;assert.equal(response.status(),200);assert.equal((await response.json()).translatedLanguages,10);await page.locator('#toast').filter({hasText:/10 idiomas actualizados/}).waitFor();
+ const translated=await api(path),bundle=translated.filter(row=>row.key===field.key);assert.equal(bundle.length,11);assert(bundle.every(row=>row.source_hash===sourceHash(value)));
+ for(const row of translated){const source=row.key===field.key?value:snapshot.find(original=>original.key===row.key&&original.locale==='es').value;assert.equal(row.source_hash,sourceHash(source));}
+ assert.match(bundle.find(row=>row.locale==='fr').value,/voix/i);assert.match(bundle.find(row=>row.locale==='zh-TW').value,/\p{Script=Han}/u);
+ await page.locator('.translation-review>summary').click();await page.locator('#review-locale').selectOption('fr');await page.locator('.translated-copy').first().getByText(bundle.find(row=>row.locale==='fr').value,{exact:true}).waitFor();
  assert.equal(await page.locator(`[data-text-key=${JSON.stringify(field.key)}]`).inputValue(),value);
+ assert.match(await page.locator('#translation-page-link').getAttribute('href'),/\/fr\/#about$/);
  await page.evaluate(()=>document.fonts.ready);await page.waitForFunction(()=>Array.from(document.querySelectorAll('#main img')).every(image=>image.complete&&image.naturalWidth>0));
  await mkdir('test-results',{recursive:true});await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'test-results/studio-sections-desktop.png',fullPage:true});
  await page.getByRole('button',{name:/Cambiar imagen/}).click();await page.locator('#editor').waitFor({state:'visible'});await page.getByRole('button',{name:'Cancelar',exact:true}).click();
  await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'test-results/studio-sections-mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);
- console.log('Section editor passed: site order, Spanish-only editing, ten real translations, read-only French review, section image editor and mobile layout.');
+ console.log('Section editor passed: prefilled original, green editable copy, visible Translate button, ten real translations, eleven page links, read-only French review, section image editor and mobile layout.');
 }finally {
  await browser.close();
- const current=await api(path),spanish=current.find(row=>row.locale==='es');
+ const current=await api(path),spanish=current.find(row=>row.locale==='es'&&row.key===field.key);
+ for(const row of current.filter(row=>row.locale==='es'&&row.key!==field.key))if(row.value!==snapshot.find(original=>original.id===row.id)?.value)throw new Error('Another Spanish source changed concurrently; inspect before restoring.');
  if(spanish.value!==value && spanish.value!==original.value)throw new Error('The original changed concurrently. Inspect this section before restoring the QA bundle.');
  await api('/items/site_texts','PATCH',snapshot.map(row=>({id:row.id,value:row.value,status:row.status,source_hash:row.source_hash??null,auto_translated:row.auto_translated??null,translated_at:row.translated_at??null})));
  const added=current.filter(row=>!snapshot.some(old=>old.id===row.id));if(added.length)await api('/items/site_texts','DELETE',added.map(row=>row.id));

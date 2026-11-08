@@ -23,7 +23,7 @@ const unique=new Map(siteMap.sections.flatMap(section=>section.fields).map(row=>
 const missing=[];
 for(const row of unique.values())for(const locale of ['es',...targetLocales]) {
  if(existing.has(`${locale}:${row.key}`))continue;
- const value=locale==='es'?row.source:locale==='en'?row.english:dictionaries[locale]?.[row.english]??row.english;
+ const value=row.localizations?.[locale] ?? (locale==='es'?row.source:locale==='en'?row.english:dictionaries[locale]?.[row.english]??row.english);
  missing.push({id:textId(row.key,locale),key:row.key,locale,value,status:'published',sort:0});
 }
 for(let i=0;i<missing.length;i+=80)await api('/items/site_texts','POST',missing.slice(i,i+80));

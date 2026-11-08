@@ -1,3 +1,4 @@
+import { textOverride } from '../lib/cms';
 import type { Locale } from './translations';
 const keys = ['subtitle','greeting','placeholder','send','consent','privacy','thinking','error','close','contact','clear','open','privacyDetails','manual'] as const;
 const copy: Record<Locale, readonly string[]> = {
@@ -14,5 +15,5 @@ const copy: Record<Locale, readonly string[]> = {
  ja:['Nathalie のアートアシスタント','こんにちは。Nathalie の AI アシスタント、Olivia です。経歴、音楽作品、今後の公演についてご案内しましょうか？','ご質問を入力…','送信','問い合わせへの回答のため、Olivia がメッセージを処理・保存することに同意します。','プライバシー','Olivia が回答を作成しています…','現在 Olivia をご利用いただけません。Nathalie のマネジメントにお問い合わせください。','閉じる','マネジメントに問い合わせる','新しい会話','Olivia と話す',"Olivia AI v2 は AI アシスタントです。同意のうえでメッセージを送信した場合にのみ、メッセージ、言語、ページの内容が Vercel と Railway 上の Olivia サービスおよび回答を生成する OpenAI に送信されます。会話はチームの対応のため保存される場合があります。ブラウザーの履歴はセッション中、言語を切り替えても利用できます。「新しい会話」で消去されるのはローカル履歴のみで、サービス側の記録は削除されません。機密情報は送信しないでください。お問い合わせや削除のご依頼は Nathalie のマネジメントまでご連絡ください。","担当チームが会話を引き継ぎました。引き続きこちらにご記入いただけます。"],
 };
 export function oliviaCopy(lang: Locale) {
- return Object.fromEntries(keys.map((key,index)=>[key,copy[lang][index]])) as Record<typeof keys[number],string>;
+ return Object.fromEntries(keys.map((key,index)=>[key,textOverride(`olivia:${key}`,lang) ?? copy[lang][index]])) as Record<typeof keys[number],string>;
 }
