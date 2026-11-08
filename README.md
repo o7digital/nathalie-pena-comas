@@ -55,9 +55,11 @@ vercel --yes
 
 Le travail courant reste sur `dev` et ses previews. Toute publication en production demande une instruction explicite ; voir `AGENTS.md`.
 
-## Admin Directus
+## Nathalie Studio et Directus
 
 Le CMS de développement fonctionne sur Railway, avec PostgreSQL et un volume persistant pour les médias. La preview Vercel de `dev` lit les fiches publiées lors du build et conserve les images sur Vercel. La production reste indépendante du CMS. Accès, édition, bouton de mise à jour de la preview, sauvegardes et migration future vers VPS3 : [guide CMS](cms/README.md).
+
+[Nathalie Studio](https://studio-dev-4236.up.railway.app) fournit l'interface éditoriale dédiée : photos, vidéos, agenda, albums et langues. La route `/admin/` de la preview y conduit via `PUBLIC_STUDIO_URL`. L'espace ARM utilise les API O7 Pulse ; son activation attend la création et la liaison du tenant client. Le service est documenté dans [le guide Studio](cms/studio/README.md).
 
 ## Mesure et confidentialité
 

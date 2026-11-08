@@ -1,0 +1,62 @@
+import { chromium } from '@playwright/test';
+import { request } from 'node:https';
+import assert from 'node:assert/strict';
+import { mkdir } from 'node:fs/promises';
+
+const origin=process.env.STUDIO_TEST_URL || 'http://127.0.0.1:4380';
+const cms=process.env.PUBLIC_URL;
+if(!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD || !process.env.ADMIN_TOKEN || cms!=='https://directus-dev-9ae1.up.railway.app') throw new Error('Use the Nathalie Directus dev variables.');
+const records=[];const files=[];const errors=[];
+const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || 'chrome'});
+try {
+ await mkdir('test-results',{recursive:true});
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto(origin);await page.locator('input[name=email]').fill(process.env.ADMIN_EMAIL);await page.locator('input[name=password]').fill(process.env.ADMIN_PASSWORD);
+ await page.getByRole('button',{name:/Entrar a mi Studio/}).click();
+ await page.locator('.kpi strong').first().waitFor();await page.evaluate(()=>document.fonts.ready);
+ assert.equal(await page.locator('.kpi').count(),4);
+ assert(!(await page.evaluate(()=>document.cookie)).includes('npc_studio'));
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('#main img')).every(image=>image.complete&&image.naturalWidth>0));
+ await page.screenshot({path:'test-results/studio-overview-desktop.png',fullPage:true});
+ await page.getByRole('link',{name:/Fotografías/}).click();await page.locator('.media-card').first().waitFor();
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('.media-cover img')).every(image=>image.complete&&image.naturalWidth>0));
+ await page.screenshot({path:'test-results/studio-gallery-desktop.png',fullPage:true});
+ const photoName='Studio QA photo '+Date.now();
+ const uploaded=page.waitForResponse(response=>response.url().endsWith('/api/upload')&&response.request().method()==='POST');
+ const added=page.waitForResponse(response=>response.url().endsWith('/api/content/gallery')&&response.request().method()==='POST');
+ await page.locator('#gallery-upload').setInputFiles({name:photoName+'.webp',mimeType:'image/webp',buffer:await import('node:fs/promises').then(fs=>fs.readFile('cms/studio/public/artist.webp'))});
+ const upload=await uploaded;assert.equal(upload.status(),201);files.push((await upload.json()).data.id);
+ const photo=await added;assert.equal(photo.status(),201);records.push(['gallery',(await photo.json()).data.id]);
+ await page.getByRole('heading',{name:photoName,exact:true}).waitFor();
+ const card=page.locator('.media-card').filter({has:page.getByRole('heading',{name:photoName,exact:true})});
+ assert.match(await card.textContent(),/Borrador/);
+ await card.getByRole('button',{name:'Archivar '+photoName,exact:true}).click();
+ await page.waitForFunction(name=>Array.from(document.querySelectorAll('.media-card')).some(card=>card.textContent.includes(name)&&card.textContent.includes('Archivado')),photoName);
+ await page.getByRole('link',{name:/Actuaciones/}).click();await page.getByRole('button',{name:/Nueva actuación/}).click();
+ const title='Studio QA '+Date.now();
+ await page.locator('#editor-form [name=title]').fill(title);await page.locator('#editor-form [name=date]').fill('2027-03-15');await page.locator('#editor-form [name=venue]').fill('Private UI verification');
+ const saved=page.waitForResponse(response=>response.url().endsWith('/api/content/concerts')&&response.request().method()==='POST');
+ await page.getByRole('button',{name:/Guardar cambios/}).click();const response=await saved;assert.equal(response.status(),201);
+ records.push(['concerts',(await response.json()).data.id]);
+ await page.waitForFunction(()=>!document.querySelector('#editor').open);
+ await page.getByText(title,{exact:true}).waitFor();
+ const row=page.locator('tr').filter({hasText:title});await row.getByRole('button',{name:/Editar/}).click();
+ await page.locator('#editor-form [name=title]').fill(title+' edited');await page.getByRole('button',{name:/Guardar cambios/}).click();await page.getByText(title+' edited',{exact:true}).waitFor();
+ await page.getByRole('link',{name:/Relaciones · ARM/}).click();await page.getByRole('heading',{name:/Cada relación/}).waitFor();
+ const config=await page.evaluate(()=>fetch('/api/config').then(r=>r.json()));
+ if(!config.armReady)assert.match(await page.locator('#main').textContent(),/pendiente de configuración/);
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Abrir menú'}).click();await page.getByRole('link',{name:/Inicio/}).click();
+ await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0 && document.querySelector('#nav-backdrop').hidden);
+ await page.locator('.kpi').first().waitFor();await page.locator('#toast').waitFor({state:'hidden'});
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'test-results/studio-overview-mobile.png',fullPage:true});
+ await page.getByRole('button',{name:'Abrir menú'}).click();await page.getByRole('button',{name:/Cerrar sesión/}).click();await page.locator('#login-view').waitFor({state:'visible'});
+ assert.equal((await page.request.get(origin+'/api/content')).status(),401);
+ assert.deepEqual(errors,[]);
+ console.log('Studio browser checks passed: login, real images, photo upload/archive, draft creation/edit, ARM readiness, mobile layout and logout.');
+} finally {
+ await browser.close();
+ for(const [collection,id] of [...records,...files.map(id=>['directus_files',id])]) await new Promise((resolve,reject)=>{
+  const req=request(cms+(collection==='directus_files'?'/files/':'/items/'+collection+'/')+encodeURIComponent(id),{method:'DELETE',headers:{Authorization:'Bearer '+process.env.ADMIN_TOKEN}},res=>{res.resume();res.on('end',()=>res.statusCode===204?resolve():reject(new Error('QA draft cleanup failed: '+res.statusCode)));});req.on('error',reject);req.end();
+ });
+}

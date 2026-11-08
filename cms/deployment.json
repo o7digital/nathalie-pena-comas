@@ -7,5 +7,7 @@
  "databaseServiceId": "25dc557d-73b2-4649-b87c-a334e108d7c4",
  "directusImage": "directus/directus:12.6.1",
  "url": "https://directus-dev-9ae1.up.railway.app",
- "uploadsMountPath": "/directus/uploads"
+ "uploadsMountPath": "/directus/uploads",
+ "studioServiceId": "6acfc302-9799-49d1-897b-9b014a7fa27a",
+ "studioUrl": "https://studio-dev-4236.up.railway.app"
 }

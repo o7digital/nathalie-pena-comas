@@ -1,0 +1,7 @@
+{
+  "name": "nathalie-studio",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node server.mjs", "test": "node --test server.test.mjs", "check": "node --check server.mjs && node --check public/app.js" },
+  "engines": { "node": ">=22" }
+}

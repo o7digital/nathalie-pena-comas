@@ -4,6 +4,8 @@ Directus 12.6.1 et PostgreSQL 18 sont dans le projet Railway `nathalie-cms`, env
 
 ## Accès et édition
 
+L'interface quotidienne est désormais [Nathalie Studio](https://studio-dev-4236.up.railway.app), avec les mêmes identifiants Directus en mode « Studio ». Le [guide Studio](studio/README.md) décrit l'édition visuelle, le connecteur ARM et ses variables. Directus reste accessible pour l'administration technique.
+
 Ouvrir https://directus-dev-9ae1.up.railway.app/admin. Le compte initial utilise l'adresse du propriétaire Railway ; son mot de passe aléatoire est conservé dans la variable Railway `ADMIN_PASSWORD` du service `directus`. Ne jamais le copier dans Git ou dans une variable `PUBLIC_*`. Changer le mot de passe dans le profil Directus après récupération ; les variables de bootstrap ne changent pas un mot de passe déjà enregistré dans la base.
 
 Collections : photographies, vidéos YouTube, albums, concerts, images des sections et textes/traductions des 11 langues. Les vidéos utilisent un identifiant YouTube de 11 caractères ; les uploads vidéo ne sont pas encore raccordés à un service d'encodage/streaming. Les textes `copy:` correspondent aux textes des sections et `translation:` au catalogue historique. Leur clé reste stable quand on modifie leur valeur. Les titres d'œuvres et certains liens fixes restent dans les composants.

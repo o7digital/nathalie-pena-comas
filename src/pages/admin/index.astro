@@ -1,0 +1,18 @@
+---
+const studio = import.meta.env.PUBLIC_STUDIO_URL;
+const destination = studio ? new URL(studio).origin : null;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {destination && <meta http-equiv="refresh" content={`0;url=${destination}/`} />}
+    <title>Nathalie Studio</title>
+  </head>
+  <body>
+    <h1>Nathalie Studio</h1>
+    {destination ? <p><a href={`${destination}/`}>Entrar a mi Studio</a></p> : <p>El acceso al Studio todavía no está configurado.</p>}
+  </body>
+</html>
