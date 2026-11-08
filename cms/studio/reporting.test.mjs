@@ -60,6 +60,7 @@ test('Shopify follows pagination, excludes test orders and rejects silently inco
  const rows=await connector.shopify('2026-01-01','2026-11-02');
  assert.equal(calls.length,3);assert.equal(rows.length,2);assert.equal(rows[1].value,20.5);assert.equal(rows[1].currency,'EUR');
  assert.equal(JSON.parse(calls[2].options.body).variables.after,'next');
+ assert.match(JSON.parse(calls[1].options.body).variables.query,/created_at:<2026-11-03T00:00:00Z/);
  assert(!calls.some(c=>c.options.body?.includes('customer{')));
  const limited=createReportingConnectors({SHOPIFY_STORE_DOMAIN:'artist.myshopify.com',SHOPIFY_ADMIN_TOKEN:'secret'},async()=>({ok:true,json:async()=>({access_scopes:[{handle:'read_orders'}]})}));
  await assert.rejects(()=>limited.shopify('2020-01-01','2020-01-02'),/60 días/);

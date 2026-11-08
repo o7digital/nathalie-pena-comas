@@ -89,7 +89,7 @@ export function createReportingConnectors(env=process.env,fetcher=fetch) {
   const query='query ReportingOrders($after:String,$query:String!){orders(first:100,after:$after,query:$query,sortKey:CREATED_AT){nodes{createdAt test netPaymentSet{shopMoney{amount currencyCode}}}pageInfo{hasNextPage endCursor}}}';
   let after=null;const rows=[];
   for(let page=0;page<50;page++) {
-   const result=await requestJson(`https://${env.SHOPIFY_STORE_DOMAIN}/admin/api/2026-10/graphql.json`,{method:'POST',headers:{'X-Shopify-Access-Token':env.SHOPIFY_ADMIN_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({query,variables:{after,query:`created_at:>=${start}T00:00:00Z created_at:<=${end}T23:59:59Z`}})},fetcher);
+   const result=await requestJson(`https://${env.SHOPIFY_STORE_DOMAIN}/admin/api/2026-10/graphql.json`,{method:'POST',headers:{'X-Shopify-Access-Token':env.SHOPIFY_ADMIN_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({query,variables:{after,query:`created_at:>=${start}T00:00:00Z created_at:<${new Date(Date.parse(end)+86400000).toISOString().slice(0,10)}T00:00:00Z`}})},fetcher);
    const orders=result.data?.orders;if(!orders?.pageInfo||!Array.isArray(orders.nodes))throw new ReportingError(502,'La respuesta de Shopify no es válida.');
    for(const order of orders.nodes)if(!order.test){
     const base={date:order.createdAt.slice(0,10),provider:'shopify',channel:env.SHOPIFY_STORE_DOMAIN,source:'Shopify · pedidos creados en el período (UTC)',method:'api',updatedAt:new Date().toISOString()};
