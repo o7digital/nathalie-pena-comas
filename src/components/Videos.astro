@@ -1,7 +1,7 @@
 ---
 import { localizer } from '../data/locales';
 import Image from './ContentImage.astro';
-import { readContent, contentImage, type ContentImage } from '../lib/cms';
+import { readContent, contentImage, localizedRecord, type ContentImage } from '../lib/cms';
 import {translations,type Locale} from '../data/translations';
 import rusalka from '../assets/official/rusalka.jpg';
 import boheme from '../assets/official/boheme.jpg';
@@ -20,7 +20,7 @@ const localFilms=[{id:'HbRmwVkSP8Q',title:'Sombras Nada Más',image:sombras},{id
 const cmsVideos = await readContent('videos');
 const videos = cmsVideos?.map(row => {
  if (!row.youtube_id || !/^[A-Za-z0-9_-]{11}$/.test(row.youtube_id)) throw new Error('Published videos need an 11-character YouTube ID.');
- return {id: row.youtube_id, title: row.title, detail: row.detail || '', image: contentImage(row.image), category: row.category};
+ return {id: row.youtube_id, title: localizedRecord('videos',row.id,'title',lang,row.title), detail: localizedRecord('videos',row.id,'detail',lang,row.detail || '').trim() || '', image: contentImage(row.image), category: row.category};
 });
 const opera: {id: string; title: string; detail: string; image: ContentImage}[] = videos === undefined ? localOpera : videos.filter(row => row.category === 'opera');
 const films: {id: string; title: string; image: ContentImage}[] = videos === undefined ? localFilms : videos.filter(row => row.category === 'film');

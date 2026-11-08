@@ -3,6 +3,7 @@ import { chromium } from '@playwright/test';
 import { once } from 'node:events';
 import assert from 'node:assert/strict';
 import { createStudioServer } from './server.mjs';
+import siteMap from './site-map.json' with {type:'json'};
 const server=createStudioServer({cms:'http://unused.test',secret:'isolated-browser-test-secret-with-32-characters'});
 server.listen(0,'127.0.0.1');await once(server,'listening');
 const origin='http://127.0.0.1:'+server.address().port;
@@ -17,7 +18,7 @@ try {
  await page.route('**/api/**',async route=>{
   const request=route.request(),path=new URL(request.url()).pathname;
   const payload={
-   '/api/config':{armReady:true,preview:origin},'/api/session':{name:'Test artist',armConnected:true},
+   '/api/site-map':siteMap,'/api/config':{armReady:true,preview:origin},'/api/session':{name:'Test artist',armConnected:true},
    '/api/content':{content:{gallery:[],albums:[],videos:[],concerts:[],site_images:[],site_texts:[]}},
    '/api/arm/clients':[client],'/api/arm/deals':[deal],'/api/arm/tasks':[task],'/api/arm/pipelines':[{id:'pipeline-1',name:'Agenda artística',stages}],
   };

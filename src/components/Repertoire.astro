@@ -1,4 +1,5 @@
 ---
+import {localizedRecord,readContent} from '../lib/cms';
 import Image from './ContentImage.astro';
 import { albums } from '../data/albums';
 import { recordings } from '../data/music';
@@ -10,13 +11,15 @@ interface Props { lang: Locale }
 const { lang } = Astro.props;
 const l = localizer(lang);
 const classical = albums.filter(album => album.category === 'classical');
-const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
-const performances = [
+const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({id:'recording-'+i,title:recording.name, url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
+const localPerformances = [
  { title:'Song to the Moon', detail:'Rusalka · A. Dvořák', id:'pG7lJPLcO-g' },
  { title:'O soave fanciulla', detail:'La Bohème · G. Puccini', id:'NrGZajhOGAc' },
  { title:'Addio del passato', detail:'La Traviata · G. Verdi', id:'U1QDrRtdnAI' },
  { title:'In trutina', detail:'Carmina Burana · C. Orff', id:'Ept9wg2IlDo' },
 ];
+const cmsPerformances=await readContent('videos');
+const performances=cmsPerformances===null?localPerformances:cmsPerformances.filter(row=>row.category==='opera').map(row=>({id:row.youtube_id!,title:localizedRecord('videos',row.id,'title',lang,row.title),detail:localizedRecord('videos',row.id,'detail',lang,row.detail||'')}));
 const columns = [
  { id:'classical', title:l('Soprano · Clásico', 'Soprano · Classical'), description:l('Ópera · Oratorio · Lied', 'Opera · Oratorio · Art song'), releases:classical },
  { id:'contemporary', title:l('Contemporáneo', 'Contemporary'), description:l('Canciones · Raíces latinas', 'Songs · Latin roots'), releases:contemporary },
@@ -30,7 +33,7 @@ const columns = [
    <div class="repertoire-recordings">
     {column.releases.map(release => <a class="repertoire-recording" href={release.url} target="_blank" rel="noopener">
      <Image src={release.image} width={320} widths={[160,320]} sizes="(max-width:600px) 90px, 120px" format="webp" loading="lazy" alt={release.title} />
-     <span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{release.detail}</small><span class="repertoire-listen">{l('Escuchar', 'Listen')} ↗</span></span>
+     <span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</small><span class="repertoire-listen">{l('Escuchar', 'Listen')} ↗</span></span>
     </a>)}
    </div>
    {column.id === 'classical' && <ul class="repertoire-performances">{performances.map(performance => <li><a href={`https://www.youtube.com/watch?v=${performance.id}`} target="_blank" rel="noopener"><span><strong>{performance.title}</strong><small>{performance.detail}</small></span><span aria-hidden="true">↗</span></a></li>)}</ul>}

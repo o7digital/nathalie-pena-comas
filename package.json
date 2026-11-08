@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
-    "build": "astro build",
+    "build": "node cms/studio/build-site-map.mjs --check && astro build",
     "preview": "astro preview --host 0.0.0.0",
-    "check": "astro check",
+    "check": "node cms/studio/build-site-map.mjs --check && astro check",
+    "cms:map": "node cms/studio/build-site-map.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test"
   },

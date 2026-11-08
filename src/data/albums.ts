@@ -11,5 +11,5 @@ const localAlbums=[
 ];
 
 const cmsAlbums = await readContent('albums');
-export const albums: { title: string; image: ContentImage; url: string; detail: string; category: string }[] = cmsAlbums === null ? localAlbums.map((row, i) => ({ ...row, category: [1,3].includes(i) ? 'classical' : 'contemporary' })) : cmsAlbums.map(row => ({title: row.title, image: contentImage(row.image), url: externalLink(row.url), detail: row.detail || '', category: row.category || (['album-2','album-4'].includes(row.id) ? 'classical' : 'contemporary')}));
+export const albums: { id: string; title: string; image: ContentImage; url: string; detail: string; category: string }[] = cmsAlbums === null ? localAlbums.map((row, i) => ({ ...row, id:`album-${i+1}`, category: [1,3].includes(i) ? 'classical' : 'contemporary' })) : cmsAlbums.map(row => ({id:row.id,title: row.title, image: contentImage(row.image), url: externalLink(row.url), detail: row.detail || '', category: row.category || (['album-2','album-4'].includes(row.id) ? 'classical' : 'contemporary')}));
 if (!albums.length) throw new Error('Publish at least one album before building the site.');

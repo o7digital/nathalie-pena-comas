@@ -1,0 +1,1164 @@
+{
+  "sourceLocale": "es",
+  "sections": [
+    {
+      "id": "home",
+      "title": "Inicio",
+      "icon": "home",
+      "anchor": "home",
+      "image": "hero",
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Featured release",
+          "source": "Proyecto destacado",
+          "english": "Featured release",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to the album",
+          "source": "Escuchar el álbum",
+          "english": "Listen to the album",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:International soprano · Actress",
+          "source": "Soprano internacional · Actriz",
+          "english": "International soprano · Actress",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:A life devoted",
+          "source": "Una vida dedicada",
+          "english": "A life devoted",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:to the art of the voice.",
+          "source": "al arte de la voz.",
+          "english": "to the art of the voice.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.",
+          "source": "Ópera, escenario y raíces. El universo artístico de una soprano dominicana formada en Viena.",
+          "english": "Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:storyP2",
+          "source": "Nominada al Latin Grammy por Alta Gracia, ha actuado en el Musikverein de Viena y debutó como actriz en el Los Angeles Theater Center. Desde 2019 es embajadora cultural de la República Dominicana.",
+          "english": "A Latin Grammy nominee for Alta Gracia, she has performed at Vienna’s Musikverein and made her acting debut at the Los Angeles Theater Center. She has served as Cultural Ambassador for the Dominican Republic since 2019.",
+          "label": "Párrafo 1",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Discover Nathalie",
+          "source": "Conocer a Nathalie",
+          "english": "Discover Nathalie",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Upcoming performances",
+          "source": "Próximos conciertos",
+          "english": "Upcoming performances",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas — official portrait",
+          "source": "Nathalie Peña-Comas — retrato oficial",
+          "english": "Nathalie Peña-Comas — official portrait",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Pause slideshow",
+          "source": "Pausar el carrusel",
+          "english": "Pause slideshow",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Resume slideshow",
+          "source": "Reanudar el carrusel",
+          "english": "Resume slideshow",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:LATIN GRAMMY NOMINEE",
+          "source": "NOMINADA AL LATIN GRAMMY",
+          "english": "LATIN GRAMMY NOMINEE",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The artist & her world",
+          "source": "La artista y su mundo",
+          "english": "The artist & her world",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "title": "La artista",
+      "icon": "photo",
+      "anchor": "about",
+      "image": "story",
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Nathalie Peña-Comas — official portrait",
+          "source": "Nathalie Peña-Comas — retrato oficial",
+          "english": "Nathalie Peña-Comas — official portrait",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:The artist",
+          "source": "La artista",
+          "english": "The artist",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Latin roots.",
+          "source": "Raíces latinas.",
+          "english": "Latin roots.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:An operatic soul.",
+          "source": "Alma lírica.",
+          "english": "An operatic soul.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Born in Santo Domingo and trained at Vienna’s University of Music and Performing Arts, Nathalie Peña-Comas brings together opera and Latin American repertoire.",
+          "source": "Nacida en Santo Domingo y formada en la Universidad de Música y Artes Escénicas de Viena, Nathalie Peña-Comas une la ópera y el repertorio latinoamericano.",
+          "english": "Born in Santo Domingo and trained at Vienna’s University of Music and Performing Arts, Nathalie Peña-Comas brings together opera and Latin American repertoire.",
+          "label": "Párrafo 1",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:From Mozart to Verdi, Pamina to Violetta, her artistic journey also embraces theatre and chamber music with Ensemble Spirituosi. She has served as Cultural Ambassador for the Dominican Republic since 2019.",
+          "source": "De Mozart a Verdi, de Pamina a Violetta, su recorrido artístico se extiende también al teatro y a la música de cámara con Ensemble Spirituosi. Es embajadora cultural de la República Dominicana desde 2019.",
+          "english": "From Mozart to Verdi, Pamina to Violetta, her artistic journey also embraces theatre and chamber music with Ensemble Spirituosi. She has served as Cultural Ambassador for the Dominican Republic since 2019.",
+          "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Selected repertoire",
+          "source": "Selección de repertorio",
+          "english": "Selected repertoire",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera · Oratorio · Art song",
+          "source": "Ópera · Oratorio · Lied",
+          "english": "Opera · Oratorio · Art song",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Hear her voice",
+          "source": "Escuchar su voz",
+          "english": "Hear her voice",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "voice",
+      "title": "Trayectoria",
+      "icon": "briefcase",
+      "anchor": "voice",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Latin Grammy",
+          "source": "Latin Grammy",
+          "english": "Latin Grammy",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Nominee · Alta Gracia",
+          "source": "Nominada · Alta Gracia",
+          "english": "Nominee · Alta Gracia",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Ebe Stignani",
+          "source": "Ebe Stignani",
+          "english": "Ebe Stignani",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:First prize · International opera competition, 2022",
+          "source": "Primer premio · Concurso internacional de ópera, 2022",
+          "english": "First prize · International opera competition, 2022",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Beyond borders",
+          "source": "Sin fronteras",
+          "english": "Beyond borders",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Europe · The Americas · Asia",
+          "source": "Europa · América · Asia",
+          "english": "Europe · The Americas · Asia",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In conversation",
+          "source": "En diálogo",
+          "english": "In conversation",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Andrea Bocelli · Ramón Vargas · Ensemble Spirituosi",
+          "source": "Andrea Bocelli · Ramón Vargas · Ensemble Spirituosi",
+          "english": "Andrea Bocelli · Ramón Vargas · Ensemble Spirituosi",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:An international voice",
+          "source": "Una voz internacional",
+          "english": "An international voice",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The voice of",
+          "source": "La voz de",
+          "english": "The voice of",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:an artist.",
+          "source": "una trayectoria.",
+          "english": "an artist.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:From the European operatic tradition to the soul of Latin American music. A career connecting cultures.",
+          "source": "De la tradición operística europea al alma de la música latinoamericana. Una trayectoria que une culturas.",
+          "english": "From the European operatic tradition to the soul of Latin American music. A career connecting cultures.",
+          "label": "Descripción",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "albums",
+      "title": "Discografía",
+      "icon": "album",
+      "anchor": "music",
+      "image": null,
+      "collection": "albums",
+      "fields": [
+        {
+          "key": "copy:Featured release",
+          "source": "Proyecto destacado",
+          "english": "Featured release",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:A voice returning to its essence. An invitation to feel music at its roots.",
+          "source": "La voz vuelve a su esencia. Una invitación a sentir la música desde la raíz.",
+          "english": "A voice returning to its essence. An invitation to feel music at its roots.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to the album",
+          "source": "Escuchar el álbum",
+          "english": "Listen to the album",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Selected recordings",
+          "source": "Discografía seleccionada",
+          "english": "Selected recordings",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:A world",
+          "source": "Un universo",
+          "english": "A world",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:of expression.",
+          "source": "de matices.",
+          "english": "of expression.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Explore performances",
+          "source": "Ver interpretaciones",
+          "english": "Explore performances",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to",
+          "source": "Escuchar",
+          "english": "Listen to",
+          "label": "Texto del enlace",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Listen",
+          "source": "Escuchar",
+          "english": "Listen",
+          "label": "Texto",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "concerts",
+      "title": "Agenda",
+      "icon": "calendar",
+      "anchor": "schedule",
+      "image": null,
+      "collection": "concerts",
+      "fields": [
+        {
+          "key": "copy:Schedule / On stage",
+          "source": "Agenda / En el escenario",
+          "english": "Schedule / On stage",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Upcoming",
+          "source": "Próximas",
+          "english": "Upcoming",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:performances.",
+          "source": "actuaciones.",
+          "english": "performances.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concert enquiries",
+          "source": "Consultar sobre conciertos",
+          "english": "Concert enquiries",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Upcoming dates will be announced here.",
+          "source": "Las próximas fechas se anunciarán aquí.",
+          "english": "Upcoming dates will be announced here.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Programme announced on the official website. Dates subject to updates.",
+          "source": "Programa anunciado en el sitio oficial. Fechas sujetas a actualización.",
+          "english": "Programme announced on the official website. Dates subject to updates.",
+          "label": "Descripción",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "repertorio",
+      "title": "Repertorio",
+      "icon": "album",
+      "anchor": "repertorio",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Soprano · Classical",
+          "source": "Soprano · Clásico",
+          "english": "Soprano · Classical",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera · Oratorio · Art song",
+          "source": "Ópera · Oratorio · Lied",
+          "english": "Opera · Oratorio · Art song",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Contemporary",
+          "source": "Contemporáneo",
+          "english": "Contemporary",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Songs · Latin roots",
+          "source": "Canciones · Raíces latinas",
+          "english": "Songs · Latin roots",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Selected repertoire",
+          "source": "Selección de repertorio",
+          "english": "Selected repertoire",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Repertoire",
+          "source": "Repertorio",
+          "english": "Repertoire",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen",
+          "source": "Escuchar",
+          "english": "Listen",
+          "label": "Texto",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "videos",
+      "title": "Vídeos",
+      "icon": "video",
+      "anchor": "media",
+      "image": null,
+      "collection": "videos",
+      "fields": [
+        {
+          "key": "copy:Media / Selected performances",
+          "source": "Media / Selección de interpretaciones",
+          "english": "Media / Selected performances",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The operatic art,",
+          "source": "El arte lírico,",
+          "english": "The operatic art,",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:on stage.",
+          "source": "en escena.",
+          "english": "on stage.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Music films",
+          "source": "Videos musicales",
+          "english": "Music films",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:play",
+          "source": "Reproducir",
+          "english": "Play",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Another language, the same voice / Official music films",
+          "source": "Otro lenguaje, la misma voz / Videos oficiales",
+          "english": "Another language, the same voice / Official music films",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:officialVideo",
+          "source": "Video oficial · 2026",
+          "english": "Official video · 2026",
+          "label": "Texto",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "news",
+      "title": "Prensa y noticias",
+      "icon": "text",
+      "anchor": "news",
+      "image": "press",
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:An artist’s journal",
+          "source": "Diario de una artista",
+          "english": "An artist’s journal",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Press",
+          "source": "Prensa",
+          "english": "Press",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:News",
+          "source": "Noticias",
+          "english": "News",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In the press, behind the scenes and on stage. A selection from the official archive.",
+          "source": "En los medios, entre bastidores y sobre el escenario. Una selección del archivo oficial.",
+          "english": "In the press, behind the scenes and on stage. A selection from the official archive.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas — Oh! Magazine cover",
+          "source": "Nathalie Peña-Comas — portada de Oh! Magazine",
+          "english": "Nathalie Peña-Comas — Oh! Magazine cover",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Press archive",
+          "source": "Archivo de prensa",
+          "english": "Press archive",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The artist,",
+          "source": "La artista,",
+          "english": "The artist,",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:in the spotlight.",
+          "source": "en portada.",
+          "english": "in the spotlight.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her press archive includes covers and articles from Oh! Magazine, En Sociedad and Corriere Romagna, among other publications. The cover shown here is part of that official selection.",
+          "source": "Su archivo de prensa reúne portadas y artículos de Oh! Magazine, En Sociedad y Corriere Romagna, entre otros medios. La portada reproducida forma parte de esa selección oficial.",
+          "english": "Her press archive includes covers and articles from Oh! Magazine, En Sociedad and Corriere Romagna, among other publications. The cover shown here is part of that official selection.",
+          "label": "Párrafo 1",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Press & interview enquiries",
+          "source": "Prensa y entrevistas",
+          "english": "Press & interview enquiries",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:MUSIC PROJECT",
+          "source": "PROYECTO MUSICAL",
+          "english": "MUSIC PROJECT",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The official programme announced the album presentation on 13 October 2026 at Teatro Nacional Eduardo Brito, Santo Domingo. Explore the project and its performances on music platforms.",
+          "source": "El programa oficial anunció la presentación del álbum el 13 de octubre de 2026 en el Teatro Nacional Eduardo Brito, Santo Domingo. Descubre el proyecto y sus interpretaciones en las plataformas musicales.",
+          "english": "The official programme announced the album presentation on 13 October 2026 at Teatro Nacional Eduardo Brito, Santo Domingo. Explore the project and its performances on music platforms.",
+          "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Discover the album",
+          "source": "Descubrir el álbum",
+          "english": "Discover the album",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:NEWS ARCHIVE",
+          "source": "ARCHIVO DE NOTICIAS",
+          "english": "NEWS ARCHIVE",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Film and Dominican devotion",
+          "source": "Cine y devoción dominicana",
+          "english": "Film and Dominican devotion",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The official archive announced Nathalie’s participation in a Larimar Films documentary on the history of devotion to Our Lady of Altagracia, a figure deeply connected to Dominican culture.",
+          "source": "El archivo oficial anunció la participación de Nathalie en un documental de Larimar Films sobre la historia de la devoción a la Virgen de la Altagracia, una figura profundamente ligada a la cultura dominicana.",
+          "english": "The official archive announced Nathalie’s participation in a Larimar Films documentary on the history of devotion to Our Lady of Altagracia, a figure deeply connected to Dominican culture.",
+          "label": "Párrafo 3",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.",
+          "source": "El Wiener Opernsommer presentó a Nathalie en su debut como Donna Anna en Don Giovanni de Mozart. La producción se anunció para julio de 2024 en el palacio Belvedere de Viena.",
+          "english": "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.",
+          "label": "Párrafo 4",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Hear her performances",
+          "source": "Escuchar sus interpretaciones",
+          "english": "Hear her performances",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "spirituosi",
+      "title": "Spirituosi",
+      "icon": "people",
+      "anchor": "spirituosi",
+      "image": "spirituosi",
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Ensemble Spirituosi — official sextet photograph",
+          "source": "Ensemble Spirituosi — fotografía oficial del sexteto",
+          "english": "Ensemble Spirituosi — official sextet photograph",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:A deeply personal project",
+          "source": "Un proyecto muy personal",
+          "english": "A deeply personal project",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Nathalie’s voice, Evelyn’s flute and Nicole Peña-Comas’s cello meet the guitars of Damien Lancelle and Gonzalo Manrique and Rubén Sánchez’s double bass.",
+          "source": "La voz de Nathalie, la flauta de Evelyn y el violonchelo de Nicole Peña-Comas se encuentran con las guitarras de Damien Lancelle y Gonzalo Manrique y el contrabajo de Rubén Sánchez.",
+          "english": "Nathalie’s voice, Evelyn’s flute and Nicole Peña-Comas’s cello meet the guitars of Damien Lancelle and Gonzalo Manrique and Rubén Sánchez’s double bass.",
+          "label": "Párrafo 1",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:A sextet connecting classical music with Latin American and Caribbean traditions. Their album Souvenir Latino received three gold medals at the 2018 Global Music Awards.",
+          "source": "Un sexteto que enlaza música clásica y tradiciones de América Latina y el Caribe. Su álbum Souvenir Latino recibió tres medallas de oro en los Global Music Awards 2018.",
+          "english": "A sextet connecting classical music with Latin American and Caribbean traditions. Their album Souvenir Latino received three gold medals at the 2018 Global Music Awards.",
+          "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to Souvenir Latino",
+          "source": "Escuchar Souvenir Latino",
+          "english": "Listen to Souvenir Latino",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "gallery",
+      "title": "Galería",
+      "icon": "photo",
+      "anchor": "gallery",
+      "image": null,
+      "collection": "gallery",
+      "fields": [
+        {
+          "key": "copy:Official gallery",
+          "source": "Galería oficial",
+          "english": "Official gallery",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Previous photograph",
+          "source": "Fotografía anterior",
+          "english": "Previous photograph",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Next photograph",
+          "source": "Fotografía siguiente",
+          "english": "Next photograph",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Pause slideshow",
+          "source": "Pausar el carrusel",
+          "english": "Pause slideshow",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Resume slideshow",
+          "source": "Reanudar el carrusel",
+          "english": "Resume slideshow",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Autoplay disabled: reduced motion",
+          "source": "Reproducción automática desactivada: movimiento reducido",
+          "english": "Autoplay disabled: reduced motion",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Close photograph",
+          "source": "Cerrar fotografía",
+          "english": "Close photograph",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Enlarge photograph",
+          "source": "Ampliar fotografía",
+          "english": "Enlarge photograph",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Carousel",
+          "source": "Carrusel",
+          "english": "Carousel",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Reduced motion",
+          "source": "Movimiento reducido",
+          "english": "Reduced motion",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Gallery / Moments of an artistic life",
+          "source": "Galería / Instantes de una vida artística",
+          "english": "Gallery / Moments of an artistic life",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The stage.",
+          "source": "El escenario.",
+          "english": "The stage.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The emotion.",
+          "source": "La emoción.",
+          "english": "The emotion.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Official photographs, swipe to explore",
+          "source": "Fotografías oficiales, desliza para explorar",
+          "english": "Official photographs, swipe to explore",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Photograph gallery",
+          "source": "Galería de fotografías",
+          "english": "Photograph gallery",
+          "label": "Título",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "newsletter",
+      "title": "Newsletter",
+      "icon": "text",
+      "anchor": "newsletter",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Correspondence from Nathalie",
+          "source": "La correspondencia de Nathalie",
+          "english": "Correspondence from Nathalie",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Let’s stay",
+          "source": "Sigamos",
+          "english": "Let’s stay",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:in touch.",
+          "source": "en contacto.",
+          "english": "in touch.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concerts, projects and news from the artist.",
+          "source": "Conciertos, proyectos y noticias de la artista.",
+          "english": "Concerts, projects and news from the artist.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Newsletter subscriptions are unavailable in this demonstration.",
+          "source": "La inscripción a la newsletter no está disponible en esta demostración.",
+          "english": "Newsletter subscriptions are unavailable in this demonstration.",
+          "label": "Descripción",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "title": "Contacto",
+      "icon": "people",
+      "anchor": "contact",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Professional contact",
+          "source": "Contacto profesional",
+          "english": "Professional contact",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Home",
+          "source": "Inicio",
+          "english": "Home",
+          "label": "Texto del enlace",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Contact & representation",
+          "source": "Contacto y representación",
+          "english": "Contact & representation",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Künstlersekretariat Buchmann",
+          "source": "Künstlersekretariat Buchmann",
+          "english": "Künstlersekretariat Buchmann",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concert management · Worldwide",
+          "source": "Representación de conciertos · Mundial",
+          "english": "Concert management · Worldwide",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:office@buchmann.at",
+          "source": "office@buchmann.at",
+          "english": "office@buchmann.at",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera Connection",
+          "source": "Opera Connection",
+          "english": "Opera Connection",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera management",
+          "source": "Representación operística",
+          "english": "Opera management",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:info@opera-connection.com",
+          "source": "info@opera-connection.com",
+          "english": "info@opera-connection.com",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Footer navigation",
+          "source": "Navegación del pie de página",
+          "english": "Footer navigation",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:privacy",
+          "source": "Privacidad y preferencias",
+          "english": "Privacy & preferences",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:preferences",
+          "source": "Preferencias de privacidad",
+          "english": "Privacy preferences",
+          "label": "Texto",
+          "auxiliary": true
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "Idiomas y ajustes",
+      "icon": "layout",
+      "anchor": "home",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Home",
+          "source": "Inicio",
+          "english": "Home",
+          "label": "Texto del enlace",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:navLabel",
+          "source": "Navegación principal",
+          "english": "Main navigation",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Language",
+          "source": "Idioma",
+          "english": "Language",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:menu",
+          "source": "Abrir menú",
+          "english": "Open menu",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:close",
+          "source": "Cerrar",
+          "english": "Close",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:videoDialog",
+          "source": "Video oficial",
+          "english": "Official video",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:externalVideo",
+          "source": "Al reproducir, te conectas con YouTube.",
+          "english": "Playing connects you to YouTube.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:loadVideo",
+          "source": "Reproducir video",
+          "english": "Play video",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:fallback",
+          "source": "Abrir en YouTube",
+          "english": "Open on YouTube",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:preferences",
+          "source": "Preferencias de privacidad",
+          "english": "Privacy preferences",
+          "label": "Antetítulo",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:consentTitle",
+          "source": "Tu privacidad, en armonía.",
+          "english": "Your privacy, in harmony.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:consentDesc",
+          "source": "Puedes permitir la medición de clics musicales y publicidad, o continuar solo con lo esencial. Los videos de YouTube se cargan únicamente cuando eliges reproducirlos.",
+          "english": "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.",
+          "label": "Párrafo 1",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:privacy",
+          "source": "Privacidad y preferencias",
+          "english": "Privacy & preferences",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:analytics",
+          "source": "Medición de audiencia",
+          "english": "Audience measurement",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:marketing",
+          "source": "Publicidad",
+          "english": "Advertising",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:reject",
+          "source": "Solo lo esencial",
+          "english": "Essential only",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:save",
+          "source": "Guardar preferencias",
+          "english": "Save preferences",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "translation:accept",
+          "source": "Aceptar todo",
+          "english": "Accept all",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms.",
+          "source": "Este sitio presenta la música de Nathalie Peña-Comas y dirige a los visitantes hacia plataformas externas.",
+          "english": "This site presents Nathalie Peña-Comas’s music and directs visitors to external platforms.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Measurement and advertising",
+          "source": "Medición y publicidad",
+          "english": "Measurement and advertising",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Audience measurement and advertising are disabled by default. If configured, Google Analytics 4 and Meta Pixel load only after you consent to the relevant category. They may record visits and music platform clicks, including destination, language and link section. You can reject both categories without limiting navigation.",
+          "source": "La medición de audiencia y la publicidad están desactivadas por defecto. Cuando se configuren, Google Analytics 4 y Meta Pixel solo se cargarán después de tu consentimiento para la categoría correspondiente. Podrán registrar visitas y clics hacia plataformas musicales, con el destino, idioma y sección del enlace. Puedes rechazar ambas categorías sin limitar la navegación.",
+          "english": "Audience measurement and advertising are disabled by default. If configured, Google Analytics 4 and Meta Pixel load only after you consent to the relevant category. They may record visits and music platform clicks, including destination, language and link section. You can reject both categories without limiting navigation.",
+          "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Your preferences",
+          "source": "Tus preferencias",
+          "english": "Your preferences",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.",
+          "source": "Si guardas una elección, este navegador conserva tus preferencias en almacenamiento local durante un máximo de 180 días. Puedes cambiarlas o retirar tu consentimiento aquí o en el pie de página. Si el almacenamiento está bloqueado, tu elección solo se aplica a la sesión actual.",
+          "english": "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.",
+          "label": "Párrafo 3",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Videos and external links",
+          "source": "Videos y enlaces externos",
+          "english": "Videos and external links",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.",
+          "source": "Las imágenes y las fuentes se sirven desde este sitio. YouTube no se carga al visitar la página: primero eliges un video y después confirmas su reproducción. El reproductor usa youtube-nocookie.com; al reproducirlo, YouTube recibe datos de conexión y aplica sus propias condiciones. Spotify, Apple Music y otros destinos externos también aplican sus políticas al abrirlos.",
+          "english": "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.",
+          "label": "Párrafo 4",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Hosting and enquiries",
+          "source": "Alojamiento y consultas",
+          "english": "Hosting and enquiries",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the representation details in the Contact section.",
+          "source": "Vercel aloja el sitio y puede procesar datos técnicos de conexión para entregar las páginas. Para consultas sobre la artista o el uso de sus contenidos, utiliza los contactos de representación de la sección Contacto.",
+          "english": "Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the representation details in the Contact section.",
+          "label": "Párrafo 5",
+          "auxiliary": false
+        },
+        {
+          "key": "translation:contactCTA",
+          "source": "Contacto y representación",
+          "english": "Contact & representation",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    }
+  ]
+}

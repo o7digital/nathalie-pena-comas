@@ -2,7 +2,7 @@
 import { localizer } from '../data/locales';
 import {getImage} from 'astro:assets';
 import Image from './ContentImage.astro';
-import { readContent, contentImage, type ContentImage } from '../lib/cms';
+import { readContent, contentImage, localizedRecord, type ContentImage } from '../lib/cms';
 import recital from '../assets/official/recital.jpg';
 import opera from '../assets/official/portrait.jpg';
 import stage from '../assets/official/musikverein.jpg';
@@ -16,7 +16,7 @@ const localPhotos=[
  {src:stage,title:'Musikverein, Wien',credit:'© David Moser'},
 ];
 const cmsPhotos = await readContent('gallery');
-const photos: { src: ContentImage; title: string; credit: string }[] = cmsPhotos === null ? localPhotos : cmsPhotos.map(row => ({src: contentImage(row.image), title: row.title, credit: l(row.credit || '')}));
+const photos: { src: ContentImage; title: string; credit: string }[] = cmsPhotos === null ? localPhotos : cmsPhotos.map(row => ({src: contentImage(row.image), title: localizedRecord('gallery',row.id,'title',lang,row.title), credit: l(row.credit || '')}));
 const fullImages=await Promise.all(photos.map(photo=>'cms' in photo.src ? Promise.resolve({src:photo.src.src}) : getImage({src:photo.src,width:Math.min(2400,photo.src.width),format:'webp',quality:90})));
 const labels={prev:l("Fotografía anterior", "Previous photograph"),next:l("Fotografía siguiente", "Next photograph"),pause:l("Pausar el carrusel", "Pause slideshow"),resume:l("Reanudar el carrusel", "Resume slideshow"),reduced:l("Reproducción automática desactivada: movimiento reducido", "Autoplay disabled: reduced motion"),close:l("Cerrar fotografía", "Close photograph"),open:l("Ampliar fotografía", "Enlarge photograph")};
 ---

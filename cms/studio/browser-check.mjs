@@ -19,7 +19,7 @@ try {
  assert(!(await page.evaluate(()=>document.cookie)).includes('npc_studio'));
  await page.waitForFunction(()=>Array.from(document.querySelectorAll('#main img')).every(image=>image.complete&&image.naturalWidth>0));
  await page.screenshot({path:'test-results/studio-overview-desktop.png',fullPage:true});
- await page.getByRole('link',{name:/Fotografías/}).click();await page.locator('.media-card').first().waitFor();
+ await page.locator('#navigation a[href="#gallery"]').click();await page.locator('.media-card').first().waitFor();
  await page.waitForFunction(()=>Array.from(document.querySelectorAll('.media-cover img')).every(image=>image.complete&&image.naturalWidth>0));
  await page.screenshot({path:'test-results/studio-gallery-desktop.png',fullPage:true});
  const photoName='Studio QA photo '+Date.now();
@@ -33,7 +33,7 @@ try {
  assert.match(await card.textContent(),/Borrador/);
  await card.getByRole('button',{name:'Archivar '+photoName,exact:true}).click();
  await page.waitForFunction(name=>Array.from(document.querySelectorAll('.media-card')).some(card=>card.textContent.includes(name)&&card.textContent.includes('Archivado')),photoName);
- await page.getByRole('link',{name:/Actuaciones/}).click();await page.getByRole('button',{name:/Nueva actuación/}).click();
+ await page.locator('#navigation a[href="#concerts"]').click();await page.getByRole('button',{name:/Nueva actuación/}).click();
  const title='Studio QA '+Date.now();
  await page.locator('#editor-form [name=title]').fill(title);await page.locator('#editor-form [name=date]').fill('2027-03-15');await page.locator('#editor-form [name=venue]').fill('Private UI verification');
  const saved=page.waitForResponse(response=>response.url().endsWith('/api/content/concerts')&&response.request().method()==='POST');
@@ -48,7 +48,7 @@ try {
  const session=await page.evaluate(()=>fetch('/api/session').then(r=>r.json()));
  await page.getByRole('heading',{name:session.armConnected?/Las relaciones que te impulsan/:/Cada relación/}).waitFor();
  if(!config.armReady)assert.match(await page.locator('#main').textContent(),/pendiente de configuración/);
- await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Abrir menú'}).click();await page.getByRole('link',{name:/Inicio/}).click();
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Abrir menú'}).click();await page.locator('#navigation a[href="#overview"]').click();
  await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0 && document.querySelector('#nav-backdrop').hidden);
  await page.locator('.kpi').first().waitFor();await page.locator('#toast').waitFor({state:'hidden'});
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'test-results/studio-overview-mobile.png',fullPage:true});
@@ -58,7 +58,15 @@ try {
  console.log('Studio browser checks passed: login, real images, photo upload/archive, draft creation/edit, ARM readiness, mobile layout and logout.');
 } finally {
  await browser.close();
- for(const [collection,id] of [...records,...files.map(id=>['directus_files',id])]) await new Promise((resolve,reject)=>{
-  const req=request(cms+(collection==='directus_files'?'/files/':'/items/'+collection+'/')+encodeURIComponent(id),{method:'DELETE',headers:{Authorization:'Bearer '+process.env.ADMIN_TOKEN}},res=>{res.resume();res.on('end',()=>res.statusCode===204?resolve():reject(new Error('QA draft cleanup failed: '+res.statusCode)));});req.on('error',reject);req.end();
- });
+ async function cleanup(path,method='GET',value){return new Promise((resolve,reject)=>{
+  const body=value===undefined?null:Buffer.from(JSON.stringify(value));
+  const req=request(cms+path,{method,headers:{Authorization:'Bearer '+process.env.ADMIN_TOKEN,'Content-Type':'application/json',...(body?{'Content-Length':body.length}:{})}},res=>{const chunks=[];res.on('data',part=>chunks.push(part));res.on('end',()=>res.statusCode<400?resolve(chunks.length?JSON.parse(Buffer.concat(chunks).toString()).data:null):reject(new Error('QA cleanup failed: '+res.statusCode)));});req.on('error',reject);req.end(body);
+ });}
+ for(const [collection,id] of records){
+  const filter=encodeURIComponent(JSON.stringify({key:{_starts_with:`content:${collection}:${id}:`}}));
+  const translations=await cleanup('/items/site_texts?limit=-1&fields=id&filter='+filter);
+  if(translations.length)await cleanup('/items/site_texts','DELETE',translations.map(row=>row.id));
+  await cleanup('/items/'+collection+'/'+encodeURIComponent(id),'DELETE');
+ }
+ for(const id of files)await cleanup('/files/'+encodeURIComponent(id),'DELETE');
 }

@@ -2,6 +2,7 @@ import type { ImageMetadata } from 'astro';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
+import { assertTranslationsReady } from '../../cms/studio/translations.mjs';
 
 export type CmsImage = { src: string; width: number; height: number; cms: true };
 export type ContentImage = ImageMetadata | CmsImage;
@@ -11,6 +12,7 @@ export type CmsRecord = {
  image?: File; credit?: string; url?: string; youtube_id?: string; category?: string;
  date?: string; ensemble?: string; venue?: string; city?: string;
  key?: string; locale?: string; value?: string;
+ source_hash?: string; auto_translated?: boolean; translated_at?: string;
 };
 
 const url = (import.meta.env.DIRECTUS_URL || process.env.DIRECTUS_URL || '').replace(/\/$/, '');
@@ -84,8 +86,18 @@ export function externalLink(value: string | undefined): string {
 }
 
 export const textOverrides = await readContent('site_texts');
+if(textOverrides?.some(row=>row.source_hash)) {
+ const content: Record<string,CmsRecord[]>={};
+ for(const collection of ['gallery','albums','videos','concerts'])content[collection]=(await readContent(collection))||[];
+ assertTranslationsReady(textOverrides,content);
+}
 export function textOverride(key: string, locale: string): string | undefined {
  return textOverrides?.find(row => row.key === key && row.locale === locale)?.value;
+}
+
+export function localizedRecord(collection: string,id: string,field: string,locale: string,fallback: string): string {
+ if(locale==='es')return fallback;
+ return textOverride(`content:${collection}:${id}:${field}`,locale)??fallback;
 }
 
 export async function sectionImage(key: string, fallback: ImageMetadata): Promise<ContentImage> {

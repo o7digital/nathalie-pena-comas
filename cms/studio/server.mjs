@@ -3,6 +3,8 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID }
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve, extname } from 'node:path';
+import siteMap from './site-map.json' with { type: 'json' };
+import { translateSpanish,translationWrites,localizedFields,recordTextKey,assertTranslationsReady,sourceHash,targetLocales } from './translations.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
@@ -29,6 +31,8 @@ export function createStudioServer(options = {}) {
   serviceEmail: process.env.ARM_SERVICE_EMAIL,
   servicePassword: process.env.ARM_SERVICE_PASSWORD,
   includedUntil: process.env.STUDIO_INCLUDED_UNTIL,
+  translationKey: process.env.OPENAI_API_KEY,
+  translationModel: process.env.TRANSLATION_MODEL || 'gpt-5.4-mini',
   secure: process.env.NODE_ENV === 'production', ...options,
  };
  if (!config.cms || !config.secret || config.secret.length < 32) throw new Error('Configure DIRECTUS_URL and a strong STUDIO_SESSION_SECRET.');
@@ -36,6 +40,8 @@ export function createStudioServer(options = {}) {
  const attempts = new Map();
  let imageQueue = Promise.resolve();
  let delegatedToken = null;
+ let contentQueue=Promise.resolve();
+ const contentWrite=work=>{const job=contentQueue.then(work);contentQueue=job.catch(()=>undefined);return job;};
  const armReady = () => Boolean(config.tenant && config.editorToken);
  const canDelegate = email => armReady() && Boolean(config.adminEmail && config.serviceEmail && config.servicePassword) && email?.toLowerCase() === config.adminEmail.toLowerCase();
 
@@ -108,6 +114,27 @@ export function createStudioServer(options = {}) {
  }
  async function jsonBody(req) { try { return JSON.parse((await body(req)).toString() || '{}'); } catch(error) { if(error instanceof ApiError) throw error; throw new ApiError(400,'Revisa los datos del formulario.'); } }
  function send(res, value, status = 200) { res.writeHead(status, {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}); res.end(JSON.stringify(value)); }
+ async function textsFor(token) { return (await upstream(config.cms,'/items/site_texts?limit=-1&fields=*',token)).data; }
+ async function requireWrite(token,collection,action,needed=[]) {
+  const permissions=await upstream(config.cms,'/permissions/me',token);
+  const permission=(permissions.data||permissions)?.[collection]?.[action];
+  if(!permission?.access || permission.access==='none' || (Array.isArray(permission.fields) && !permission.fields.includes('*') && needed.some(field=>!permission.fields.includes(field))))throw new ApiError(403,'Tu cuenta no tiene permiso para guardar estos cambios.');
+ }
+ async function persistTexts(rows,current,token) {
+  const existing=new Set(current.map(row=>row.id));
+  const creates=rows.filter(row=>!existing.has(row.id)),updates=rows.filter(row=>existing.has(row.id));
+  if(creates.length)await upstream(config.cms,'/items/site_texts',token,'POST',creates);
+  if(updates.length)await upstream(config.cms,'/items/site_texts',token,'PATCH',updates);
+ }
+ async function prepareSources(sources,current,token) {
+  if(!sources.length)return [];
+  await requireWrite(token,'site_texts','create',['key','locale','value','source_hash']);
+  await requireWrite(token,'site_texts','update',['value','source_hash']);
+  let translated;
+  try{translated=config.translate?await config.translate(sources):await translateSpanish(sources,{key:config.translationKey,model:config.translationModel});}
+  catch(error){throw new ApiError(503,error.message);}
+  return translationWrites(sources,translated,current);
+ }
  function validate(collection, input, creating) {
   const allowed = new Set([...fields[collection], 'status', 'sort']);
   if (Object.keys(input).some(k => !allowed.has(k))) throw new ApiError(400,'El formulario contiene campos no permitidos.');
@@ -127,7 +154,7 @@ export function createStudioServer(options = {}) {
   res.setHeader('X-Content-Type-Options','nosniff'); res.setHeader('Referrer-Policy','same-origin'); res.setHeader('X-Frame-Options','DENY');
   res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   if (path==='/health') return send(res,{ok:true});
-  if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas',includedUntil:config.includedUntil || null});
+  if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas',includedUntil:config.includedUntil || null,sourceLocale:'es',translationReady:Boolean(config.translationKey||config.translate),translatedLanguages:10});
   if (path.startsWith('/api/')) {
    if (!['GET','POST','PATCH'].includes(req.method)) throw new ApiError(405,'Método no permitido.');
    if (req.method !== 'GET') {
@@ -160,6 +187,23 @@ export function createStudioServer(options = {}) {
     const profile=s.mode!=='arm'?await upstream(config.cms,'/users/me?fields=id,email',s.access):null;
     return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady()});
    }
+   if(path==='/api/site-map' && req.method==='GET')return send(res,siteMap);
+   const section=path.match(/^\/api\/sections\/([a-z]+)$/);
+   if(section && req.method==='POST')return contentWrite(async()=>{
+    const definition=siteMap.sections.find(row=>row.id===section[1]);
+    if(!definition)throw new ApiError(404,'Sección no encontrada.');
+    const input=await jsonBody(req),allowed=new Set(definition.fields.map(field=>field.key));
+    if((input.force!==undefined&&typeof input.force!=='boolean') || !Array.isArray(input.texts) || input.texts.length>100 || input.texts.some(row=>!row || !allowed.has(row.key) || typeof row.value!=='string' || row.value.length>12000) || new Set(input.texts.map(row=>row.key)).size!==input.texts.length)throw new ApiError(400,'Revisa los textos de esta sección.');
+    const current=await textsFor(s.access);
+    const sources=input.texts.flatMap(row=>{
+     const existing=current.find(item=>item.key===row.key&&item.locale==='es');
+     const baseline=existing?.value??definition.fields.find(item=>item.key===row.key).source;
+     return !input.force&&row.value===baseline?[]:[{...row,status:existing?.status||'published'}];
+    });
+    const writes=await prepareSources(sources,current,s.access);
+    await persistTexts(writes,current,s.access);
+    return send(res,{ok:true,changed:sources.length,translatedLanguages:sources.length?10:0});
+   });
    if(path==='/api/content' && req.method==='GET') {
     const content={};
     // Avoid sending six concurrent expensive requests to the CMS.
@@ -170,15 +214,45 @@ export function createStudioServer(options = {}) {
     return send(res,{content});
    }
    const record=path.match(/^\/api\/content\/([a-z_]+)(?:\/([a-zA-Z\d_-]+))?$/);
-   if(record && fields[record[1]] && ['POST','PATCH'].includes(req.method)) {
+   if(record && fields[record[1]] && ['POST','PATCH'].includes(req.method))return contentWrite(async()=>{
     const [,collection,id]=record;
     if(id && !idPattern.test(id)) throw new ApiError(400,'Registro no válido.');
     if((req.method==='PATCH')!==Boolean(id)) throw new ApiError(405,'Método no permitido.');
     const input=validate(collection,await jsonBody(req),!id);
     const data=id?input:{id:randomUUID(),status:'draft',sort:Date.now()%2147483647,...input};
+    await requireWrite(s.access,collection,id?'update':'create',Object.keys(input));
+    const current=id?(await upstream(config.cms,`/items/${collection}/${encodeURIComponent(id)}?fields=*`,s.access)).data:null;
+    const sourceId=id||data.id;
+    if(collection==='site_texts') {
+     if((input.locale && input.locale!=='es') || (current && current.locale!=='es'))throw new ApiError(400,'Edita el original en español. Las otras lenguas se actualizan automáticamente.');
+     if(current && ((input.key && input.key!==current.key) || (input.locale && input.locale!==current.locale)))throw new ApiError(400,'La identidad de este texto no se puede cambiar.');
+     const key=current?.key||input.key;
+     if(!current && !siteMap.sections.some(section=>section.fields.some(field=>field.key===key)))throw new ApiError(400,'Crea los textos desde la sección correspondiente del sitio.');
+     const value=input.value??current?.value??'',status=input.status||current?.status||'draft';
+     const texts=await textsFor(s.access);
+     if(!current || value!==current.value || status!==current.status) {
+      const writes=await prepareSources([{key,value,status}],texts,s.access);
+      await persistTexts(writes,texts,s.access);
+      return send(res,{data:writes.find(row=>row.locale==='es'),translatedLanguages:10},id?200:201);
+     }
+     return send(res,{data:current});
+    }
+    if(localizedFields[collection]) {
+     const texts=await textsFor(s.access),status=input.status||current?.status||'draft';
+     const needsRepair=field=>{const key=recordTextKey(collection,sourceId,field),bundle=texts.filter(row=>row.key===key);return bundle.some(row=>row.source_hash)&&['es',...targetLocales].some(locale=>bundle.find(row=>row.locale===locale)?.source_hash!==sourceHash(input[field]));};
+     const sources=localizedFields[collection].filter(field=>typeof input[field]==='string'&&(input[field]!==current?.[field]||needsRepair(field))).map(field=>({key:recordTextKey(collection,sourceId,field),value:input[field],status}));
+     const writes=await prepareSources(sources,texts,s.access);
+     // Store translations before changing their source; stale/partial bundles block publication.
+     await persistTexts(writes,texts,s.access);
+     if(current && input.status && input.status!==current.status) {
+      const prefix=`content:${collection}:${id}:`;
+      const statuses=texts.filter(row=>row.key?.startsWith(prefix)&&!writes.some(write=>write.id===row.id)).map(row=>({id:row.id,status}));
+      if(statuses.length)await upstream(config.cms,'/items/site_texts',s.access,'PATCH',statuses);
+     }
+    }
     const result=await upstream(config.cms,`/items/${collection}${id?'/'+encodeURIComponent(id):''}`,s.access,req.method,data);
     return send(res,result,id?200:201);
-   }
+   });
    if(path==='/api/upload' && req.method==='POST') {
     const bytes=await body(req,26*1024*1024);
     const form=await new Response(bytes,{headers:{'Content-Type':req.headers['content-type'] || ''}}).formData().catch(()=>{throw new ApiError(400,'Selecciona una fotografía.');});
@@ -204,16 +278,20 @@ export function createStudioServer(options = {}) {
     if(!Array.isArray(ids)||ids.length>1000||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!idPattern.test(id))) throw new ApiError(400,'El orden no es válido.');
     return send(res,await upstream(config.cms,`/items/${reorder[1]}`,s.access,'PATCH',ids.map((id,sort)=>({id,sort}))));
    }
-   if(path==='/api/publish' && req.method==='POST') {
+   if(path==='/api/publish' && req.method==='POST')return contentWrite(async()=>{
     if(!config.publishHook) throw new ApiError(503,'La actualización de la vista previa no está configurada.');
     // Check write permission without changing a record, including for read-only accounts.
     const permissions=await upstream(config.cms,'/permissions/me',s.access);
     const own=permissions?.data || permissions;
     if(!Object.keys(fields).some(collection=>own?.[collection]?.update?.access && own[collection].update.access!=='none')) throw new ApiError(403,'Tu cuenta no puede publicar cambios.');
+    const texts=(await textsFor(s.access)).filter(row=>row.status==='published');
+    const content={};
+    if(texts.some(row=>row.source_hash))for(const collection of Object.keys(localizedFields))content[collection]=(await upstream(config.cms,`/items/${collection}?limit=-1&filter[status][_eq]=published`,s.access)).data;
+    try{assertTranslationsReady(texts,content);}catch{throw new ApiError(409,'Hay traducciones pendientes o desactualizadas. Vuelve a guardar el original español antes de actualizar la vista previa.');}
     const result=await fetch(config.publishHook,{method:'POST',signal:AbortSignal.timeout(20000)});
     if(!result.ok) throw new ApiError(502,'La vista previa no pudo actualizarse. Inténtalo de nuevo.');
     return send(res,{ok:true,url:config.preview});
-   }
+   });
    if(path==='/api/arm/connect' && req.method==='POST') {
     if(!armReady()) throw new ApiError(409,'Primero hay que configurar la suscripción ARM de Nathalie.');
     const input=await jsonBody(req);

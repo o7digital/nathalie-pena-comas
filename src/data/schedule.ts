@@ -8,7 +8,7 @@ const localSchedule = [
 ];
 
 const cmsConcerts = await readContent('concerts');
-export const schedule = cmsConcerts === null ? localSchedule : cmsConcerts.map(row => {
+export const schedule = cmsConcerts === null ? localSchedule.map((row,i)=>({...row,id:`concert-${i}`})) : cmsConcerts.map(row => {
  if (!row.date || !/^\d{4}-\d{2}-\d{2}$/.test(row.date)) throw new Error('Published concerts need a valid date.');
- return { date: row.date, title: row.title, ensemble: row.ensemble || '', venue: row.venue || '', city: row.city || '' };
+ return { id:row.id,date: row.date, title: row.title, ensemble: row.ensemble || '', venue: row.venue || '', city: row.city || '' };
 });
