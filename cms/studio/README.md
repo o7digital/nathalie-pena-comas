@@ -14,17 +14,19 @@ Après les modifications, choisir « Actualizar vista previa » : le hook lance 
 
 Le connecteur parle aux API réelles de https://api.crm.o7digitalgroup.com/api : contacts (`clients`), propositions (`deals`), tâches et pipelines. Les formulaires proposent la création de contacts, propositions et tâches ; les listes reprennent les données du CRM. Les propositions changent d’étape et les tâches de statut directement depuis le Studio. La gestion complète reste accessible dans O7 Pulse. Aucun compte ni abonnement CRM n'est créé par le déploiement Studio.
 
-Pour activer Nathalie :
+L'espace Nathalie est activé. Les identifiants non sensibles de la souscription et du tenant sont dans `../deployment.json`. Le compte Directus désigné par `ARM_ADMIN_EMAIL` dispose d'un accès ARM délégué depuis le mode « Studio », avec son e-mail et son mot de passe Directus habituels. Son compte CRM personnel et ses autres espaces restent inchangés.
 
-1. Créer ou retrouver son tenant via le parcours administrateur O7 Pulse. Confirmer l'e-mail du client et le plan choisi. La création de souscription, l'invitation et le paiement sont des actions distinctes.
-2. Configurer dans le service `studio` la variable `ARM_TENANT_ID` avec l'identifiant exact de ce tenant, puis redéployer ce service.
-3. Vérifier la connexion avec un compte de ce tenant. Un compte d'un autre tenant est refusé. Le mode ARM de l'écran de connexion permet alors d'utiliser les identifiants Pulse pour les contenus et la gestion artistique.
+La souscription utilise l'offre existante `PULSE_TEAM`, avec 12 mois inclus à partir de sa création. Elle appartient à l'espace CRM existant de l'administrateur provisoire ; aucun compte personnel n'a été déplacé. `currentPeriodEnd` enregistre l'échéance et `STUDIO_INCLUDED_UNTIL` l'affiche dans le Studio. Le renouvellement reste manuel et à configurer : aucun checkout, mandat Stripe, invitation e-mail ni suspension automatique à l'échéance n'a été créé. Aucun quota de contacts, propositions ou contenus n'est ajouté. Le CRM actuel impose encore un plafond technique de **30 utilisateurs par souscription**, distinct des limites techniques d'upload photo.
 
-Le backend revérifie `/auth/me` et l'appartenance au tenant à chaque requête ARM, et à chaque requête de contenu provenant d'une session ARM. Il n'existe pas de création automatique ni de facturation implicite. L'essai de 30 jours/1 utilisateur doit être explicitement choisi par le propriétaire avant provisionnement.
+Le contact client est conservé dans la souscription et dans `STUDIO_CUSTOMER_EMAIL`. Son compte humain sera créé lorsque le propriétaire décidera de lui donner accès. Pour connecter ultérieurement ce compte directement, utiliser le mode « ARM » ou le formulaire de connexion de l'espace ARM. Le tenant doit correspondre exactement à `ARM_TENANT_ID`.
+
+Le connecteur d'administration utilise une identité technique `ADMIN` appartenant uniquement au tenant Nathalie. Ses identifiants sont dans `ARM_SERVICE_EMAIL` et `ARM_SERVICE_PASSWORD`, uniquement côté serveur. La délégation est réservée à l'e-mail administrateur explicitement configuré ; le backend revérifie l'identité Directus actuelle puis `/auth/me` côté CRM pour chaque requête ARM. Les jetons sont mis en cache côté serveur cinq minutes et l'appartenance au tenant reste vérifiée à chaque accès. Un autre éditeur CMS ne reçoit pas cet accès.
+
+Le pipeline « Agenda artística » comporte cinq étapes : nouvelle proposition, conversation, proposition envoyée, confirmée et non concrétisée. Les données de contacts, propositions et tâches sont celles du CRM réel.
 
 ## Configuration et sécurité
 
-Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `ARM_API_URL`, et éventuellement `ARM_TENANT_ID`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
+Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `ARM_API_URL`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`, `ARM_ADMIN_EMAIL`, `ARM_SERVICE_EMAIL`, `ARM_SERVICE_PASSWORD`, `STUDIO_INCLUDED_UNTIL` et `STUDIO_CUSTOMER_EMAIL`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
 
 Les sessions sont chiffrées et authentifiées dans un cookie HttpOnly, Secure en déploiement, SameSite Strict. Les jetons Directus/Pulse restent côté serveur. Les écritures exigent l'origine configurée ; seuls les chemins et champs autorisés sont transmis. Les médias nécessitent une session et sont servis avec un cache privé. Le Studio ne sert aucun fichier serveur ni accès arbitraire aux API d'administration.
 
@@ -35,6 +37,8 @@ En mode Studio, Directus applique les permissions du compte connecté. En mode A
 ```sh
 railway run --no-local --service directus --environment dev -- node cms/studio/provision.mjs
 ```
+
+`provision-arm.cjs` a provisionné le tenant via les services métier déjà déployés du CRM, puis attribué cette seule souscription à l'espace de l'administrateur désigné et enregistré sa période incluse. Il ne modifie pas le code du CRM central. Ce script doit s'exécuter dans le conteneur API CRM avec une configuration client explicite. **Sa sortie contient les identifiants techniques : la capturer dans un processus privé et l'envoyer aux variables Railway par stdin, sans l'afficher ni la sauvegarder dans Git.** Une réexécution retrouve la même souscription et conserve son échéance, mais renouvelle le mot de passe du seul connecteur ; mettre à jour Railway et redéployer immédiatement. Ne pas réexécuter pour prolonger un abonnement.
 
 Le service utilise `cms/studio/Dockerfile` avec le dépôt comme contexte. Le démarrage ne nécessite aucune installation de dépendances Node. Déploiement :
 
@@ -50,9 +54,12 @@ Les sessions sont sans stockage local. Tous les contenus restent dans les volume
 npm --prefix cms/studio run check
 npm --prefix cms/studio test
 node cms/studio/arm-browser-check.mjs
+railway run --no-local --service directus --environment dev -- node cms/studio/arm-live-check.mjs
 railway run --no-local --service directus --environment dev -- node cms/studio/browser-check.mjs
 ```
 
 Le dernier test attend un Studio local sur le port 4380 ; définir `STUDIO_TEST_URL` pour viser le service déployé. Il vérifie une connexion réelle, les images privées, la création/modification d'un brouillon d'agenda, l'état du connecteur ARM, le mobile et la déconnexion. Son brouillon de test est supprimé en fin de parcours avec le compte administrateur. Les tests unitaires isolent les services et vérifient les frontières de permissions et de tenant.
 
 `arm-browser-check.mjs` utilise uniquement des données de test isolées pour vérifier les formulaires, les étapes des propositions et les statuts des tâches. Il ne se connecte à aucun compte CRM réel.
+
+`arm-live-check.mjs` vérifie la délégation de l’administrateur et crée un contact, une proposition et une tâche temporaires dans le seul tenant Nathalie. Il vérifie leurs mises à jour puis les supprime via les API CRM. Il lit les identifiants techniques depuis Railway sans les afficher. Il refuse toute autre configuration de projet/API/tenant.

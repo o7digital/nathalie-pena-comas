@@ -9,5 +9,14 @@
  "url": "https://directus-dev-9ae1.up.railway.app",
  "uploadsMountPath": "/directus/uploads",
  "studioServiceId": "6acfc302-9799-49d1-897b-9b014a7fa27a",
- "studioUrl": "https://studio-dev-4236.up.railway.app"
+ "studioUrl": "https://studio-dev-4236.up.railway.app",
+ "crmSubscription": {
+  "subscriptionId": "85d989b9-612b-4186-8de0-7058c8e793f5",
+  "tenantId": "8dca4b70-fa57-4cdf-b27f-7820e1a52887",
+  "plan": "PULSE_TEAM",
+  "seats": 30,
+  "includedUntil": "2027-11-08T02:50:46.094Z",
+  "renewal": "manual",
+  "pipelineId": "8f3e06cf-e5c3-4a5b-b705-06a4fd270a9c"
+ }
 }

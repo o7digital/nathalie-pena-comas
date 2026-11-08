@@ -197,7 +197,9 @@ async function startSession(){
  state.session=await api('/api/session');$('#login-view').hidden=true;$('#studio-view').hidden=false;
  $('#account-name').textContent=state.session.name||state.session.email?.split('@')[0]||'Mi cuenta';
  $('#today').textContent=new Intl.DateTimeFormat('es',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Mexico_City'}).format(new Date());
- $('#sidebar-preview').href=state.config.preview;await reload();
+ $('#sidebar-preview').href=state.config.preview;
+ if(state.config.includedUntil){const date=new Date(state.config.includedUntil);if(Number.isFinite(date.getTime()))$('#workspace-plan').textContent='Hosting incluido hasta el '+new Intl.DateTimeFormat('es',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Mexico_City'}).format(date)+' · Renovación por configurar';}
+ await reload();
 }
 async function init(){try{state.config=await api('/api/config');$('#login-mode-label').hidden=!state.config.armReady;await startSession();}catch(error){showLogin(error.status===401?'':error.message);}}
 init();

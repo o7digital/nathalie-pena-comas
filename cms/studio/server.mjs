@@ -25,13 +25,19 @@ export function createStudioServer(options = {}) {
   crm: process.env.ARM_API_URL || 'https://api.crm.o7digitalgroup.com/api',
   tenant: process.env.ARM_TENANT_ID,
   editorToken: process.env.STUDIO_CONTENT_TOKEN,
+  adminEmail: process.env.ARM_ADMIN_EMAIL,
+  serviceEmail: process.env.ARM_SERVICE_EMAIL,
+  servicePassword: process.env.ARM_SERVICE_PASSWORD,
+  includedUntil: process.env.STUDIO_INCLUDED_UNTIL,
   secure: process.env.NODE_ENV === 'production', ...options,
  };
  if (!config.cms || !config.secret || config.secret.length < 32) throw new Error('Configure DIRECTUS_URL and a strong STUDIO_SESSION_SECRET.');
  const encryptionKey = createHash('sha256').update(config.secret).digest();
  const attempts = new Map();
  let imageQueue = Promise.resolve();
+ let delegatedToken = null;
  const armReady = () => Boolean(config.tenant && config.editorToken);
+ const canDelegate = email => armReady() && Boolean(config.adminEmail && config.serviceEmail && config.servicePassword) && email?.toLowerCase() === config.adminEmail.toLowerCase();
 
  function seal(value) {
   const iv = randomBytes(12), cipher = createCipheriv('aes-256-gcm', encryptionKey, iv);
@@ -67,6 +73,20 @@ export function createStudioServer(options = {}) {
   const result = await upstream(config.crm, '/auth/me', token);
   if (result?.user?.tenantId !== config.tenant) throw new ApiError(403, 'Esta cuenta no pertenece al espacio de Nathalie.');
   return result.user;
+ }
+ async function crmTokenFor(s) {
+  if(s.crmToken) { await crmIdentity(s.crmToken); return s.crmToken; }
+  if(s.mode!=='cms' || !canDelegate(s.email)) throw new ApiError(401,'Conecta tu cuenta ARM para continuar.');
+  // Resolve the current Directus identity again; never authorize from a submitted email.
+  const profile=await upstream(config.cms,'/users/me?fields=id,email',s.access);
+  if(!canDelegate(profile?.data?.email)) throw new ApiError(403,'Esta cuenta no tiene acceso de administración ARM.');
+  if(!delegatedToken || delegatedToken.until<Date.now()) {
+   const result=await upstream(config.crm,'/auth/login',null,'POST',{email:config.serviceEmail,password:config.servicePassword});
+   await crmIdentity(result.token);
+   delegatedToken={value:result.token,until:Date.now()+300000};
+  }
+  await crmIdentity(delegatedToken.value);
+  return delegatedToken.value;
  }
  async function authenticated(req, res) {
   const s = session(req);
@@ -107,7 +127,7 @@ export function createStudioServer(options = {}) {
   res.setHeader('X-Content-Type-Options','nosniff'); res.setHeader('Referrer-Policy','same-origin'); res.setHeader('X-Frame-Options','DENY');
   res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   if (path==='/health') return send(res,{ok:true});
-  if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas'});
+  if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas',includedUntil:config.includedUntil || null});
   if (path.startsWith('/api/')) {
    if (!['GET','POST','PATCH'].includes(req.method)) throw new ApiError(405,'Método no permitido.');
    if (req.method !== 'GET') {
@@ -137,8 +157,8 @@ export function createStudioServer(options = {}) {
    }
    const s=await authenticated(req,res);
    if(path==='/api/session' && req.method==='GET') {
-    if(s.mode!=='arm') await upstream(config.cms,'/users/me?fields=id',s.access);
-    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken),armReady:armReady()});
+    const profile=s.mode!=='arm'?await upstream(config.cms,'/users/me?fields=id,email',s.access):null;
+    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady()});
    }
    if(path==='/api/content' && req.method==='GET') {
     const content={};
@@ -201,7 +221,7 @@ export function createStudioServer(options = {}) {
     await crmIdentity(result.token); s.crmToken=result.token; setSession(res,s); return send(res,{ok:true});
    }
    if(path.startsWith('/api/arm/')) {
-    await crmIdentity(s.crmToken || '');
+    const crmToken=await crmTokenFor(s);
     const match=path.match(/^\/api\/arm\/(clients|deals|tasks|pipelines)(?:\/([a-zA-Z\d_-]+))?$/);
     if(!match) throw new ApiError(404,'Recurso no disponible.');
     const [,resource,id]=match;
@@ -211,12 +231,12 @@ export function createStudioServer(options = {}) {
      data=await jsonBody(req);
      if(resource==='pipelines' || Object.keys(data).some(key=>!allowed[resource].includes(key))) throw new ApiError(400,'Campos no permitidos para esta operación ARM.');
     }
-    const result=await upstream(config.crm,`/${resource}${id?'/'+encodeURIComponent(id):''}`,s.crmToken,req.method,data);
+    const result=await upstream(config.crm,`/${resource}${id?'/'+encodeURIComponent(id):''}`,crmToken,req.method,data);
     if(resource==='pipelines' && !id && req.method==='GET') {
      // The list endpoint omits stages; the detail endpoint includes their ordered definitions.
      if(!Array.isArray(result)) throw new ApiError(502,'No se pudieron cargar los pipelines.');
      const pipelines=[];
-     for(const pipeline of result) pipelines.push(await upstream(config.crm,'/pipelines/'+encodeURIComponent(pipeline.id),s.crmToken));
+     for(const pipeline of result) pipelines.push(await upstream(config.crm,'/pipelines/'+encodeURIComponent(pipeline.id),crmToken));
      return send(res,pipelines);
     }
     return send(res,result);

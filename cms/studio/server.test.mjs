@@ -12,7 +12,7 @@ async function setup(t, overrides = {}) {
   calls.push({path:req.url,method:req.method,authorization:req.headers.authorization,body});
   res.setHeader('Content-Type','application/json');
   if(req.url==='/auth/login')return res.end(JSON.stringify({data:{access_token:'private-access',refresh_token:'private-refresh',expires:900000}}));
-  if(req.url.startsWith('/users/me'))return res.end(JSON.stringify({data:{id:'owner',email:'owner@example.test',first_name:'Owner'}}));
+  if(req.url.startsWith('/users/me'))return res.end(JSON.stringify({data:{id:'owner',email:overrides.cmsEmail || 'owner@example.test',first_name:'Owner'}}));
   if(req.url==='/permissions/me')return res.end(JSON.stringify({data:{gallery:{update:{access:overrides.readOnly?'none':'full'}}}}));
   if(req.url==='/api/auth/login')return res.end(JSON.stringify({token:'private-crm-token',user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test',name:'Artist'}}));
   if(req.url==='/api/auth/me')return res.end(JSON.stringify({user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test'}}));
@@ -111,4 +111,31 @@ test('ARM loads real pipeline stage definitions and prevents tenant injection on
  assert.equal((await create({name:'Injected',tenantId:'another-tenant'})).status,400);
  assert(!calls.some(call=>call.path==='/api/clients'&&call.body.includes('another-tenant')));
  assert(calls.some(call=>call.path==='/api/clients'&&call.authorization==='Bearer private-crm-token'));
+});
+
+test('the designated CMS administrator receives tenant-scoped ARM access without changing their CRM account',async t=>{
+ const {request,login,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',adminEmail:'owner@example.test',serviceEmail:'connector@example.test',servicePassword:'private-service-password',includedUntil:'2027-11-08T00:00:00.000Z'});
+ const {cookie}=await login();
+ const session=await(await request('/api/session',{headers:{Cookie:cookie}})).json();assert.equal(session.armConnected,true);
+ const contacts=await request('/api/arm/clients',{headers:{Cookie:cookie}});assert.equal(contacts.status,200);
+ assert(calls.some(call=>call.path==='/api/auth/login'&&JSON.parse(call.body).email==='connector@example.test'));
+ assert(calls.some(call=>call.path==='/users/me?fields=id,email'));
+ assert(calls.some(call=>call.path==='/api/clients'&&call.authorization==='Bearer private-crm-token'));
+ const publicConfig=await(await request('/api/config')).text();assert.match(publicConfig,/2027-11-08/);
+ assert.doesNotMatch(publicConfig+JSON.stringify(session)+cookie,/private-service-password|connector@example.test|private-crm-token/);
+});
+
+test('another CMS editor cannot use the administrator ARM connector',async t=>{
+ const {request,login,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',adminEmail:'different@example.test',serviceEmail:'connector@example.test',servicePassword:'private-service-password'});
+ const {cookie}=await login();
+ assert.equal((await(await request('/api/session',{headers:{Cookie:cookie}})).json()).armConnected,false);
+ assert.equal((await request('/api/arm/clients',{headers:{Cookie:cookie}})).status,401);
+ assert(!calls.some(call=>call.path==='/api/auth/login'||call.path==='/api/clients'));
+});
+
+test('delegated ARM access rejects a service account in another tenant',async t=>{
+ const {request,login,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',adminEmail:'owner@example.test',serviceEmail:'connector@example.test',servicePassword:'private-service-password',returnedTenant:'other-customer'});
+ const {cookie}=await login();
+ assert.equal((await request('/api/arm/clients',{headers:{Cookie:cookie}})).status,403);
+ assert(!calls.some(call=>call.path==='/api/clients'));
 });

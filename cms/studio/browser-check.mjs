@@ -43,8 +43,10 @@ try {
  await page.getByText(title,{exact:true}).waitFor();
  const row=page.locator('tr').filter({hasText:title});await row.getByRole('button',{name:/Editar/}).click();
  await page.locator('#editor-form [name=title]').fill(title+' edited');await page.getByRole('button',{name:/Guardar cambios/}).click();await page.getByText(title+' edited',{exact:true}).waitFor();
- await page.getByRole('link',{name:/Relaciones · ARM/}).click();await page.getByRole('heading',{name:/Cada relación/}).waitFor();
+ await page.getByRole('link',{name:/Relaciones · ARM/}).click();
  const config=await page.evaluate(()=>fetch('/api/config').then(r=>r.json()));
+ const session=await page.evaluate(()=>fetch('/api/session').then(r=>r.json()));
+ await page.getByRole('heading',{name:session.armConnected?/Las relaciones que te impulsan/:/Cada relación/}).waitFor();
  if(!config.armReady)assert.match(await page.locator('#main').textContent(),/pendiente de configuración/);
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Abrir menú'}).click();await page.getByRole('link',{name:/Inicio/}).click();
  await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0 && document.querySelector('#nav-backdrop').hidden);
