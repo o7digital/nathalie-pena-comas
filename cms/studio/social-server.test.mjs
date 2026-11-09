@@ -14,6 +14,7 @@ async function setup(t,email='owner@example.test'){
   else if(req.url.startsWith('/files/'))result={data:{id:mediaId,type:'image/jpeg',filesize:'10',folder:SOCIAL_MEDIA_FOLDER,width:1440,height:1440,modified_on:'2026-11-08T00:00:00Z'}};
   else if(req.url==='/assets/'+mediaId){res.setHeader('Content-Type','image/jpeg');const range=req.headers.range;if(range){res.statusCode=206;res.setHeader('Content-Range','bytes 0-9/10');}res.setHeader('Content-Length','10');return res.end(Buffer.alloc(10));}
   else if(req.url==='/arm/social')result={posts:[],channels:[],providers:[],offer:{enabled:true}};
+  else if(req.url==='/arm/social/billing/checkout'||req.url==='/arm/social/billing/portal')result={url:'https://checkout.stripe.com/c/pay/isolated',mode:'test'};
   else if(req.url==='/arm/social/posts/post-1'&&req.method==='GET')result={id:'post-1',version:1,media:{id:mediaId}};
   else if(req.url==='/arm/social/posts/post-1/approve')result={id:'post-1',status:'SCHEDULED'};
   else if(req.url==='/arm/social/posts')result={id:'post-1',...body,version:1,status:'DRAFT'};
@@ -39,6 +40,14 @@ test('native social BFF binds requests to the client service token and rejects u
  assert.equal((await request('/api/social/posts',{method:'POST',headers,body:JSON.stringify({title:'Bad',tenantId:'foreign-client'})})).status,400);
  assert.equal((await request('/api/social/posts',{method:'POST',headers:{...headers,Origin:'https://attacker.test'},body:'{}'})).status,403);
  assert(!calls.some(c=>c.path==='/arm/social/posts'));
+});
+test('annual billing forwards only the fixed Studio return URI and never proxies a webhook or client-supplied price',async t=>{
+ const {request,headers,calls}=await setup(t);
+ const response=await request('/api/social/billing/checkout',{method:'POST',headers,body:JSON.stringify({amount:1,tenantId:'another-client',redirectUri:'https://attacker.test/'})});
+ assert.equal(response.status,200);
+ assert.deepEqual(calls.find(c=>c.path==='/arm/social/billing/checkout').body,{redirectUri:'https://studio.example.test/social-callback.html'});
+ assert.equal((await request('/api/social/billing/webhook',{method:'POST',headers,body:'{}'})).status,404);
+ assert.equal((await request('/social-billing.js')).status,200);
 });
 test('OAuth return addresses are pinned and unprivileged CMS editors cannot delegate social access',async t=>{
  const {request,headers,calls}=await setup(t);

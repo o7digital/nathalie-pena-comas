@@ -2,6 +2,6 @@
   "name": "nathalie-studio",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node server.mjs", "test": "node --test *.test.mjs", "check": "node --check server.mjs && node --check social-media.mjs && node --check public/social.js && node --check public/social-callback.js && node --check reporting.mjs && node --check public/reporting.js && node --check translations.mjs && node --check public/app.js" },
+  "scripts": { "start": "node server.mjs", "test": "node --test *.test.mjs", "check": "node --check server.mjs && node --check social-media.mjs && node --check public/social.js && node --check public/social-billing.js && node --check public/social-callback.js && node --check reporting.mjs && node --check public/reporting.js && node --check translations.mjs && node --check public/app.js" },
   "engines": { "node": ">=22" }
 }

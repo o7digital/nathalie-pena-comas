@@ -113,7 +113,7 @@ Exécuter `node cms/studio/provision-reporting.mjs` avec les variables administr
 
 CSV UTF-8, virgules, maximum 240 Ko/2000 lignes, en-tête exact : `date,channel,metric,value,currency`. Dates ISO quotidiennes. Métriques sociales : `reach`, `impressions`, `profile_visits`, `link_clicks`, `engagements`, `video_views`, `new_followers`. Apple : `streams`, `downloads`, `royalties`. La devise est obligatoire pour les royalties et vide pour les comptes. Ne pas importer à la fois des totaux et leurs sous-totaux dans la même métrique. Les jours sans import restent vides dans les courbes ; le tableau et l'export permettent de vérifier la provenance. Les sommes monétaires restent séparées par devise.
 
-Le tarif est une **proposition mensuelle** configurée dans O7 CRM → Abonnements → Analytics & Reporting. Le Studio lit uniquement `/tenant/reporting-plan`, lié au tenant authentifié. Le montant reste à définir initialement ; aucune facturation Stripe n'est créée et les 12 mois de hosting restent indépendants. Le forfait social prévu à 9 USD dans Pulse n'est pas modifié par cette proposition.
+Le tarif est une **proposition mensuelle** configurée dans O7 CRM → Abonnements → Analytics & Reporting. Le Studio lit uniquement `/tenant/reporting-plan`, lié au tenant authentifié. Le montant reste à définir initialement ; aucune facturation Stripe n'est créée et les 12 mois de hosting restent indépendants. Le forfait Social indépendant est de 89 USD/an.
 
 Les secrets GA4/Shopify se configurent dans Railway → nathalie-cms → **dev** → **studio** → Variables. Si le service HF utilisé est Hugging Face, sa variable privée est `HF_TOKEN` dans ce même service, uniquement lorsqu'un usage serveur HF sera défini. Aucun token HF n'est requis par ce module ni envoyé au navigateur. Aucun secret dans les variables `PUBLIC_*`, dans Git ou dans le chat.
 
@@ -125,7 +125,7 @@ La route `#social` contient le module natif O7 pour les réseaux trouvés sur le
 
 Spotify reste un canal musical : lien du profil et imports d’écoutes / royalties dans Analytics & Reporting. La distribution des titres passe par le distributeur. L’import Spotify conserve sa propre source et ses devises.
 
-L’accès technique Social et son forfait (proposition de 9 USD/mois par défaut) sont pilotés dans O7 CRM → Abonnements. Le Studio reflète le tarif configuré. Aucun prélèvement n’est créé en activant le module ou en connectant un compte. Une souscription active et l’option Social activée sont nécessaires pour autoriser ou programmer des envois ; les brouillons restent disponibles.
+L’accès technique Social et son forfait annuel (89 USD/an par défaut, référence 9 USD/mois) sont pilotés dans O7 CRM → Abonnements. Le Studio reflète le tarif configuré. Aucun prélèvement n’est créé en activant le module ou en connectant un compte. Une souscription active et l’option Social activée sont nécessaires pour autoriser ou programmer des envois ; les brouillons restent disponibles.
 
 Les applications développeur Meta, Google/YouTube et X ne sont pas encore configurées. La connexion est donc indiquée comme en préparation. Leurs identifiants sont à conserver sur le **backend central CRM**, pas dans Vercel ni dans ce dépôt. L’URL de retour à enregistrer est `https://studio-dev-4236.up.railway.app/social-callback.html`. Le guide complet est dans le dépôt CRM : `docs/social-applications-setup.md`. Le token Hugging Face n’est pas utilisé pour publier sur les réseaux.
 
@@ -136,3 +136,11 @@ Directus Core limite les permissions aux collections : les filtres conditionnels
 Un redémarrage pendant un envoi ou une réponse ambiguë donne un état « Por verificar ». Aucun renvoi automatique susceptible de doubler une publication. Une vérification distante peut confirmer un objet déjà créé ; elle ne crée pas de nouveau post. L’annulation est possible tant qu’aucune destination n’a commencé son envoi.
 
 Contrôles : `npm --prefix cms/studio test`, `npm --prefix cms/studio run check`, `node cms/studio/social-browser-check.mjs`, ainsi que les vérifications contenu / ARM / reporting existantes. Les fournisseurs sociaux sont simulés dans les tests : aucune publication réelle. Après chaque modification, livraison uniquement sur `dev`, Railway dev et aperçu Vercel ; ne pas toucher main, main2 ou la production du site.
+
+## O7 Social annual subscription
+
+The subscription view and Social account view share `public/social-billing.js`. The annual offer is **89 USD/year**, 12 months renewable annually, compared with 9 USD/month (19 USD saved). Client consent is explicit before Stripe Checkout; saving content, connecting accounts, and saving the manager’s quote never charge the client. Hosting remains included for its existing 12-month period.
+
+The BFF forwards only authenticated `POST /api/social/billing/checkout` and `/portal`, fixing the Studio return origin and discarding client-supplied amounts/customer/tenant IDs. Stripe webhooks go directly to the central API and cannot be proxied through Studio. Prices, subscription state and payment mode come from central `/tenant/reporting-plan`. Test payment is clearly labeled; no real payment is available until the existing O7 live key is configured privately on the central backend. Keys never belong in Studio, Vercel or browser code.
+
+Run `node social-billing-browser-check.mjs` for isolated annual-price, consent, cancellation, network-error, handoff and mobile checks.

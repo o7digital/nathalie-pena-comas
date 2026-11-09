@@ -241,13 +241,13 @@ export function createStudioServer(options = {}) {
     }
     const route=path.slice('/api'.length);
     const allowed=(req.method==='GET'&&(/^\/social$/.test(route)||/^\/social\/(posts|calendar)$/.test(route)||/^\/social\/posts\/[a-zA-Z\d_-]+$/.test(route)||/^\/social\/oauth\/[a-zA-Z\d_-]+\/candidates$/.test(route)))||
-     (req.method==='POST'&&(/^\/social\/posts$/.test(route)||/^\/social\/posts\/[a-zA-Z\d_-]+\/(approve|cancel|refresh)$/.test(route)||/^\/social\/channels\/[a-zA-Z\d_-]+\/disconnect$/.test(route)||/^\/social\/oauth\/(meta|youtube|x)\/start$/.test(route)||route==='/social/oauth/complete'||/^\/social\/oauth\/[a-zA-Z\d_-]+\/confirm$/.test(route)))||
+     (req.method==='POST'&&(/^\/social\/posts$/.test(route)||/^\/social\/posts\/[a-zA-Z\d_-]+\/(approve|cancel|refresh)$/.test(route)||/^\/social\/channels\/[a-zA-Z\d_-]+\/disconnect$/.test(route)||/^\/social\/oauth\/(meta|youtube|x)\/start$/.test(route)||route==='/social/oauth/complete'||/^\/social\/billing\/(checkout|portal)$/.test(route)||/^\/social\/oauth\/[a-zA-Z\d_-]+\/confirm$/.test(route)))||
      (req.method==='PATCH'&&/^\/social\/posts\/[a-zA-Z\d_-]+$/.test(route));
     if(!allowed)throw new ApiError(404,'Operación social no disponible.');
     let input;
     if(req.method!=='GET'){
      input=await jsonBody(req);
-     if(route.endsWith('/start'))input={redirectUri:(config.origin||'https://studio-dev-4236.up.railway.app')+'/social-callback.html'};
+     if(route.endsWith('/start')||/^\/social\/billing\/(checkout|portal)$/.test(route))input={redirectUri:(config.origin||'https://studio-dev-4236.up.railway.app')+'/social-callback.html'};
      if(route==='/social/posts'||/^\/social\/posts\/[^/]+$/.test(route)){
       if(Object.keys(input).some(key=>!['clientKey','title','text','timezone','channelIds','options','version','mediaId'].includes(key)))throw new ApiError(400,'Campos no permitidos para esta publicación.');
       const {mediaId,...rest}=input;
@@ -426,7 +426,7 @@ export function createStudioServer(options = {}) {
   }
   if(path==='/social-callback.html')res.setHeader('Referrer-Policy','no-referrer');
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const relative=staticFiles[path] || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
@@ -437,7 +437,7 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','social.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
