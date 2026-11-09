@@ -17,6 +17,9 @@ test('CSV import preserves royalty currencies and stable IDs; duplicate or inval
  assert.throws(()=>importRows('apple-music',csv.replace('USD',''),'Missing currency'));
  assert.equal(importRows('apple-music',csv.replace('12.345','-1.2'),'Refund')[0].payload.value,-1.2);
 });
+test('Spotify imports retain their own source and currency without being counted as Apple royalties',()=>{
+ const rows=importRows('spotify',csv.replaceAll('Apple Music','Spotify'),'Spotify distributor');assert.equal(rows[0].payload.provider,'spotify');assert.equal(rows[0].payload.currency,'USD');assert.equal(rows[1].payload.metric,'streams');
+});
 test('quoted CSV handles commas and rejects trailing injected columns; exports neutralize formula text',()=>{
  const rows=importRows('apple-music',csv.replace('Apple Music','"Apple, Music"'),'=FORMULA');
  assert.equal(rows[0].payload.channel,'Apple, Music');

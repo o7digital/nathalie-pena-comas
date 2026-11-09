@@ -118,3 +118,21 @@ Le tarif est une **proposition mensuelle** configurée dans O7 CRM → Abonnemen
 Les secrets GA4/Shopify se configurent dans Railway → nathalie-cms → **dev** → **studio** → Variables. Si le service HF utilisé est Hugging Face, sa variable privée est `HF_TOKEN` dans ce même service, uniquement lorsqu'un usage serveur HF sera défini. Aucun token HF n'est requis par ce module ni envoyé au navigateur. Aucun secret dans les variables `PUBLIC_*`, dans Git ou dans le chat.
 
 Validation : `npm --prefix cms/studio test`, `npm --prefix cms/studio run check`, `node cms/studio/reporting-browser-check.mjs`. Les tests de navigateur utilisent des fixtures isolées ; ils ne créent ni statistiques ni factures chez Nathalie.
+
+## O7 Pulse Social natif
+
+La route `#social` contient le module natif O7 pour les réseaux trouvés sur le site d’origine : Instagram, Facebook, YouTube et X/Twitter. Il comprend les connexions OAuth avec choix explicite des comptes, les brouillons, une photo ou vidéo par publication, la prévisualisation, une confirmation avant envoi, la programmation avec fuseau horaire, le calendrier et le journal par destination. Le moteur et ses jetons chiffrés sont centralisés dans l’API O7 ; Buffer n’intervient pas dans cette chaîne.
+
+Spotify reste un canal musical : lien du profil et imports d’écoutes / royalties dans Analytics & Reporting. La distribution des titres passe par le distributeur. L’import Spotify conserve sa propre source et ses devises.
+
+L’accès technique Social et son forfait (proposition de 9 USD/mois par défaut) sont pilotés dans O7 CRM → Abonnements. Le Studio reflète le tarif configuré. Aucun prélèvement n’est créé en activant le module ou en connectant un compte. Une souscription active et l’option Social activée sont nécessaires pour autoriser ou programmer des envois ; les brouillons restent disponibles.
+
+Les applications développeur Meta, Google/YouTube et X ne sont pas encore configurées. La connexion est donc indiquée comme en préparation. Leurs identifiants sont à conserver sur le **backend central CRM**, pas dans Vercel ni dans ce dépôt. L’URL de retour à enregistrer est `https://studio-dev-4236.up.railway.app/social-callback.html`. Le guide complet est dans le dépôt CRM : `docs/social-applications-setup.md`. Le token Hugging Face n’est pas utilisé pour publier sur les réseaux.
+
+Les médias sont transférés en flux vers Directus (photo 25 Mo maximum, MP4 250 Mo), dans le dossier privé O7 Social créé par `node cms/studio/provision-social.mjs`. Les photos sont optimisées dans une nouvelle version JPEG carrée de 1440 px ; les originaux sont conservés. Les métadonnées du formulaire multipart précèdent le fichier, comme l’exige le transfert Directus. Les URL publiques signées ne fonctionnent que dans une fenêtre courte autour de l’envoi approuvé ; elles sont liées à la version du fichier, et supportent les lectures vidéo par plages d’octets. Le chargement en édition reste authentifié.
+
+Directus Core limite les permissions aux collections : les filtres conditionnels de dossier sont réservés à une autre offre. Le compte Website build conserve donc son accès serveur à `directus_files`, sans exposer son jeton au navigateur ; le chargeur du site n’utilise que les fichiers référencés par les collections de contenu public, jamais le dossier Social. Les fichiers Directus restent inaccessibles anonymement.
+
+Un redémarrage pendant un envoi ou une réponse ambiguë donne un état « Por verificar ». Aucun renvoi automatique susceptible de doubler une publication. Une vérification distante peut confirmer un objet déjà créé ; elle ne crée pas de nouveau post. L’annulation est possible tant qu’aucune destination n’a commencé son envoi.
+
+Contrôles : `npm --prefix cms/studio test`, `npm --prefix cms/studio run check`, `node cms/studio/social-browser-check.mjs`, ainsi que les vérifications contenu / ARM / reporting existantes. Les fournisseurs sociaux sont simulés dans les tests : aucune publication réelle. Après chaque modification, livraison uniquement sur `dev`, Railway dev et aperçu Vercel ; ne pas toucher main, main2 ou la production du site.

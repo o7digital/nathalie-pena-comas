@@ -1,3 +1,4 @@
+import {createSocialUI} from './social.js';
 import {createReportingUI} from './reporting.js';
 export {};
 const $=s=>document.querySelector(s);
@@ -12,7 +13,7 @@ const collectionFor={gallery:'gallery',videos:'videos',concerts:'concerts',album
 const labels={gallery:'Fotografías',videos:'Vídeos',concerts:'Actuaciones',albums:'Discografía',site_texts:'Textos e idiomas',site_images:'Mi sitio'};
 const state={data:null,session:null,config:{},filter:'all',search:'',locale:'es',editor:null,editorImage:'',arm:null,armTab:'clients',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
+const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription','social'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
 const imageId=row=>typeof row?.image==='string'?row.image:row?.image?.id;
 const image=(row,width=640)=>imageId(row)?`/api/image/${encodeURIComponent(imageId(row))}?w=${width}`:'/artist.webp';
 const badge=status=>`<span class="badge ${escapeHtml(status)}">${({published:'Publicado',draft:'Borrador',archived:'Archivado'})[status]||'Borrador'}</span>`;
@@ -24,7 +25,7 @@ async function api(path,options={}){
  const data=await response.json().catch(()=>({}));
  if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;throw error;}return data;
 }
-function showLogin(error=''){reportingUI.reset();state.session=null;state.data=null;state.arm=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
+function showLogin(error=''){socialUI.reset();reportingUI.reset();state.session=null;state.data=null;state.arm=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
 async function reload(){const result=await api('/api/content');state.data=result.content;renderNavigation();render();}
 function renderNavigation(){
  $('#navigation').innerHTML=nav.map(([key,title,glyph])=>`<a class="nav-item ${route()===key?'active':''} ${key==='arm'?'arm':''}" href="#${key}" ${route()===key?'aria-current="page"':''}>${icon(glyph)}<span>${title}</span>${['gallery','videos','albums'].includes(key)?`<small class="nav-count">${state.data?.[collectionFor[key]]?.filter(r=>r.status!=='archived').length??''}</small>`:''}</a>`).join('');
@@ -41,6 +42,7 @@ function render(){
  closeNav();
  if(current==='overview')return dashboard();
  if(current==='arm')return renderArm();
+ if(current==='social')return socialUI.show();
  if(current==='analytics')return reportingUI.show();
  if(current==='subscription')return reportingUI.subscription();
  const definition=state.site.sections.find(section=>section.id===current);
@@ -267,11 +269,12 @@ async function startSession(){
  state.session=await api('/api/session');$('#login-view').hidden=true;$('#studio-view').hidden=false;
  $('#account-name').textContent=state.session.name||state.session.email?.split('@')[0]||'Mi cuenta';
  $('#today').textContent=new Intl.DateTimeFormat('es',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Mexico_City'}).format(new Date());
- state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['arm','Relaciones · ARM','people'],['analytics','Analytics & Reporting','layout'],['subscription','Mi suscripción','briefcase']];
+ state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['arm','Relaciones · ARM','people'],['social','O7 Pulse Social','globe'],['analytics','Analytics & Reporting','layout'],['subscription','Mi suscripción','briefcase']];
  $('#sidebar-preview').href=state.config.preview;
  if(state.config.includedUntil){const date=new Date(state.config.includedUntil);if(Number.isFinite(date.getTime()))$('#workspace-plan').textContent='Hosting incluido hasta el '+new Intl.DateTimeFormat('es',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Mexico_City'}).format(date)+' · Renovación por configurar';}
  await reload();
 }
 async function init(){try{state.config=await api('/api/config');$('#login-mode-label').hidden=!state.config.armReady;await startSession();}catch(error){showLogin(error.status===401?'':error.message);}}
+const socialUI=createSocialUI({api,content:()=>state.data,isCurrent:()=>Boolean(state.session)&&route()==='social',toast});
 const reportingUI=createReportingUI({api,session:()=>state.session||{},config:()=>state.config,isCurrent:key=>Boolean(state.session)&&route()===key,toast});
 init();

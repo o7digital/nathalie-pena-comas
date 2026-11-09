@@ -1,7 +1,7 @@
 import { createHash, createSign } from 'node:crypto';
 
 export class ReportingError extends Error { constructor(status, message) { super(message); this.status = status; } }
-export const providers = ['ga4','instagram','facebook','youtube','tiktok','linkedin','x','apple-music','shopify'];
+export const providers = ['ga4','instagram','facebook','youtube','tiktok','linkedin','x','apple-music','spotify','shopify'];
 export const metricLabels = {
  sessions:'Visitas al sitio', page_views:'Páginas vistas', social_sessions:'Visitas desde redes',
  reach:'Alcance', impressions:'Impresiones', profile_visits:'Visitas al perfil', link_clicks:'Clics en enlaces',
@@ -40,7 +40,7 @@ export function importRows(provider,csv,source,now=new Date().toISOString()) {
  return parseCsv(csv).map((cells,index)=>{
   const [date,channel,metric,value,currency]=cells.map(v=>v.trim());
   const financial=metric==='royalties';
-  if(cells.length!==5||!dateOnly(date)||!channel||channel.length>120||!(provider==='apple-music'?['streams','downloads','royalties']:socialMetrics).includes(metric)||!/^[-]?\d+(?:\.\d{1,6})?$/.test(value)||!Number.isFinite(Number(value))||Math.abs(Number(value))>1e12||(!financial&&(!Number.isSafeInteger(Number(value))||Number(value)<0))||(financial?!['USD','EUR','MXN','CAD','GBP','CHF','JPY','SEK'].includes(currency):currency!==''))throw new ReportingError(400,`Revisa la fila ${index+2}: fecha, métrica, valor o moneda inválidos.`);
+  if(cells.length!==5||!dateOnly(date)||!channel||channel.length>120||!(['apple-music','spotify'].includes(provider)?['streams','downloads','royalties']:socialMetrics).includes(metric)||!/^[-]?\d+(?:\.\d{1,6})?$/.test(value)||!Number.isFinite(Number(value))||Math.abs(Number(value))>1e12||(!financial&&(!Number.isSafeInteger(Number(value))||Number(value)<0))||(financial?!['USD','EUR','MXN','CAD','GBP','CHF','JPY','SEK'].includes(currency):currency!==''))throw new ReportingError(400,`Revisa la fila ${index+2}: fecha, métrica, valor o moneda inválidos.`);
   const id=createHash('sha256').update(JSON.stringify([provider,date,channel,metric,currency])).digest('hex');
   if(seen.has(id))throw new ReportingError(400,`La fila ${index+2} repite una métrica del mismo día y canal.`);seen.add(id);
   return {id,date,provider,payload:{date,provider,channel,metric,value:Number(value),currency:currency||null,source:source.trim(),updatedAt:now,method:'import'}};

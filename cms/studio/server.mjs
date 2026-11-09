@@ -1,4 +1,5 @@
 import http from 'node:http';
+import {createSocialMedia,SocialMediaError} from './social-media.mjs';
 import { createReporting, createReportingConnectors, ReportingError, toCsv } from './reporting.mjs';
 import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -43,6 +44,7 @@ export function createStudioServer(options = {}) {
  let delegatedToken = null;
  let contentQueue=Promise.resolve();
  const contentWrite=work=>{const job=contentQueue.then(work);contentQueue=job.catch(()=>undefined);return job;};
+ const socialMedia=createSocialMedia({cms:config.cms,editorToken:config.editorToken,secret:config.secret,origin:config.origin||'https://studio-dev-4236.up.railway.app'});
  const reporting = createReporting({
   connectors: options.reportingConnectors || createReportingConnectors(),
   read: async(start,end) => {
@@ -99,6 +101,7 @@ export function createStudioServer(options = {}) {
   if (data !== undefined && !(data instanceof FormData)) headers['Content-Type'] = 'application/json';
   const response = await fetch(base.replace(/\/$/,'') + path, { method, headers, body: data === undefined ? undefined : data instanceof FormData ? data : JSON.stringify(data), signal: AbortSignal.timeout(60000), redirect: 'error' });
   const payload = response.status === 204 ? null : await response.json().catch(() => null);
+  if(!response.ok && base===config.crm && path.startsWith('/social') && [400,403,404,409,422,429,503].includes(response.status)){const message=Array.isArray(payload?.message)?payload.message.join(' · '):payload?.message;if(typeof message==='string'&&message.length<1500)throw new ApiError(response.status,message);}
   if (!response.ok) throw new ApiError(response.status === 401 ? 401 : response.status === 403 ? 403 : 502, response.status === 401 ? 'Tu sesión ha terminado. Vuelve a entrar.' : response.status === 403 ? 'Tu cuenta no tiene permiso para esta acción.' : 'El servicio no pudo completar la solicitud. Inténtalo de nuevo.');
   return payload;
  }
@@ -190,8 +193,9 @@ export function createStudioServer(options = {}) {
  async function serve(req, res) {
   const url = new URL(req.url, 'http://studio.local'), path=url.pathname;
   res.setHeader('X-Content-Type-Options','nosniff'); res.setHeader('Referrer-Policy','same-origin'); res.setHeader('X-Frame-Options','DENY');
-  res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+  res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; media-src 'self' blob:; font-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   if (path==='/health') return send(res,{ok:true});
+  if(/^\/social-media\/[a-f\d-]{36}$/.test(path)&&['GET','HEAD'].includes(req.method))return socialMedia.publicStream(req,res,url);
   if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas',includedUntil:config.includedUntil || null,sourceLocale:'es',translationReady:Boolean(config.translationKey||config.translate),translatedLanguages:10});
   if (path.startsWith('/api/')) {
    if (!['GET','POST','PATCH'].includes(req.method)) throw new ApiError(405,'Método no permitido.');
@@ -226,6 +230,45 @@ export function createStudioServer(options = {}) {
     return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady(),reportingOwner:Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase())});
    }
    if(path==='/api/site-map' && req.method==='GET')return send(res,siteMap);
+   if(path.startsWith('/api/social')) {
+    const previewMedia=path.match(/^\/api\/social\/media-preview\/([a-f\d-]{36})$/);
+    if(previewMedia&&req.method==='GET')return socialMedia.privateStream(req,res,previewMedia[1],s.access);
+    const crmToken=await crmTokenFor(s);
+    if(path==='/api/social/upload'&&req.method==='POST'){
+     await upstream(config.crm,'/social/access',crmToken);
+     await requireWrite(s.access,'directus_files','create');
+     return send(res,await socialMedia.upload(req,s.access));
+    }
+    const route=path.slice('/api'.length);
+    const allowed=(req.method==='GET'&&(/^\/social$/.test(route)||/^\/social\/(posts|calendar)$/.test(route)||/^\/social\/posts\/[a-zA-Z\d_-]+$/.test(route)||/^\/social\/oauth\/[a-zA-Z\d_-]+\/candidates$/.test(route)))||
+     (req.method==='POST'&&(/^\/social\/posts$/.test(route)||/^\/social\/posts\/[a-zA-Z\d_-]+\/(approve|cancel|refresh)$/.test(route)||/^\/social\/channels\/[a-zA-Z\d_-]+\/disconnect$/.test(route)||/^\/social\/oauth\/(meta|youtube|x)\/start$/.test(route)||route==='/social/oauth/complete'||/^\/social\/oauth\/[a-zA-Z\d_-]+\/confirm$/.test(route)))||
+     (req.method==='PATCH'&&/^\/social\/posts\/[a-zA-Z\d_-]+$/.test(route));
+    if(!allowed)throw new ApiError(404,'Operación social no disponible.');
+    let input;
+    if(req.method!=='GET'){
+     input=await jsonBody(req);
+     if(route.endsWith('/start'))input={redirectUri:(config.origin||'https://studio-dev-4236.up.railway.app')+'/social-callback.html'};
+     if(route==='/social/posts'||/^\/social\/posts\/[^/]+$/.test(route)){
+      if(Object.keys(input).some(key=>!['clientKey','title','text','timezone','channelIds','options','version','mediaId'].includes(key)))throw new ApiError(400,'Campos no permitidos para esta publicación.');
+      const {mediaId,...rest}=input;
+      if(Object.hasOwn(rest,'media'))throw new ApiError(400,'Selecciona el medio desde tu Studio.');
+      input={...rest,media:mediaId?await socialMedia.prepare(mediaId,s.access):null};
+     }
+     if(route.endsWith('/approve')){
+      if(Object.keys(input).some(key=>!['version','action','scheduledAt'].includes(key)))throw new ApiError(400,'Revisa la confirmación de publicación.');
+      const post=await upstream(config.crm,route.replace(/\/approve$/,''),crmToken);
+      if(post.version!==input.version)throw new ApiError(409,'El borrador ha cambiado. Vuelve a cargarlo.');
+      const due=input.action==='SCHEDULE'?Date.parse(input.scheduledAt):Date.now();
+      if(!Number.isFinite(due)||due>Date.now()+90*86400000||due<Date.now()-60000)throw new ApiError(400,'Revisa la fecha de programación.');
+      input={...input,media:post.media?.id?await socialMedia.prepare(post.media.id,s.access,due):null};
+     }
+    }
+    const query=new URLSearchParams();
+    if(req.method==='GET')for(const key of ['cursor','month'])if(url.searchParams.has(key))query.set(key,url.searchParams.get(key));
+    const result=await upstream(config.crm,route+(query.size?'?'+query.toString():''),crmToken,req.method,input);
+    return send(res,result);
+   }
+
    if(path==='/api/subscription' && req.method==='GET') {
     const token=await crmTokenFor(s);
     return send(res,await upstream(config.crm,'/tenant/reporting-plan',token));
@@ -381,8 +424,9 @@ export function createStudioServer(options = {}) {
    }
    throw new ApiError(404,'Página no encontrada.');
   }
+  if(path==='/social-callback.html')res.setHeader('Referrer-Policy','no-referrer');
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const relative=staticFiles[path] || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
@@ -393,11 +437,11 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','social.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
-  const status=error instanceof ApiError || error instanceof ReportingError?error.status:500;
+  const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError?error.status:500;
   send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message},status);
  }));
 }
