@@ -22,7 +22,7 @@ La lecture des collections et fichiers exige une authentification. L'identité `
 
 Les images des fiches publiées sont transformées par Directus et copiées au build dans `public/_cms/`, dossier ignoré par Git. Elles sont ensuite servies par Vercel. Le build nettoie les anciennes copies et utilise des noms avec empreinte de contenu. Les transformations sont mises en file pour limiter la charge. Les images distantes ne passent pas par l'optimisation Astro.
 
-Si le CMS, une image ou une fiche nécessaire est indisponible/invalide, le build échoue et le précédent déploiement reste disponible. Sans `DIRECTUS_URL`, le site utilise ses contenus locaux. Seules les variables Vercel **Preview, branche dev** sont configurées : `DIRECTUS_URL` et `DIRECTUS_READ_TOKEN`.
+Si le CMS, une image ou une fiche nécessaire est indisponible/invalide, le build échoue et le précédent déploiement reste disponible. Sans `DIRECTUS_URL`, le site utilise ses contenus locaux. Après la demande explicite de publication sur `main` du 8 novembre 2026, les variables `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN` et `PUBLIC_STUDIO_URL` sont configurées pour Vercel **Production**, en plus de **Preview, branche dev**. Le jeton de production réutilise l'identité de lecture du CMS Railway existant ; aucun accès d'écriture n'est transmis au site. Le Studio continue de publier ses aperçus sur `dev` ; une nouvelle publication en production exige toujours une instruction explicite.
 
 Le bootstrap est réexécutable : il crée les éléments manquants sans écraser les modifications éditoriales. Il répare aussi les uploads initiaux incomplets. Exécution depuis ce dépôt lié au bon projet Railway :
 
