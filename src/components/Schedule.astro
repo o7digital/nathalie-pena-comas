@@ -1,18 +1,18 @@
 ---
-import {localizedRecord} from '../lib/cms';
 import { localizer } from '../data/locales';
-import {schedule} from '../data/schedule';
-import type {Locale} from '../data/translations';
-interface Props {lang:Locale} const {lang}=Astro.props;const l = localizer(lang);const es=lang==='es';
+import { schedule } from '../data/schedule';
+import ConcertRow from './ConcertRow.astro';
+import type { Locale } from '../data/translations';
+interface Props { lang: Locale }
+const {lang} = Astro.props, l = localizer(lang);
 const today = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const upcoming=schedule.filter(event=>event.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
-const localize = (text:string) => !es ? l(text) : text
- .replace('Inaugural Concert','Concierto inaugural')
- .replace('National Symphony Orchestra','Orquesta Sinfónica Nacional')
- .replace('Györ Philharmonic Orchestra','Orquesta Filarmónica de Györ')
- .replace('Basilica of Györ','Basílica de Györ')
- .replace('Symphony Nr. 2 — Resurrection','Sinfonía n.º 2 — Resurrección')
- .replace('Dominican Republic','República Dominicana')
- .replace('Hungary','Hungría').replace('Vienna','Viena');
+const upcoming = schedule.filter(event => event.date >= today).sort((a,b) => a.date.localeCompare(b.date));
+const first = upcoming.slice(0,4), remaining = upcoming.slice(4);
 ---
-<section class="agenda section" id="schedule"><div class="section-top"><div><div class="kicker">{l("Agenda / En el escenario", "Schedule / On stage")}</div><h2 class="section-title">{l("Próximas", "Upcoming")}<br/><em>{l("actuaciones.", "performances.")}</em></h2></div><a href="#contact" class="text-link">{l("Consultar sobre conciertos", "Concert enquiries")} ↗</a></div><div class="concert-list">{upcoming.map(event=><article class="concert"><time datetime={event.date}><strong>{event.date.slice(8)}</strong><span>{new Intl.DateTimeFormat(lang,{month:'short',timeZone:'UTC'}).format(new Date(event.date))} / {event.date.slice(0,4)}</span></time><div class="concert-program"><h3>{localizedRecord('concerts',event.id,'title',lang,localize(event.title))}</h3><p>{localizedRecord('concerts',event.id,'ensemble',lang,localize(event.ensemble))}</p></div><div class="concert-place"><span>{localizedRecord('concerts',event.id,'venue',lang,localize(event.venue))}</span><small>{localizedRecord('concerts',event.id,'city',lang,localize(event.city))}</small></div></article>)}</div>{!upcoming.length&&<p>{l("Las próximas fechas se anunciarán aquí.", "Upcoming dates will be announced here.")}</p>}<p class="source-note">{l("Programa anunciado en el sitio oficial. Fechas sujetas a actualización.", "Programme announced on the official website. Dates subject to updates.")}</p></section>
+<section class="agenda section" id="schedule">
+ <div class="section-top"><div><div class="kicker">{l("Agenda / En el escenario", "Schedule / On stage")}</div><h2 class="section-title">{l("Próximas", "Upcoming")}<br/><em>{l("actuaciones.", "performances.")}</em></h2></div><a href="#contact" class="text-link">{l("Consultar sobre conciertos", "Concert enquiries")} ↗</a></div>
+ <div class="concert-list">{first.map(event => <ConcertRow event={event} lang={lang}/>)}</div>
+ {remaining.length > 0 && <details class="concert-more"><summary><span class="concert-more-closed">{l("Ver agenda completa", "View full schedule")}</span><span class="concert-more-open">{l("Ver menos fechas", "Show fewer dates")}</span><small>+ {remaining.length}</small><span class="concert-more-icon" aria-hidden="true">＋</span></summary><div class="concert-list">{remaining.map(event => <ConcertRow event={event} lang={lang}/>)}</div></details>}
+ {!upcoming.length && <p>{l("Las próximas fechas se anunciarán aquí.", "Upcoming dates will be announced here.")}</p>}
+ <p class="source-note">{l("Programa anunciado en el sitio oficial. Fechas sujetas a actualización.", "Programme announced on the official website. Dates subject to updates.")}</p>
+</section>

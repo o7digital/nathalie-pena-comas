@@ -15,7 +15,7 @@ test('the editorial map includes current artist copy, navigation, recordings, as
 });
 
 test('homepage and privacy editorial text does not bypass the content editor',async()=>{
- const components=['Hero','Story','International','Releases','Schedule','Repertoire','Videos','Editorial','Spirituosi','Gallery','Newsletter','Footer','Header','Dialogs','Privacy'];
+ const components=['Hero','Story','International','Releases','Schedule','ConcertRow','Repertoire','Videos','Editorial','Spirituosi','Gallery','Newsletter','Footer','Header','Dialogs','Privacy'];
  const uneditable=[];
  for(const name of components){
   const {ast}=await parse(await readFile(new URL(`../../src/components/${name}.astro`,import.meta.url),'utf8'));

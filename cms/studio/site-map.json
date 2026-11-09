@@ -132,6 +132,94 @@
       ]
     },
     {
+      "id": "concerts",
+      "title": "Agenda",
+      "icon": "calendar",
+      "anchor": "schedule",
+      "page": "home",
+      "image": null,
+      "collection": "concerts",
+      "fields": [
+        {
+          "key": "copy:Schedule / On stage",
+          "source": "Agenda / En el escenario",
+          "english": "Schedule / On stage",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Upcoming",
+          "source": "Próximas",
+          "english": "Upcoming",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:performances.",
+          "source": "actuaciones.",
+          "english": "performances.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concert enquiries",
+          "source": "Consultar sobre conciertos",
+          "english": "Concert enquiries",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:View full schedule",
+          "source": "Ver agenda completa",
+          "english": "View full schedule",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Show fewer dates",
+          "source": "Ver menos fechas",
+          "english": "Show fewer dates",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Upcoming dates will be announced here.",
+          "source": "Las próximas fechas se anunciarán aquí.",
+          "english": "Upcoming dates will be announced here.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Programme announced on the official website. Dates subject to updates.",
+          "source": "Programa anunciado en el sitio oficial. Fechas sujetas a actualización.",
+          "english": "Programme announced on the official website. Dates subject to updates.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Free admission",
+          "source": "Entrada libre",
+          "english": "Free admission",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Tickets coming soon",
+          "source": "Entradas próximamente",
+          "english": "Tickets coming soon",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Information & tickets",
+          "source": "Información y entradas",
+          "english": "Information & tickets",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
       "id": "about",
       "title": "La artista",
       "icon": "photo",
@@ -433,59 +521,6 @@
           "source": "Escuchar",
           "english": "Listen",
           "label": "Texto",
-          "auxiliary": false
-        }
-      ]
-    },
-    {
-      "id": "concerts",
-      "title": "Agenda",
-      "icon": "calendar",
-      "anchor": "schedule",
-      "page": "home",
-      "image": null,
-      "collection": "concerts",
-      "fields": [
-        {
-          "key": "copy:Schedule / On stage",
-          "source": "Agenda / En el escenario",
-          "english": "Schedule / On stage",
-          "label": "Antetítulo",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Upcoming",
-          "source": "Próximas",
-          "english": "Upcoming",
-          "label": "Título",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:performances.",
-          "source": "actuaciones.",
-          "english": "performances.",
-          "label": "Título",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Concert enquiries",
-          "source": "Consultar sobre conciertos",
-          "english": "Concert enquiries",
-          "label": "Texto del enlace",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Upcoming dates will be announced here.",
-          "source": "Las próximas fechas se anunciarán aquí.",
-          "english": "Upcoming dates will be announced here.",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Programme announced on the official website. Dates subject to updates.",
-          "source": "Programa anunciado en el sitio oficial. Fechas sujetas a actualización.",
-          "english": "Programme announced on the official website. Dates subject to updates.",
-          "label": "Descripción",
           "auxiliary": false
         }
       ]

@@ -10,7 +10,7 @@ type File = { id: string; width: number | null; height: number | null; type: str
 export type CmsRecord = {
  id: string; status: string; sort: number; title: string; detail?: string;
  image?: File; credit?: string; url?: string; youtube_id?: string; category?: string;
- date?: string; ensemble?: string; venue?: string; city?: string;
+ date?: string; ensemble?: string; venue?: string; city?: string; ticket_status?: string;
  key?: string; locale?: string; value?: string;
  source_hash?: string; auto_translated?: boolean; translated_at?: string;
 };

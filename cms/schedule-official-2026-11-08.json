@@ -1,0 +1,267 @@
+{
+  "source": "https://www.nathaliepenacomas.net/schedule",
+  "retrievedOn": "2026-11-08",
+  "sourceLocale": "es",
+  "events": [
+    {
+      "id": "concert-2026-01-07",
+      "date": "2026-01-07",
+      "title": "Concierto vienés: Gala de Año Nuevo",
+      "ensemble": "Orquesta de Cámara Iberoamericana",
+      "venue": "Auditorio Nacional de Música",
+      "city": "Madrid, España",
+      "url": "https://orquestadecamaraiberoamericana.koobin.com/concierto-vienes-070126-1930",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-01-09",
+      "date": "2026-01-09",
+      "title": "Concierto vienés: Gala de Año Nuevo",
+      "ensemble": "Orquesta de Cámara Iberoamericana",
+      "venue": "Centro Cultural Miguel Delibes",
+      "city": "Valladolid, España",
+      "url": "https://es.patronbase.com/_CCMiguelDelibes/Sections/Choose?prod_id=P420&perf_id=1&submit=Continuar",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-02-14",
+      "date": "2026-02-14",
+      "title": "Concierto para enamorados",
+      "ensemble": "Vienna Chamber Orchestra",
+      "venue": "Sala Dorada, Wiener Musikverein",
+      "city": "Viena, Austria",
+      "url": "https://www.musikverein.at/konzert/?id=0007e6b7",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-03-15",
+      "date": "2026-03-15",
+      "title": "Bizet: Carmen (Micaëla)",
+      "ensemble": "Channel Islands Chamber Orchestra",
+      "venue": "Rancho Campana Performing Arts Center",
+      "city": "Camarillo, Estados Unidos",
+      "url": "https://cichamberorchestra.org/general-admission/p/carmen-in-concert",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-04-03",
+      "date": "2026-04-03",
+      "title": "Bach: Johannes-Passion",
+      "ensemble": "Les Orpheistes Orchestra",
+      "venue": "Minoritenkirche",
+      "city": "Viena, Austria",
+      "url": "https://viennaticketing.com/de/klassische-konzerte-in-der-minoritenkirche.html",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-05-01",
+      "date": "2026-05-01",
+      "title": "Concierto de gala",
+      "ensemble": "Fiestas patronales de San Felipe",
+      "venue": "Parque Independencia",
+      "city": "Puerto Plata, República Dominicana",
+      "url": "",
+      "ticket_status": "free"
+    },
+    {
+      "id": "concert-2026-06-17",
+      "date": "2026-06-17",
+      "title": "Orff: Carmina Burana",
+      "ensemble": "85.º aniversario de la Orquesta Sinfónica Nacional de la República Dominicana",
+      "venue": "Teatro Nacional Eduardo Brito",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://uepatickets.com/tickets/es/entradas-teatro-carmina-burana",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-06-19",
+      "date": "2026-06-19",
+      "title": "Lanzamiento del sencillo «Esclavo y Amo»",
+      "ensemble": "Del nuevo EP de Nathalie Peña-Comas",
+      "venue": "Plataformas digitales",
+      "city": "",
+      "url": "https://open.spotify.com/intl-es/track/4BE0KqF21ot4HCBzuWR6aA",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-09-04",
+      "date": "2026-09-04",
+      "title": "Lanzamiento del sencillo «Sombras Nada Más»",
+      "ensemble": "Del nuevo EP de Nathalie Peña-Comas",
+      "venue": "Plataformas digitales",
+      "city": "",
+      "url": "https://open.spotify.com/intl-es/album/2XATWYXDhgBsIIWnN5ffWK",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-10-13",
+      "date": "2026-10-13",
+      "title": "Presentación del álbum Quinto Elemento: Tierra",
+      "ensemble": "Nathalie Peña-Comas",
+      "venue": "Teatro Nacional Eduardo Brito",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://orcd.co/quintoelemento",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-10-24",
+      "date": "2026-10-24",
+      "title": "Concierto inaugural",
+      "ensemble": "Orquesta Sinfónica Nacional",
+      "venue": "Centro Cultural Rainieri",
+      "city": "Punta Cana, República Dominicana",
+      "url": "https://www.instagram.com/centrorainieri/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-10-28",
+      "date": "2026-10-28",
+      "title": "Brahms: Ein deutsches Requiem",
+      "ensemble": "Orquesta Filarmónica de Györ · Philharmonia Chor Wien",
+      "venue": "Basílica de Györ",
+      "city": "Györ, Hungría",
+      "url": "https://gyfz.hu/icalendar/event/currentDate/2026-10-28/ice_id/511/m/98",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-11-04",
+      "date": "2026-11-04",
+      "title": "Mahler: Sinfonía n.º 2 — Resurrección",
+      "ensemble": "Orquesta Sinfónica Nacional",
+      "venue": "Teatro Nacional Eduardo Brito",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://uepatickets.com/tickets/es/entradas-teatro-temporada-sinfonica-2026-4-noviembre-new",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-11-15",
+      "date": "2026-11-15",
+      "title": "Brahms: Ein deutsches Requiem",
+      "ensemble": "Orquesta Filarmónica de Györ · Philharmonia Chor Wien",
+      "venue": "Minoritenkirche",
+      "city": "Viena, Austria",
+      "url": "https://viennaticketing.com/en/concerts-in-the-minoriten-church.html",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-11-24",
+      "date": "2026-11-24",
+      "title": "Concierto: Molina & Friends",
+      "ensemble": "Orquesta Sinfónica Nacional",
+      "venue": "Teatro Nacional Eduardo Brito",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://www.instagram.com/popularenlinea/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-12-10",
+      "date": "2026-12-10",
+      "title": "Concierto: Molina & Friends",
+      "ensemble": "Orquesta Sinfónica Nacional",
+      "venue": "Gran Teatro Regional del Cibao",
+      "city": "Santiago, República Dominicana",
+      "url": "https://www.instagram.com/popularenlinea/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-12-16",
+      "date": "2026-12-16",
+      "title": "Conversatorio y recital",
+      "ensemble": "Centro Cultural Taino",
+      "venue": "Casa del Cordón",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://casadelcordon.com/conversatorios",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2026-12-20",
+      "date": "2026-12-20",
+      "title": "Concierto: Molina & Friends",
+      "ensemble": "Orquesta Sinfónica Nacional",
+      "venue": "Anfiteatro Juan Lockward",
+      "city": "Puerto Plata, República Dominicana",
+      "url": "",
+      "ticket_status": "free"
+    },
+    {
+      "id": "concert-2027-03-26",
+      "date": "2027-03-26",
+      "title": "Bach: Johannes-Passion",
+      "ensemble": "Les Orpheistes Orchestra",
+      "venue": "Minoritenkirche",
+      "city": "Viena, Austria",
+      "url": "https://viennaticketing.com/de/klassische-konzerte-in-der-minoritenkirche.html",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-04-07",
+      "date": "2027-04-07",
+      "title": "Quinto Elemento: Tierra",
+      "ensemble": "Nathalie Peña-Comas",
+      "venue": "Teatro Nacional Eduardo Brito",
+      "city": "Santo Domingo, República Dominicana",
+      "url": "https://www.tuboleta.com.do/",
+      "ticket_status": "soon"
+    },
+    {
+      "id": "concert-2027-07-01",
+      "date": "2027-07-01",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-07-03",
+      "date": "2027-07-03",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-07-08",
+      "date": "2027-07-08",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-07-10",
+      "date": "2027-07-10",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-07-14",
+      "date": "2027-07-14",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    },
+    {
+      "id": "concert-2027-07-16",
+      "date": "2027-07-16",
+      "title": "Verdi: Aida (Aida)",
+      "ensemble": "Vienna Opera Summer Festival",
+      "venue": "",
+      "city": "Viena, Austria",
+      "url": "https://www.opernsommer.at/en/",
+      "ticket_status": "available"
+    }
+  ]
+}

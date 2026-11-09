@@ -11,7 +11,7 @@ import { translateSpanish,translationWrites,localizedFields,recordTextKey,assert
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
  gallery: ['title','credit','image'], albums: ['title','detail','url','category','image'],
- videos: ['title','detail','youtube_id','category','image'], concerts: ['title','date','ensemble','venue','city'],
+ videos: ['title','detail','youtube_id','category','image'], concerts: ['title','date','ensemble','venue','city','url','ticket_status'],
  site_images: ['title','key','image'], site_texts: ['key','locale','value'],
 };
 const idPattern = /^[a-zA-Z0-9_-]{1,200}$/;
@@ -184,6 +184,7 @@ export function createStudioServer(options = {}) {
   for (const [key,value] of Object.entries(input)) if (key !== 'sort' && value !== null && (typeof value !== 'string' || value.length>12000)) throw new ApiError(400,'Revisa el contenido del formulario.');
   if (input.image && !uuid.test(input.image)) throw new ApiError(400,'Selecciona una imagen válida.');
   if (input.url) { let link; try {link=new URL(input.url);} catch{} if(!link || link.protocol!=='https:' || link.username || link.password) throw new ApiError(400,'El enlace debe empezar por https://.'); }
+  if (input.ticket_status !== undefined && !['available','soon','free','none'].includes(input.ticket_status)) throw new ApiError(400,'Selecciona una disponibilidad válida para las entradas.');
   if (input.youtube_id && !/^[A-Za-z\d_-]{11}$/.test(input.youtube_id)) throw new ApiError(400,'Introduce un enlace o identificador de YouTube válido.');
   if (input.date && (!/^\d{4}-\d{2}-\d{2}$/.test(input.date) || Number.isNaN(Date.parse(input.date)))) throw new ApiError(400,'Selecciona una fecha válida.');
   if (input.locale && !locales.includes(input.locale)) throw new ApiError(400,'Selecciona un idioma disponible.');

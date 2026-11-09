@@ -207,7 +207,12 @@
     "Repertoire": "Repertoire",
     "Soprano · Classical": "Sopran · Klassik",
     "Contemporary": "Zeitgenössisch",
-    "Songs · Latin roots": "Lieder · Lateinamerikanische Wurzeln"
+    "Songs · Latin roots": "Lieder · Lateinamerikanische Wurzeln",
+    "View full schedule": "Gesamten Spielplan ansehen",
+    "Show fewer dates": "Weniger Termine anzeigen",
+    "Free admission": "Eintritt frei",
+    "Tickets coming soon": "Tickets demnächst erhältlich",
+    "Information & tickets": "Informationen und Tickets"
   },
   "fr": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "SORTIE 2026 ✦ L'ART DE SENTIR ✦ NOUVELLE MUSIQUE",
@@ -417,7 +422,12 @@
     "Repertoire": "Répertoire",
     "Soprano · Classical": "Soprano · Classique",
     "Contemporary": "Contemporain",
-    "Songs · Latin roots": "Chansons · Racines latines"
+    "Songs · Latin roots": "Chansons · Racines latines",
+    "View full schedule": "Voir le programme complet",
+    "Show fewer dates": "Voir moins de dates",
+    "Free admission": "Entrée libre",
+    "Tickets coming soon": "Billets bientôt disponibles",
+    "Information & tickets": "Informations et billets"
   },
   "it": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "USCITA 2026 ✦ L'ARTE DEL SENTIRE ✦ NUOVA MUSICA",
@@ -627,7 +637,12 @@
     "Repertoire": "Repertorio",
     "Soprano · Classical": "Soprano · Classica",
     "Contemporary": "Contemporaneo",
-    "Songs · Latin roots": "Canzoni · Radici latine"
+    "Songs · Latin roots": "Canzoni · Radici latine",
+    "View full schedule": "Vedi l'intero programma",
+    "Show fewer dates": "Vedi meno date",
+    "Free admission": "Ingresso gratuito",
+    "Tickets coming soon": "Biglietti presto disponibili",
+    "Information & tickets": "Informazioni e biglietti"
   },
   "sv": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 RELEASE ✦ KONSTEN ATT KÄNLA ✦ NY MUSIK",
@@ -837,7 +852,12 @@
     "Repertoire": "Repertoar",
     "Soprano · Classical": "Sopran · Klassiskt",
     "Contemporary": "Samtida",
-    "Songs · Latin roots": "Sånger · Latinska rötter"
+    "Songs · Latin roots": "Sånger · Latinska rötter",
+    "View full schedule": "Se hela programmet",
+    "Show fewer dates": "Se färre datum",
+    "Free admission": "Fri entré",
+    "Tickets coming soon": "Biljetter kommer snart",
+    "Information & tickets": "Information och biljetter"
   },
   "hu": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026-OS KIADÁS ✦ AZ ÉRZÉS MŰVÉSZETE ✦ ÚJ ZENE",
@@ -1047,7 +1067,12 @@
     "Repertoire": "Repertoár",
     "Soprano · Classical": "Szoprán · Klasszikus",
     "Contemporary": "Kortárs",
-    "Songs · Latin roots": "Dalok · Latin gyökerek"
+    "Songs · Latin roots": "Dalok · Latin gyökerek",
+    "View full schedule": "Teljes program megtekintése",
+    "Show fewer dates": "Kevesebb dátum megtekintése",
+    "Free admission": "Ingyenes belépés",
+    "Tickets coming soon": "Jegyek hamarosan",
+    "Information & tickets": "Információ és jegyek"
   },
   "hr": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "IZDANJE 2026. ✦ UMJETNOST OSJEĆAJA ✦ NOVA GLAZBA",
@@ -1257,7 +1282,12 @@
     "Repertoire": "Repertoar",
     "Soprano · Classical": "Sopran · Klasika",
     "Contemporary": "Suvremeno",
-    "Songs · Latin roots": "Pjesme · Latinoamerički korijeni"
+    "Songs · Latin roots": "Pjesme · Latinoamerički korijeni",
+    "View full schedule": "Prikaži cijeli raspored",
+    "Show fewer dates": "Prikaži manje datuma",
+    "Free admission": "Besplatan ulaz",
+    "Tickets coming soon": "Ulaznice uskoro u prodaji",
+    "Information & tickets": "Informacije i ulaznice"
   },
   "ru": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "РЕЛИЗ 2026 ГОДА ✦ ИСКУССТВО ЧУВСТВОВАТЬ ✦ НОВАЯ МУЗЫКА",
@@ -1467,7 +1497,12 @@
     "Repertoire": "Репертуар",
     "Soprano · Classical": "Сопрано · Классика",
     "Contemporary": "Современная музыка",
-    "Songs · Latin roots": "Песни · Латиноамериканские корни"
+    "Songs · Latin roots": "Песни · Латиноамериканские корни",
+    "View full schedule": "Смотреть полный расписание",
+    "Show fewer dates": "Показать меньше дат",
+    "Free admission": "Вход свободный",
+    "Tickets coming soon": "Билеты скоро в продаже",
+    "Information & tickets": "Информация и билеты"
   },
   "zh-TW": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 年發布 ✦ 感覺的藝術 ✦ 新音樂",
@@ -1677,7 +1712,12 @@
     "Repertoire": "曲目",
     "Soprano · Classical": "女高音 · 古典",
     "Contemporary": "當代",
-    "Songs · Latin roots": "歌曲 · 拉丁根源"
+    "Songs · Latin roots": "歌曲 · 拉丁根源",
+    "View full schedule": "查看完整節目表",
+    "Show fewer dates": "查看較少日期",
+    "Free admission": "免費入場",
+    "Tickets coming soon": "門票即將開售",
+    "Information & tickets": "資訊與門票"
   },
   "ja": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 年リリース ✦ 感じる芸術 ✦ 新しい音楽",
@@ -1887,6 +1927,11 @@
     "Repertoire": "レパートリー",
     "Soprano · Classical": "ソプラノ · クラシック",
     "Contemporary": "コンテンポラリー",
-    "Songs · Latin roots": "歌曲 · ラテンのルーツ"
+    "Songs · Latin roots": "歌曲 · ラテンのルーツ",
+    "View full schedule": "全日程を見る",
+    "Show fewer dates": "表示する日程を減らす",
+    "Free admission": "入場無料",
+    "Tickets coming soon": "チケット発売予定",
+    "Information & tickets": "情報とチケット"
   }
 }

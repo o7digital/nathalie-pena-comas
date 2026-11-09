@@ -79,6 +79,16 @@ test('cross-origin mutations are rejected before the CMS is changed',async t=>{
  assert.equal(response.status,403);assert(!calls.some(call=>call.method==='PATCH'));
 });
 
+test('concert reservation fields stay editable with validated availability and safe HTTPS links',async t=>{
+ const {request,login,origin,calls}=await setup(t);const {cookie}=await login();
+ const write=body=>request('/api/content/concerts/concert-fixture',{method:'PATCH',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ assert.equal((await write({ticket_status:'soon',url:'https://www.tuboleta.com.do/'})).status,200);
+ assert(calls.some(call=>call.method==='PATCH'&&call.path==='/items/concerts/concert-fixture'&&JSON.parse(call.body).ticket_status==='soon'));
+ assert.equal((await write({ticket_status:'sold-without-confirmation'})).status,400);
+ assert.equal((await write({ticket_status:'available',url:'javascript:alert(1)'})).status,400);
+ assert.equal((await write({ticket_status:'free',url:''})).status,200);
+});
+
 test('read-only identities cannot trigger a preview rebuild',async t=>{
  const {request,login,origin,calls}=await setup(t,{readOnly:true});const {cookie}=await login();
  const response=await request('/api/publish',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:'{}'});

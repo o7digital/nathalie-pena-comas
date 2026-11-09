@@ -1,9 +1,9 @@
 import { readFile,writeFile } from 'node:fs/promises';
 import ts from 'typescript';
 const specs=[
- ['home','Inicio','home','home','Hero','hero'],['about','La artista','photo','about','Story','story'],
+ ['home','Inicio','home','home','Hero','hero'],['concerts','Agenda','calendar','schedule','Schedule,ConcertRow',null,'concerts'],['about','La artista','photo','about','Story','story'],
  ['voice','Trayectoria','briefcase','voice','International'],['albums','Discografía','album','music','Releases',null,'albums'],
- ['concerts','Agenda','calendar','schedule','Schedule',null,'concerts'],['repertorio','Repertorio','album','repertorio','Repertoire'],
+ ['repertorio','Repertorio','album','repertorio','Repertoire'],
  ['videos','Vídeos','video','media','Videos',null,'videos'],['news','Prensa y noticias','text','news','Editorial','press'],
  ['spirituosi','Spirituosi','people','spirituosi','Spirituosi','spirituosi'],['gallery','Galería','photo','gallery','Gallery',null,'gallery'],
  ['newsletter','Newsletter','text','newsletter','Newsletter'],['contact','Contacto','people','contact','Footer'],

@@ -1,0 +1,18 @@
+---
+import { concertText, type ConcertEvent } from '../data/schedule';
+import { localizer } from '../data/locales';
+import type { Locale } from '../data/translations';
+interface Props { event: ConcertEvent; lang: Locale }
+const {event, lang} = Astro.props;
+const l = localizer(lang);
+---
+<article class="concert" data-concert-date={event.date}>
+ <time datetime={event.date}><strong>{event.date.slice(8)}</strong><span>{new Intl.DateTimeFormat(lang,{month:'short',timeZone:'UTC'}).format(new Date(event.date))} / {event.date.slice(0,4)}</span></time>
+ <div class="concert-program"><h3>{concertText(event,'title',lang)}</h3><p>{concertText(event,'ensemble',lang)}</p></div>
+ <div class="concert-place">{event.venue && <span>{concertText(event,'venue',lang)}</span>}<small>{concertText(event,'city',lang)}</small></div>
+ <div class="concert-tickets">
+  {event.ticket_status==='free' ? <span class="concert-ticket-note">{l("Entrada libre", "Free admission")}</span>
+   : event.ticket_status==='soon' ? <span class="concert-ticket-note">{l("Entradas próximamente", "Tickets coming soon")}</span>
+   : event.url && <a href={event.url} class="text-link" target="_blank" rel="noopener noreferrer">{l("Información y entradas", "Information & tickets")} ↗</a>}
+ </div>
+</article>

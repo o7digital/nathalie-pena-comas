@@ -46,7 +46,7 @@ const definitions = {
  gallery: { label: 'Fotografías', icon: 'photo_library', fields: [field('title'), image, field('credit')] },
  albums: { label: 'Álbumes', icon: 'album', fields: [field('title'), image, field('detail'), field('url'), field('category', 'string', { meta: { interface: 'select-dropdown', options: { choices: [{ text: 'Clásico', value: 'classical' }, { text: 'Contemporáneo', value: 'contemporary' }] } } })] },
  videos: { label: 'Videos', icon: 'movie', fields: [field('title'), image, field('detail'), field('youtube_id'), field('category', 'string', { meta: { interface: 'select-dropdown', options: { choices: [{ text: 'Ópera', value: 'opera' }, { text: 'Video musical', value: 'film' }] } } })] },
- concerts: { label: 'Conciertos', icon: 'event', fields: [field('title'), field('date', 'date', { meta: { interface: 'datetime' } }), field('ensemble'), field('venue'), field('city')] },
+ concerts: { label: 'Conciertos', icon: 'event', fields: [field('title'), field('date', 'date', { meta: { interface: 'datetime' } }), field('ensemble'), field('venue'), field('city'), field('url'), field('ticket_status', 'string', { meta: { interface: 'select-dropdown', options: { choices: [{text:'Información y entradas',value:'available'},{text:'Próximamente',value:'soon'},{text:'Entrada libre',value:'free'},{text:'Sin enlace',value:'none'}] } } })] },
  site_images: { label: 'Imágenes de las secciones', icon: 'wallpaper', fields: [field('title'), field('key'), image] },
  site_texts: { label: 'Textos y traducciones', icon: 'translate', fields: [field('key'), field('locale', 'string', { meta: { interface: 'select-dropdown', options: { choices: ['es','en','de','fr','it','sv','hu','hr','ru','zh-TW','ja'].map(value => ({ text: value, value })) } } }), field('value', 'text')] },
 };
@@ -116,8 +116,8 @@ await insertMissing('gallery', gallery.map(({ src, ...row }, i) => published({ .
 const opera = await variable('src/components/Videos.astro', 'localOpera');
 const films = await variable('src/components/Videos.astro', 'localFilms');
 await insertMissing('videos', [...opera.map(row => ({ ...row, category: 'opera' })), ...films.map(row => ({ ...row, category: 'film' }))].map(({ id, ...row }, i) => published({ ...row, youtube_id: id }, i, `video-${id}`)));
-const concerts = await variable('src/data/schedule.ts', 'localSchedule');
-await insertMissing('concerts', concerts.map((row, i) => published(row, i, `concert-${row.date}`)));
+const concerts = JSON.parse(await readFile(new URL('./schedule-official-2026-11-08.json', import.meta.url), 'utf8')).events;
+await insertMissing('concerts', concerts.map((row, i) => published(row, i, row.id)));
 const images = [ ['hero','Retrato principal','src/assets/official/hero.jpg'], ['story','Biografía','src/assets/official/editorial.jpg'], ['spirituosi','Ensemble Spirituosi','src/assets/official/spirituosi.jpg'], ['press','Prensa','src/assets/official/press-oh.jpeg'] ];
 await insertMissing('site_images', await Promise.all(images.map(async ([key,title,path], i) => published({ key, title, image: await upload(resolve(path)) }, i, key))));
 

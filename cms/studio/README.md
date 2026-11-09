@@ -6,7 +6,7 @@ Interface éditoriale dédiée, hébergée dans le service Railway `studio`, env
 
 Utiliser les identifiants Directus existants pour le mode « Studio ». L'administrateur provisoire accède aussi à l'ARM depuis cette session.
 
-Le menu suit le site : **Inicio, La artista, Trayectoria, Discografía, Agenda, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages d’Olivia. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
+Le menu suit le site : **Inicio, Agenda, La artista, Trayectoria, Discografía, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages d’Olivia. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
 
 Le catalogue couvre les **190 textes fixes** actuellement utilisés dans le site et ses contrôles, en complément des textes des collections médias. Les textes existants sont préremplis. Le vert, le fond léger et le libellé « Editable » identifient les champs modifiables ; les traductions en relecture restent de couleur neutre.
 
@@ -144,3 +144,15 @@ The subscription view and Social account view share `public/social-billing.js`. 
 The BFF forwards only authenticated `POST /api/social/billing/checkout` and `/portal`, fixing the Studio return origin and discarding client-supplied amounts/customer/tenant IDs. Stripe webhooks go directly to the central API and cannot be proxied through Studio. Prices, subscription state and payment mode come from central `/tenant/reporting-plan`. Test payment is clearly labeled; no real payment is available until the existing O7 live key is configured privately on the central backend. Keys never belong in Studio, Vercel or browser code.
 
 Run `node social-billing-browser-check.mjs` for isolated annual-price, consent, cancellation, network-error, handoff and mobile checks.
+
+## Agenda officielle actualisée le 8 novembre 2026
+
+La source https://www.nathaliepenacomas.net/schedule a été transcrite dans `cms/schedule-official-2026-11-08.json` : 26 événements, dont 13 à venir à la date de l’import, jusqu’au 16 juillet 2027. Les quatre identifiants existants sont conservés ; aucun événement client n’est supprimé. L’espagnol reste la source, avec dix traductions suivies par hash. Le frontend sans CMS utilise le même contenu et ses traductions locales.
+
+L’agenda apparaît immédiatement après le hero, avant la biographie avec la robe bleue. Les quatre prochaines dates sont ouvertes ; les suivantes se déplient sans JavaScript. Les réservations reprennent les liens officiels ; les entrées libres et les billets prochainement disponibles restent des mentions distinctes.
+
+Dans le Studio, Agenda suit Inicio. Les filtres Próximas / Historial / Todas distinguent les dates, indépendamment du filtre de publication. Les événements passés sont triés du plus récent au plus ancien. L’éditeur permet de modifier `url` et `ticket_status` (available / soon / free / none), avec validation HTTPS.
+
+`node cms/import-official-schedule.mjs` prépare un bilan sans écrire ; `--apply` sauvegarde les contenus concernés hors Git dans un dossier privé puis importe uniquement dans Directus dev. Variables privées : `DIRECTUS_URL`, `ADMIN_TOKEN`, `OPENAI_API_KEY` et éventuellement `TRANSLATION_MODEL`. Il préserve les identifiants existants et refuse de publier implicitement un événement auparavant en brouillon/archivé. Il ne déploie jamais en production. Une republication de l’aperçu est nécessaire après les modifications du CMS.
+
+Validation : `tests/schedule.spec.ts`, `node cms/studio/calendar-browser-check.mjs`, tests Studio et vérification Astro.
