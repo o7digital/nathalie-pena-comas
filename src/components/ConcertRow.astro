@@ -13,6 +13,6 @@ const l = localizer(lang);
  <div class="concert-tickets">
   {event.ticket_status==='free' ? <span class="concert-ticket-note">{l("Entrada libre", "Free admission")}</span>
    : event.ticket_status==='soon' ? <span class="concert-ticket-note">{l("Entradas próximamente", "Tickets coming soon")}</span>
-   : event.url && <a href={event.url} class="text-link" target="_blank" rel="noopener noreferrer">{l("Información y entradas", "Information & tickets")} ↗</a>}
+   : event.ticket_status==='available' && event.url && <a href={event.url} class="text-link" target="_blank" rel="noopener noreferrer">{l("Información y entradas", "Information & tickets")} ↗</a>}
  </div>
 </article>
