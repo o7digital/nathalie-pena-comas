@@ -83,7 +83,9 @@ Routes : `/es/`, `/en/`, `/de/` (Autriche et Allemagne), `/fr/`, `/it/`, `/sv/`,
 
 Les traductions de démonstration sont issues d’une base automatique avec révision éditoriale ; une validation par des locuteurs natifs est recommandée avant une communication officielle. Les titres des œuvres, albums, noms propres et crédits restent dans leur forme officielle. Les textes additionnels se trouvent dans `src/data/localized.json` et le registre des langues dans `src/data/locales.ts`. Le référencement de chaque marché nécessite un travail de localisation complémentaire.
 
-## Olivia AI v2
+## Nath AI
+
+Nath AI est le nom affiché de l’assistante. Les clés éditoriales `olivia:*`, le stockage de session et le service Olivia restent compatibles ; les anciens textes du CMS sont adaptés au nom Nath AI lors du build.
 
 Le widget artistique est disponible sur les 11 versions et leurs pages de confidentialité. Son interface et la langue de chaque requête suivent la route actuelle. L’historique et l’identifiant visiteur sont conservés dans `sessionStorage` entre les langues ; les messages déjà reçus gardent leur langue d’origine. Une nouvelle conversation efface l’historique local et crée un nouvel identifiant, sans prétendre supprimer les données du service.
 

@@ -6,7 +6,7 @@ Interface éditoriale dédiée, hébergée dans le service Railway `studio`, env
 
 Utiliser les identifiants Directus existants pour le mode « Studio ». L'administrateur provisoire accède aussi à l'ARM depuis cette session.
 
-Le menu suit le site : **Inicio, Agenda, La artista, Trayectoria, Discografía, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages d’Olivia. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
+Le menu suit le site : **Inicio, Agenda, La artista, Trayectoria, Discografía, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages de Nath AI. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
 
 Le catalogue couvre les **190 textes fixes** actuellement utilisés dans le site et ses contrôles, en complément des textes des collections médias. Les textes existants sont préremplis. Le vert, le fond léger et le libellé « Editable » identifient les champs modifiables ; les traductions en relecture restent de couleur neutre.
 
