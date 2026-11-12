@@ -67,7 +67,9 @@ Aucun identifiant de mesure n’est fourni ni activé par défaut. `.env.example
 
 GA4 reçoit `music_platform_click` avec `platform`, `destination`, `language`, `section`. Meta reçoit `MusicPlatformClick` uniquement avec consentement publicitaire. Les paramètres UTM entrants restent disponibles pour la mesure de campagne des fournisseurs. Les pixels ne sont jamais utilisés comme prérequis aux liens musicaux.
 
-YouTube ne reçoit aucune requête initiale : ouverture du dialogue, puis confirmation de lecture avant de charger `youtube-nocookie.com`. Un lien direct YouTube est disponible si l’intégration est bloquée. Escape ferme le dialogue et rétablit le focus ; fermeture supprime le lecteur. Les dialogues natifs confinent le focus clavier. Les animations respectent `prefers-reduced-motion`.
+L’accueil ouvre une introduction YouTube silencieuse de 18 secondes (« Ave Maria desde El Vaticano »), puis passe au portrait et à l’album toutes les cinq secondes. La durée commence à la lecture effective. Le lecteur utilise `youtube-nocookie.com`, `mute=1` et `playsinline=1`. La vidéo conserve son cadrage sur ordinateur et mobile. Les commandes permettent de passer aux photos, revoir l’intro ou suspendre la séquence ; elle se met aussi en pause hors écran, dans un onglet masqué ou pendant un dialogue. En cas de blocage YouTube, le portrait reste visible et le diaporama prend le relais après huit secondes. L’intro automatique est désactivée avec `prefers-reduced-motion`, l’économie de données signalée par le navigateur ou un lien vers une autre section. Sans JavaScript, le portrait reste affiché.
+
+Le bouton « Écouter Ave Maria » ouvre la vidéo complète avec son dans le dialogue existant. Les vidéos complètes ne se chargent qu’après confirmation de lecture. Un lien direct YouTube reste disponible si l’intégration est bloquée. Escape ferme le dialogue et rétablit le focus ; la fermeture supprime le lecteur. Les dialogues natifs confinent le focus clavier.
 
 Avant d’activer de vrais identifiants publicitaires, compléter la politique avec l’identité du responsable, les contacts et les informations de conservation propres aux comptes utilisés. Les pages actuelles décrivent les fonctions livrées.
 
@@ -75,7 +77,7 @@ Avant d’activer de vrais identifiants publicitaires, compléter la politique a
 
 Astro 5 est conservé conformément au brief. L’audit npm signale encore des avis concernant Astro nécessitant une migration majeure pour disparaître. La publication est statique : aucun serveur Astro, server island, View Transition ou entrée HTML non fiable ; seules des images JPEG vérifiées et locales sont optimisées au build. Les dépendances sharp/esbuild sont mises à jour par overrides. Ne pas ajouter d’optimisation distante ou de rendu serveur sans réexaminer ces avis et envisager une migration Astro.
 
-Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement et l’absence de requêtes tierces initiales. Ils simulent le document vidéo pour vérifier l’intégration ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
+Les tests vérifient les routes, le responsive, les images, le menu, le clavier, les embeds, le consentement, l’introduction vidéo et son repli. Hors introduction YouTube, les services tiers restent désactivés sans interaction ou consentement. Les tests simulent le lecteur pour vérifier les transitions et ses erreurs ; la lecture effective dépend de YouTube et des restrictions du navigateur. Aucun score Core Web Vitals terrain n’est revendiqué : il nécessite des mesures sur le trafic réel.
 
 ## Versions internationales
 

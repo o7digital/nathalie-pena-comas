@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440]) {
  test(`${lang} responsive at ${width}px`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   const errors: string[] = []; const thirdParty: string[] = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('request', r => { if (new URL(r.url()).origin !== new URL(process.env.TEST_BASE_URL || 'http://localhost:4322').origin) thirdParty.push(r.url()); });
@@ -26,13 +27,14 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440
  });
 }
 test('video loads on confirmation, traps focus, and restores focus on Escape', async ({ page }) => {
+ await page.emulateMedia({ reducedMotion: 'reduce' });
  await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ body: '<html><body>Video embed</body></html>', contentType: 'text/html' }));
  await page.goto('/en/'); const trigger = page.locator('.hero [data-video]'); await trigger.click();
  await expect(page.locator('#video-modal')).toBeVisible(); await expect(page.locator('iframe')).toHaveCount(0);
  await page.keyboard.press('Shift+Tab');
  expect(await page.evaluate(() => !!document.activeElement?.closest('#video-modal'))).toBe(true);
  await page.locator('#load-video').click();
- await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/pG7lJPLcO-g/);
+ await expect(page.locator('iframe')).toHaveAttribute('src', /youtube-nocookie.com\/embed\/kglZQlwuAqU/);
  await page.keyboard.press('Escape'); await expect(page.locator('#video-modal')).not.toBeVisible();
  await expect(page.locator('iframe')).toHaveCount(0); await expect(trigger).toBeFocused();
  await page.locator('.video [data-video="otT5_7vJYv4"]').click();

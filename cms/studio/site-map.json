@@ -11,6 +11,13 @@
       "collection": null,
       "fields": [
         {
+          "key": "copy:From the Vatican",
+          "source": "Desde El Vaticano",
+          "english": "From the Vatican",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Featured release",
           "source": "Proyecto destacado",
           "english": "Featured release",
@@ -88,6 +95,13 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Replay introduction",
+          "source": "Volver a ver la introducción",
+          "english": "Replay introduction",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
           "key": "copy:Nathalie Peña-Comas — official portrait",
           "source": "Nathalie Peña-Comas — retrato oficial",
           "english": "Nathalie Peña-Comas — official portrait",
@@ -109,6 +123,13 @@
           "auxiliary": true
         },
         {
+          "key": "copy:View photos",
+          "source": "Ver las fotos",
+          "english": "View photos",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
           "key": "copy:LATIN GRAMMY NOMINEE",
           "source": "NOMINADA AL LATIN GRAMMY",
           "english": "LATIN GRAMMY NOMINEE",
@@ -123,9 +144,9 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Song to the Moon",
-          "source": "Song to the Moon",
-          "english": "Song to the Moon",
+          "key": "copy:Listen to Ave Maria",
+          "source": "Escuchar Ave Maria",
+          "english": "Listen to Ave Maria",
           "label": "Texto",
           "auxiliary": true
         }
@@ -1250,9 +1271,9 @@
         },
         {
           "key": "translation:consentDesc",
-          "source": "Puedes permitir la medición de clics musicales y publicidad, o continuar solo con lo esencial. Los videos de YouTube se cargan únicamente cuando eliges reproducirlos.",
-          "english": "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.",
-          "label": "Párrafo 1",
+          "source": "Puedes permitir la medición de clics musicales y publicidad, o continuar solo con lo esencial.",
+          "english": "You can allow music click measurement and advertising, or continue with essential features only.",
+          "label": "Descripción",
           "auxiliary": false
         },
         {
@@ -1322,7 +1343,7 @@
           "key": "translation:storyP1",
           "source": "Nathalie Peña-Comas es una soprano y actriz dominicana formada en Viena. Su trayectoria conecta la ópera, los escenarios internacionales y el repertorio latino.",
           "english": "Nathalie Peña-Comas is a Dominican soprano and actress trained in Vienna. Her career connects opera, international stages and Latin repertoire.",
-          "label": "Párrafo 2",
+          "label": "Párrafo 1",
           "auxiliary": false
         },
         {
@@ -1792,9 +1813,9 @@
           "auxiliary": true
         },
         {
-          "key": "copy:Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.",
-          "source": "Las imágenes y las fuentes se sirven desde este sitio. YouTube no se carga al visitar la página: primero eliges un video y después confirmas su reproducción. El reproductor usa youtube-nocookie.com; al reproducirlo, YouTube recibe datos de conexión y aplica sus propias condiciones. Spotify, Apple Music y otros destinos externos también aplican sus políticas al abrirlos.",
-          "english": "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.",
+          "key": "copy:Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.",
+          "source": "Las imágenes y las fuentes se sirven desde este sitio. La introducción del inicio carga automáticamente un video de YouTube sin sonido. Los demás videos se cargan tras confirmar la reproducción. Los reproductores usan youtube-nocookie.com; YouTube recibe datos de conexión según sus propias condiciones. Las plataformas musicales externas aplican sus políticas al abrirlas.",
+          "english": "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.",
           "label": "Párrafo 3",
           "auxiliary": false
         },

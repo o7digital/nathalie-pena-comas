@@ -73,7 +73,6 @@
     "Home": "Startseite",
     "Hosting and enquiries": "Hosting und Anfragen",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Wenn Sie eine Auswahl speichern, speichert dieser Browser Ihre Einstellungen bis zu 180 Tage lang lokal. Sie können diese hier oder in der Fußzeile ändern oder Ihre Einwilligung widerrufen. Wenn der Speicher blockiert ist, gilt Ihre Auswahl nur für die aktuelle Sitzung.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Bilder und Schriftarten werden von dieser Website bereitgestellt. YouTube lädt beim Seitenbesuch nicht: Zuerst wählen Sie ein Video aus und bestätigen dann die Wiedergabe. Der Player verwendet youtube-nocookie.com; Playback sendet unter seinen eigenen Bedingungen Verbindungsdaten an YouTube. Spotify, Apple Music und andere externe Ziele wenden beim Öffnen ebenfalls ihre eigenen Richtlinien an.",
     "In conversation": "Im Gespräch",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "In der Presse, hinter den Kulissen und auf der Bühne. Eine Auswahl aus dem offiziellen Archiv.",
     "Inaugural Concert": "Eröffnungskonzert",
@@ -189,7 +188,6 @@
     "Watch videos": "Videos ansehen",
     "Where a voice": "Wo eine Stimme",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "Der Wiener Opernsommer präsentierte Nathalies Rollendebüt als Donna Anna in Mozarts Don Giovanni. Die Produktion war für Juli 2024 im Wiener Schloss Belvedere angekündigt.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Sie können die Messung von Musikklicks und Werbung zulassen oder nur mit wesentlichen Funktionen fortfahren. YouTube-Videos werden nur geladen, wenn Sie sie abspielen möchten.",
     "Your preferences": "Ihre Vorlieben",
     "Your privacy, in harmony.": "Ihre Privatsphäre im Einklang.",
     "an artist.": "einer Künstlerin.",
@@ -212,7 +210,13 @@
     "Show fewer dates": "Weniger Termine anzeigen",
     "Free admission": "Eintritt frei",
     "Tickets coming soon": "Tickets demnächst erhältlich",
-    "Information & tickets": "Informationen und Tickets"
+    "Information & tickets": "Informationen und Tickets",
+    "From the Vatican": "Aus dem Vatikan",
+    "Replay introduction": "Intro erneut ansehen",
+    "View photos": "Fotos ansehen",
+    "Listen to Ave Maria": "Ave Maria anhören",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Bilder und Schriftarten werden von dieser Website bereitgestellt. Die Einführung auf der Startseite lädt automatisch ein stummgeschaltetes YouTube-Video. Andere Videos werden nach Bestätigung geladen. Die Player verwenden youtube-nocookie.com; YouTube erhält Verbindungsdaten gemäß seinen eigenen Bedingungen. Externe Musikplattformen wenden beim Öffnen ihre eigenen Richtlinien an.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Sie können die Messung von Musikklicks und Werbung zulassen oder nur die wesentlichen Funktionen verwenden."
   },
   "fr": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "SORTIE 2026 ✦ L'ART DE SENTIR ✦ NOUVELLE MUSIQUE",
@@ -288,7 +292,6 @@
     "Home": "Accueil",
     "Hosting and enquiries": "Hébergement et demandes de renseignements",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Si vous enregistrez un choix, ce navigateur stocke vos préférences localement pendant 180 jours maximum. Vous pouvez les modifier ou retirer votre consentement ici ou dans le pied de page. Si le stockage est bloqué, votre choix s'applique uniquement à la session en cours.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Les images et les polices sont servies à partir de ce site. YouTube ne se charge pas lors de la visite de la page : vous choisissez d'abord une vidéo, puis confirmez la lecture. Le joueur utilise youtube-nocookie.com ; la lecture envoie les données de connexion à YouTube selon ses propres conditions. Spotify, Apple Music et d'autres destinations externes appliquent également leurs propres politiques lors de leur ouverture.",
     "In conversation": "En conversation",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "Dans la presse, en coulisses et sur scène. Une sélection des archives officielles.",
     "Inaugural Concert": "Concert inaugural",
@@ -404,7 +407,6 @@
     "Watch videos": "Regarder des vidéos",
     "Where a voice": "Où une voix",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "Wiener Opernsommer a présenté le premier rôle de Nathalie dans le rôle de Donna Anna dans Don Giovanni de Mozart. La production a été annoncée pour juillet 2024 au Palais du Belvédère de Vienne.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Vous pouvez autoriser la mesure des clics musicaux et la publicité, ou continuer avec les fonctionnalités essentielles uniquement. Les vidéos YouTube se chargent uniquement lorsque vous choisissez de les lire.",
     "Your preferences": "Vos préférences",
     "Your privacy, in harmony.": "Votre intimité, en harmonie.",
     "an artist.": "d’une artiste.",
@@ -427,7 +429,13 @@
     "Show fewer dates": "Voir moins de dates",
     "Free admission": "Entrée libre",
     "Tickets coming soon": "Billets bientôt disponibles",
-    "Information & tickets": "Informations et billets"
+    "Information & tickets": "Informations et billets",
+    "From the Vatican": "Depuis le Vatican",
+    "Replay introduction": "Revoir l’introduction",
+    "View photos": "Voir les photos",
+    "Listen to Ave Maria": "Écouter Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Les images et les polices sont servies depuis ce site. L’introduction de l’accueil charge automatiquement une vidéo YouTube sans son. Les autres vidéos se chargent après confirmation de lecture. Les lecteurs utilisent youtube-nocookie.com ; YouTube reçoit des données de connexion selon ses propres conditions. Les plateformes musicales externes appliquent leurs propres politiques à l’ouverture.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Vous pouvez autoriser la mesure des clics musicaux et la publicité, ou continuer avec les fonctions essentielles uniquement."
   },
   "it": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "USCITA 2026 ✦ L'ARTE DEL SENTIRE ✦ NUOVA MUSICA",
@@ -503,7 +511,6 @@
     "Home": "Casa",
     "Hosting and enquiries": "Hosting e richieste",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Se salvi una scelta, questo browser memorizza le tue preferenze localmente per un massimo di 180 giorni. Puoi modificarli o revocare il consenso qui o nel footer. Se lo spazio di archiviazione è bloccato, la tua scelta si applica solo alla sessione corrente.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Immagini e caratteri vengono serviti da questo sito. YouTube non si carica alla visita della pagina: prima si sceglie un video, poi si conferma la riproduzione. Il giocatore utilizza youtube-nocookie.com; la riproduzione invia i dati di connessione a YouTube secondo i propri termini. Anche Spotify, Apple Music e altre destinazioni esterne applicano le proprie politiche all'apertura.",
     "In conversation": "Nella conversazione",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "Sulla stampa, dietro le quinte e sul palco. Una selezione dall'archivio ufficiale.",
     "Inaugural Concert": "Concerto inaugurale",
@@ -619,7 +626,6 @@
     "Watch videos": "Guarda i video",
     "Where a voice": "Dove una voce",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "La Wiener Opernsommer ha presentato il debutto di Nathalie nel ruolo di Donna Anna nel Don Giovanni di Mozart. La produzione è stata annunciata per luglio 2024 al Palazzo Belvedere di Vienna.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Puoi consentire la misurazione dei clic musicali e la pubblicità oppure continuare solo con le funzionalità essenziali. I video di YouTube vengono caricati solo quando scegli di riprodurli.",
     "Your preferences": "Le tue preferenze",
     "Your privacy, in harmony.": "La tua privacy, in armonia.",
     "an artist.": "di un’artista.",
@@ -642,7 +648,13 @@
     "Show fewer dates": "Vedi meno date",
     "Free admission": "Ingresso gratuito",
     "Tickets coming soon": "Biglietti presto disponibili",
-    "Information & tickets": "Informazioni e biglietti"
+    "Information & tickets": "Informazioni e biglietti",
+    "From the Vatican": "Dal Vaticano",
+    "Replay introduction": "Rivedi l’introduzione",
+    "View photos": "Guarda le foto",
+    "Listen to Ave Maria": "Ascolta Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Le immagini e i caratteri sono forniti da questo sito. L’introduzione della home carica automaticamente un video YouTube senza audio. Gli altri video si caricano dopo la conferma di riproduzione. I lettori usano youtube-nocookie.com; YouTube riceve i dati di connessione secondo le proprie condizioni. Le piattaforme musicali esterne applicano le proprie politiche all’apertura.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Puoi consentire la misurazione dei clic musicali e la pubblicità oppure continuare solo con le funzionalità essenziali."
   },
   "sv": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 RELEASE ✦ KONSTEN ATT KÄNLA ✦ NY MUSIK",
@@ -718,7 +730,6 @@
     "Home": "Hem",
     "Hosting and enquiries": "Värdskap och förfrågningar",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Om du sparar ett val lagrar den här webbläsaren dina inställningar lokalt i upp till 180 dagar. Du kan ändra dem eller återkalla samtycke här eller i sidfoten. Om lagringen är blockerad gäller ditt val endast den aktuella sessionen.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Bilder och typsnitt serveras från denna webbplats. YouTube laddas inte vid sidbesök: först väljer du en video och bekräftar sedan uppspelningen. Spelaren använder youtube-nocookie.com; uppspelning skickar anslutningsdata till YouTube enligt sina egna villkor. Spotify, Apple Music och andra externa destinationer tillämpar också sina egna policyer när de öppnas.",
     "In conversation": "I konversation",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "I pressen, bakom kulisserna och på scen. Ett urval från det officiella arkivet.",
     "Inaugural Concert": "Invigningskonsert",
@@ -834,7 +845,6 @@
     "Watch videos": "Titta på videor",
     "Where a voice": "Där en röst",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "Wiener Opernsommer presenterade Nathalies rolldebut som Donna Anna i Mozarts Don Giovanni. Produktionen tillkännagavs för juli 2024 i Wiens Belvedere-palats.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Du kan tillåta mätning av musikklick och annonsering, eller fortsätta med endast viktiga funktioner. YouTube-videor laddas bara när du väljer att spela upp dem.",
     "Your preferences": "Dina preferenser",
     "Your privacy, in harmony.": "Din integritet, i harmoni.",
     "an artist.": "en artist.",
@@ -857,7 +867,13 @@
     "Show fewer dates": "Se färre datum",
     "Free admission": "Fri entré",
     "Tickets coming soon": "Biljetter kommer snart",
-    "Information & tickets": "Information och biljetter"
+    "Information & tickets": "Information och biljetter",
+    "From the Vatican": "Från Vatikanen",
+    "Replay introduction": "Visa introduktionen igen",
+    "View photos": "Visa bilder",
+    "Listen to Ave Maria": "Lyssna på Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Bilder och typsnitt levereras från denna webbplats. Introduktionen på startsidan laddar automatiskt en YouTube-video utan ljud. Andra videor laddas efter bekräftad uppspelning. Spelarna använder youtube-nocookie.com; YouTube tar emot anslutningsdata enligt sina egna villkor. Externa musikplattformar tillämpar sina egna policyer när de öppnas.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Du kan tillåta mätning av musikklick och annonsering eller fortsätta med endast grundläggande funktioner."
   },
   "hu": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026-OS KIADÁS ✦ AZ ÉRZÉS MŰVÉSZETE ✦ ÚJ ZENE",
@@ -933,7 +949,6 @@
     "Home": "Otthon",
     "Hosting and enquiries": "Tárhely és érdeklődés",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Ha elment egy választást, ez a böngésző helyileg tárolja beállításait akár 180 napig. Itt vagy a láblécben módosíthatja vagy visszavonhatja a hozzájárulást. Ha a tárhely le van tiltva, a választása csak az aktuális munkamenetre vonatkozik.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "A képeket és a betűtípusokat erről az oldalról szolgáltatjuk. A YouTube nem tölt be oldallátogatással: először kiválaszt egy videót, majd megerősíti a lejátszást. A lejátszó a youtube-nocookie.com webhelyet használja; lejátszás kapcsolati adatokat küld a YouTube-nak a saját feltételei szerint. A Spotify, az Apple Music és más külső célállomások szintén a saját szabályzatukat alkalmazzák a megnyitáskor.",
     "In conversation": "A beszélgetésben",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "A sajtóban, a színfalak mögött és a színpadon. Válogatás a hivatalos archívumból.",
     "Inaugural Concert": "Beavató koncert",
@@ -1049,7 +1064,6 @@
     "Watch videos": "Nézz videókat",
     "Where a voice": "Ahol egy hang",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "A Wiener Opernsommer bemutatta Nathalie szerepét, mint Donna Anna Mozart Don Giovannijában. A produkciót 2024 júliusára hirdették meg a bécsi Belvedere-palotában.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Engedélyezheti a zenei kattintások mérését és hirdetését, vagy csak a lényeges funkciókkal folytathatja. A YouTube-videók csak akkor töltődnek be, ha úgy döntesz, hogy lejátszod őket.",
     "Your preferences": "Az Ön preferenciái",
     "Your privacy, in harmony.": "A magánéleted, harmóniában.",
     "an artist.": "hangja.",
@@ -1072,7 +1086,13 @@
     "Show fewer dates": "Kevesebb dátum megtekintése",
     "Free admission": "Ingyenes belépés",
     "Tickets coming soon": "Jegyek hamarosan",
-    "Information & tickets": "Információ és jegyek"
+    "Information & tickets": "Információ és jegyek",
+    "From the Vatican": "A Vatikánból",
+    "Replay introduction": "Bevezető újrajátszása",
+    "View photos": "Fotók megtekintése",
+    "Listen to Ave Maria": "Ave Maria meghallgatása",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "A képeket és betűtípusokat ez a webhely szolgáltatja. A kezdőlap bevezetője automatikusan betölt egy néma YouTube-videót. Más videók a lejátszás megerősítése után töltődnek be. A lejátszók a youtube-nocookie.com címet használják; a YouTube a saját feltételei szerint kap kapcsolati adatokat. A külső zenei platformok megnyitásakor azok saját szabályzatai érvényesek.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Engedélyezheti a zenei kattintások mérését és a hirdetéseket, vagy folytathatja csak az alapvető funkciókkal."
   },
   "hr": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "IZDANJE 2026. ✦ UMJETNOST OSJEĆAJA ✦ NOVA GLAZBA",
@@ -1148,7 +1168,6 @@
     "Home": "Dom",
     "Hosting and enquiries": "Hosting i upiti",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Ako spremite izbor, ovaj preglednik pohranjuje vaše postavke lokalno do 180 dana. Možete ih promijeniti ili povući privolu ovdje ili u podnožju. Ako je pohrana blokirana, vaš izbor se odnosi samo na trenutnu sesiju.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Slike i fontovi poslužuju se s ove stranice. YouTube se ne učitava prilikom posjeta stranici: prvo odaberete video, a zatim potvrdite reprodukciju. Igrač koristi youtube-nocookie.com; reprodukcija šalje podatke o vezi YouTubeu pod vlastitim uvjetima. Spotify, Apple Music i druga vanjska odredišta također primjenjuju vlastita pravila kada se otvore.",
     "In conversation": "U razgovoru",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "U tisku, iza kulisa i na pozornici. Izbor iz službene arhive.",
     "Inaugural Concert": "Inauguracijski koncert",
@@ -1264,7 +1283,6 @@
     "Watch videos": "Gledajte videa",
     "Where a voice": "Gdje glas",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "Wiener Opernsommer predstavila je Nathalienu debitantsku ulogu Donne Anne u Mozartovom Don Giovanniju. Produkcija je najavljena za srpanj 2024. u bečkoj palači Belvedere.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Možete dopustiti mjerenje glazbenih klikova i oglašavanje ili nastaviti samo s osnovnim značajkama. YouTube videozapisi učitavaju se samo kada ih odlučite reproducirati.",
     "Your preferences": "Vaše preferencije",
     "Your privacy, in harmony.": "Vaša privatnost, u harmoniji.",
     "an artist.": "jedne umjetnice.",
@@ -1287,7 +1305,13 @@
     "Show fewer dates": "Prikaži manje datuma",
     "Free admission": "Besplatan ulaz",
     "Tickets coming soon": "Ulaznice uskoro u prodaji",
-    "Information & tickets": "Informacije i ulaznice"
+    "Information & tickets": "Informacije i ulaznice",
+    "From the Vatican": "Iz Vatikana",
+    "Replay introduction": "Ponovi uvod",
+    "View photos": "Pogledaj fotografije",
+    "Listen to Ave Maria": "Poslušaj Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Slike i fontovi poslužuju se s ove stranice. Uvod na početnoj stranici automatski učitava YouTube videozapis bez zvuka. Ostali videozapisi učitavaju se nakon potvrde reprodukcije. Reproduktori koriste youtube-nocookie.com; YouTube prima podatke o vezi prema svojim uvjetima. Vanjske glazbene platforme primjenjuju vlastita pravila pri otvaranju.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Možete dopustiti mjerenje glazbenih klikova i oglašavanje ili nastaviti samo s osnovnim značajkama."
   },
   "ru": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "РЕЛИЗ 2026 ГОДА ✦ ИСКУССТВО ЧУВСТВОВАТЬ ✦ НОВАЯ МУЗЫКА",
@@ -1363,7 +1387,6 @@
     "Home": "Главная",
     "Hosting and enquiries": "Хостинг и вопросы",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "Если вы сохраните выбор, этот браузер сохранит ваши предпочтения локально до 180 дней. Вы можете изменить их или отозвать согласие здесь или в нижнем колонтитуле. Если хранилище заблокировано, ваш выбор применяется только к текущему сеансу.",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "Изображения и шрифты взяты с этого сайта. Ютуб не загружается при посещении страницы: сначала выбираешь видео, потом подтверждаешь воспроизведение. Игрок использует youtube-nocookie.com; воспроизведение отправляет данные о подключении на YouTube в соответствии со своими условиями. Spotify, Apple Music и другие внешние направления также применяют свои собственные политики при открытии.",
     "In conversation": "В разговоре",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "В прессе, за кулисами и на сцене. Подборка из официального архива.",
     "Inaugural Concert": "Инаугурационный концерт",
@@ -1479,7 +1502,6 @@
     "Watch videos": "Смотреть видео",
     "Where a voice": "Где голос",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "Винер-Опернсоммер представила Натали дебютную роль Донны Анны в опере Моцарта «Дон Жуан». Производство было объявлено на июль 2024 года в венском дворце Бельведер.",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "Вы можете разрешить отслеживание кликов по музыке и рекламу или продолжить работу только с основными функциями. Видео YouTube загружаются только тогда, когда вы решите их воспроизвести.",
     "Your preferences": "Ваши предпочтения",
     "Your privacy, in harmony.": "Ваша конфиденциальность в гармонии.",
     "an artist.": "артистки.",
@@ -1502,7 +1524,13 @@
     "Show fewer dates": "Показать меньше дат",
     "Free admission": "Вход свободный",
     "Tickets coming soon": "Билеты скоро в продаже",
-    "Information & tickets": "Информация и билеты"
+    "Information & tickets": "Информация и билеты",
+    "From the Vatican": "Из Ватикана",
+    "Replay introduction": "Повторить вступление",
+    "View photos": "Смотреть фотографии",
+    "Listen to Ave Maria": "Слушать Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "Изображения и шрифты загружаются с этого сайта. Вступление на главной странице автоматически загружает видео YouTube без звука. Другие видео загружаются после подтверждения воспроизведения. Проигрыватели используют youtube-nocookie.com; YouTube получает данные соединения на своих условиях. Внешние музыкальные платформы применяют собственные правила при открытии.",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "Вы можете разрешить измерение музыкальных кликов и рекламу или продолжить только с основными функциями."
   },
   "zh-TW": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 年發布 ✦ 感覺的藝術 ✦ 新音樂",
@@ -1578,7 +1606,6 @@
     "Home": "首頁",
     "Hosting and enquiries": "託管和查詢",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "如果您儲存選擇，此瀏覽器會在本機儲存您的首選項最長 180 天。您可以在此處或頁腳中更改它們或撤回同意。如果儲存空間被阻止，您的選擇僅適用於目前會話。",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "圖像和字體由該網站提供。 YouTube 不會在頁面訪問時加載：首先選擇視頻，然後確認播放。播放器使用 youtube-nocookie.com；播放根據自己的條款將連接資料發送到 YouTube。 Spotify、Apple Music 和其他外部目的地在開啟時也應用自己的政策。",
     "In conversation": "談話中",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "在媒體、幕後和舞台上。官方檔案中的精選內容。",
     "Inaugural Concert": "開幕音樂會",
@@ -1694,7 +1721,6 @@
     "Watch videos": "觀看影片",
     "Where a voice": "哪裡有聲音",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "維也納歌劇院 (Wiener Opernsommer) 介紹了娜塔莉 (Nathalie) 在莫札特的《唐璜》中飾演唐娜安娜 (Donna Anna) 的處女作。該劇宣布將於 2024 年 7 月在維也納麗城宮拍攝。",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "您可以允許音樂點擊測量和廣告，或僅繼續使用基本功能。 YouTube 影片僅在您選擇播放時才會載入。",
     "Your preferences": "您的偏好",
     "Your privacy, in harmony.": "您的隱私，和諧相處。",
     "an artist.": "獨特的聲音。",
@@ -1717,7 +1743,13 @@
     "Show fewer dates": "查看較少日期",
     "Free admission": "免費入場",
     "Tickets coming soon": "門票即將開售",
-    "Information & tickets": "資訊與門票"
+    "Information & tickets": "資訊與門票",
+    "From the Vatican": "來自梵蒂岡",
+    "Replay introduction": "重播開場影片",
+    "View photos": "查看照片",
+    "Listen to Ave Maria": "聆聽 Ave Maria",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "圖片和字型由本網站提供。首頁開場會自動載入靜音 YouTube 影片。其他影片在確認播放後才會載入。播放器使用 youtube-nocookie.com；YouTube 依其條款接收連線資料。外部音樂平台在開啟時適用其各自的政策。",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "您可以允許音樂點擊衡量和廣告，或僅使用基本功能繼續。"
   },
   "ja": {
     "2026 RELEASE ✦ THE ART OF FEELING ✦ NEW MUSIC": "2026 年リリース ✦ 感じる芸術 ✦ 新しい音楽",
@@ -1793,7 +1825,6 @@
     "Home": "ホーム",
     "Hosting and enquiries": "開催・お問い合わせ",
     "If you save a choice, this browser stores your preferences locally for up to 180 days. You can change them or withdraw consent here or in the footer. If storage is blocked, your choice applies only to the current session.": "選択を保存すると、このブラウザは設定をローカルに最大 180 日間保存します。ここまたはフッターでそれらを変更したり、同意を撤回したりすることができます。ストレージがブロックされている場合、選択は現在のセッションにのみ適用されます。",
-    "Images and fonts are served from this site. YouTube does not load on page visit: first you choose a video, then confirm playback. The player uses youtube-nocookie.com; playback sends connection data to YouTube under its own terms. Spotify, Apple Music and other external destinations also apply their own policies when opened.": "画像とフォントはこのサイトから提供されます。ページにアクセスしても YouTube は読み込まれません。まずビデオを選択し、次に再生を確認します。プレーヤーは youtube-nocookie.com を使用します。再生は、独自の条件に基づいて接続データを YouTube に送信します。 Spotify、Apple Music、その他の外部接続先も、開くときに独自のポリシーを適用します。",
     "In conversation": "会話中",
     "In the press, behind the scenes and on stage. A selection from the official archive.": "報道陣、舞台裏、ステージ上。公式アーカイブからの抜粋。",
     "Inaugural Concert": "創立記念コンサート",
@@ -1909,7 +1940,6 @@
     "Watch videos": "ビデオを見る",
     "Where a voice": "声が聞こえるところ",
     "Wiener Opernsommer presented Nathalie’s role debut as Donna Anna in Mozart’s Don Giovanni. The production was announced for July 2024 at Vienna’s Belvedere Palace.": "ウィーン・オペランサマーは、モーツァルトの「ドン・ジョバンニ」のドンナ・アンナ役でナタリーの役デビューを果たしました。制作は2024年7月にウィーンのベルヴェデーレ宮殿で発表された。",
-    "You can allow music click measurement and advertising, or continue with essential features only. YouTube videos load only when you choose to play them.": "音楽のクリック測定と広告を許可することも、重要な機能のみを継続することもできます。 YouTube ビデオは、再生を選択した場合にのみ読み込まれます。",
     "Your preferences": "あなたの好み",
     "Your privacy, in harmony.": "あなたのプライバシーを調和させて。",
     "an artist.": "芸術家の軌跡。",
@@ -1932,6 +1962,12 @@
     "Show fewer dates": "表示する日程を減らす",
     "Free admission": "入場無料",
     "Tickets coming soon": "チケット発売予定",
-    "Information & tickets": "情報とチケット"
+    "Information & tickets": "情報とチケット",
+    "From the Vatican": "バチカンより",
+    "Replay introduction": "イントロをもう一度見る",
+    "View photos": "写真を見る",
+    "Listen to Ave Maria": "Ave Mariaを聴く",
+    "Images and fonts are served from this site. The home introduction automatically loads a muted YouTube video. Other videos load after playback confirmation. Players use youtube-nocookie.com; YouTube receives connection data under its own terms. External music platforms apply their own policies when opened.": "画像とフォントはこのサイトから配信されます。ホームのイントロでは、ミュートのYouTube動画を自動的に読み込みます。その他の動画は再生確認後に読み込みます。プレーヤーはyoutube-nocookie.comを使用し、YouTubeは独自の規約に基づき接続データを受け取ります。外部の音楽プラットフォームを開くと、各サービスのポリシーが適用されます。",
+    "You can allow music click measurement and advertising, or continue with essential features only.": "音楽リンクのクリック測定と広告を許可するか、基本機能のみで続行できます。"
   }
 }

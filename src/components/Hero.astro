@@ -11,6 +11,10 @@ const {lang}=Astro.props;const l = localizer(lang);const t = translations[lang];
 ---
 <section class="hero signature-hero section" id="home" aria-labelledby="hero-title">
   <div class="hero-portrait" data-hero-slider>
+  <div class="hero-slide hero-video-slide" data-hero-video aria-hidden="true" inert>
+    <div class="hero-video-stage" data-hero-player inert></div>
+    <div class="hero-video-caption"><span>Nathalie Peña-Comas</span><strong>Ave Maria</strong><span>{l("Desde El Vaticano", "From the Vatican")}</span></div>
+  </div>
   <div class="hero-slide is-active" data-hero-slide><Image src={sectionPhoto} class="hero-photo" width={2560} alt="Nathalie Peña-Comas — fotografía oficial, retrato profesional" widths={[640,960,1440,1920,2560]} sizes="(max-width: 780px) 1440px, 75vw" format="webp" quality={90} loading="eager" fetchpriority="high" /></div>
   <div class="hero-slide hero-album-slide" data-hero-slide aria-hidden="true" inert>
     <a href={albums[0].url} target="_blank" rel="noopener" class="hero-album-link">
@@ -21,11 +25,13 @@ const {lang}=Astro.props;const l = localizer(lang);const t = translations[lang];
   </div>
   <div class="hero-inner fade-in"><div class="eyebrow">{l("Soprano internacional · Actriz", "International soprano · Actress")}</div><h1 id="hero-title">{l("Nathalie")}<br/><em>{l("Peña-Comas")}</em></h1><p class="hero-sub">{l("Una vida dedicada", "A life devoted")}<br/><em>{l("al arte de la voz.", "to the art of the voice.")}</em></p><p class="hero-description">{l("Ópera, escenario y raíces. El universo artístico de una soprano dominicana formada en Viena.", "Opera, stage and roots. The artistic world of a Dominican soprano trained in Vienna.")}</p><p class="hero-description hero-biography">{t.storyP2}</p><div class="hero-ctas"><a class="btn-gold" href="#about">{l("Conocer a Nathalie", "Discover Nathalie")} ↗</a><a class="btn-outline" href="#schedule">{l("Próximos conciertos", "Upcoming performances")} ↓</a></div></div>
   <div class="hero-slider-controls" hidden>
+    <button type="button" data-hero-replay aria-label={l("Volver a ver la introducción", "Replay introduction")} aria-pressed="false">▷</button>
     <button type="button" data-hero-select="0" aria-label={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} aria-pressed="true">01</button>
     <button type="button" data-hero-select="1" aria-label={albums[0].title} aria-pressed="false">02</button>
     <button type="button" data-hero-pause data-pause-label={l("Pausar el carrusel", "Pause slideshow")} data-resume-label={l("Reanudar el carrusel", "Resume slideshow")} aria-label={l("Pausar el carrusel", "Pause slideshow")} aria-pressed="false">Ⅱ</button>
   </div>
-  <div class="hero-bottom"><span>{l("NOMINADA AL LATIN GRAMMY", "LATIN GRAMMY NOMINEE")}</span><a href="#voice">{l("La artista y su mundo", "The artist & her world")} ↓</a><button data-video="pG7lJPLcO-g" data-title={l("Song to the Moon")}>▷ {l("Song to the Moon")}</button></div>
+  <button type="button" class="hero-skip" data-hero-skip hidden>{l("Ver las fotos", "View photos")} ↓</button>
+  <div class="hero-bottom"><span>{l("NOMINADA AL LATIN GRAMMY", "LATIN GRAMMY NOMINEE")}</span><a href="#voice">{l("La artista y su mundo", "The artist & her world")} ↓</a><button data-video="kglZQlwuAqU" data-title="Ave Maria — Desde El Vaticano">▷ {l("Escuchar Ave Maria", "Listen to Ave Maria")}</button></div>
 </section>
 
 <script>import '../scripts/hero-slider';</script>

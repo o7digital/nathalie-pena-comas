@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('a newly configured YouTube video opens with consent and an exact safe destination', async ({page}) => {
+ await page.emulateMedia({ reducedMotion: 'reduce' });
  await page.route('**/en/', async route => {
   const response = await route.fetch();
   await route.fulfill({ response, body: (await response.text()).replaceAll('otT5_7vJYv4', 'abcdefghijk') });

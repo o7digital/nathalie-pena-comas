@@ -283,6 +283,31 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
 }
 @media(prefers-reduced-motion:reduce) { .hero-slide { transition:none; } }
 
+/* A single, silent film introduction precedes the existing photo sequence. */
+.hero-video-slide { background:#080808; }
+.hero-video-stage { position:absolute; inset:0; }
+.hero-video-stage iframe { display:block; width:100%; height:100%; border:0; pointer-events:none; }
+.hero-video-caption { position:absolute; left:6.5%; bottom:125px; display:grid; gap:8px; pointer-events:none; text-shadow:0 2px 14px #000; }
+.hero-video-caption span { font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+.hero-video-caption strong { font:clamp(36px,5vw,72px)/1.1 var(--serif); }
+.signature-hero.is-video-intro { height:100svh; min-height:680px; }
+.signature-hero.is-video-intro .hero-portrait { width:100%; }
+.signature-hero.is-video-intro .hero-portrait:after { opacity:0; }
+.signature-hero.is-video-intro .hero-inner { position:absolute; inset:0; visibility:hidden; }
+.hero-skip { position:absolute; z-index:4; bottom:105px; left:6.5%; min-height:44px; padding:10px 16px; border:1px solid #ffffff70; background:#141619dc; color:#fff; font:12px var(--sans); }
+.hero-skip[hidden] { display:none; }
+@media(max-width:780px) {
+ .signature-hero.is-video-intro { height:auto; min-height:950px; }
+ .signature-hero .hero-inner { margin-top:max(450px,calc(56.25vw + 220px)); }
+ .hero-video-stage { bottom:auto; height:max(220px,56.25vw); }
+ .hero-video-caption { left:24px; top:calc(max(220px,56.25vw) + 24px); bottom:auto; gap:6px; }
+ .hero-video-caption span { font-size:10px; }
+ .hero-video-caption strong { font-size:36px; }
+ .signature-hero.is-video-intro .hero-inner { position:relative; inset:auto; visibility:visible; }
+ .signature-hero.is-video-intro .hero-slider-controls { top:calc(90px + max(220px,56.25vw) + 126px); }
+ .hero-skip { top:calc(90px + max(220px,56.25vw) + 126px); bottom:auto; left:24px; max-width:calc(100% - 270px); padding:10px; }
+}
+
 .repertoire-section { padding:110px 6.5%; background:#eee9e1; }
 .repertoire-columns { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:7%; }
 .repertoire-column { min-width:0; }
