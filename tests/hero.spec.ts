@@ -174,7 +174,7 @@ for (const reason of ['reduced motion','save data','section link'] as const) {
  });
 }
 
-for (const width of [390,768,1440]) {
+for (const width of [390,768,1024,1440]) {
  test(`film preserves its frame and keeps controls clear at ${width}px`, async ({ page }) => {
   await mockYouTube(page);
   await page.setViewportSize({width,height:900});
@@ -196,6 +196,11 @@ for (const width of [390,768,1440]) {
    expect(caption!.y + caption!.height).toBeLessThan(skip!.y);
    const copy = await page.locator('.hero-inner').boundingBox();
    expect(copy!.y).toBeGreaterThan(controls!.y + controls!.height);
+  } else {
+   const listen = await page.locator('.hero [data-video]').boundingBox();
+   const assistant = await page.locator('.olivia-launcher').boundingBox();
+   expect(listen!.x + listen!.width).toBeLessThan(assistant!.x);
+   expect(listen!.y + listen!.height).toBeLessThanOrEqual(900);
   }
   await page.screenshot({path:`test-results/hero-film-${width}.png`});
  });

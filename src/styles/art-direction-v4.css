@@ -294,6 +294,7 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
 .signature-hero.is-video-intro .hero-portrait { width:100%; }
 .signature-hero.is-video-intro .hero-portrait:after { opacity:0; }
 .signature-hero.is-video-intro .hero-inner { position:absolute; inset:0; visibility:hidden; }
+.signature-hero.is-video-intro .hero-bottom { padding-right:240px; }
 .hero-skip { position:absolute; z-index:4; bottom:105px; left:6.5%; min-height:44px; padding:10px 16px; border:1px solid #ffffff70; background:#141619dc; color:#fff; font:12px var(--sans); }
 .hero-skip[hidden] { display:none; }
 @media(max-width:780px) {
@@ -304,6 +305,7 @@ html:lang(ja), html:lang(zh-TW) { --serif: Georgia, 'Noto Serif CJK TC', 'Yu Min
  .hero-video-caption span { font-size:10px; }
  .hero-video-caption strong { font-size:36px; }
  .signature-hero.is-video-intro .hero-inner { position:relative; inset:auto; visibility:visible; }
+ .signature-hero.is-video-intro .hero-bottom { padding-right:24px; }
  .signature-hero.is-video-intro .hero-slider-controls { top:calc(90px + max(220px,56.25vw) + 126px); }
  .hero-skip { top:calc(90px + max(220px,56.25vw) + 126px); bottom:auto; left:24px; max-width:calc(100% - 270px); padding:10px; }
 }
