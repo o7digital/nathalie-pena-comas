@@ -1,6 +1,8 @@
 import { test,expect } from '@playwright/test';
 const languages=['es','en','de','fr','it','sv','hu','hr','ru','zh-TW','ja'];
 const host='https://suitesmine-bot.vercel.app';
+// Exercise the assistant independently of the timed full-screen introduction.
+test.beforeEach(async ({page}) => { await page.emulateMedia({reducedMotion:'reduce'}); });
 for(const lang of languages){
  test(`Olivia ${lang}: localized UI and authenticated v2 request`,async({page})=>{
   const calls: {url:string;data:any}[]=[];

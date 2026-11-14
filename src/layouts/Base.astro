@@ -31,6 +31,12 @@ const graph = { '@context': 'https://schema.org', '@graph': [
 <html lang={lang}>
 <head>
  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#141619" />
+ {!privacy && <script is:inline>
+  // Decide before the first paint so loading YouTube never exposes the slideshow.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData && (!location.hash || location.hash === '#home')) {
+   document.documentElement.dataset.heroIntro = 'true';
+  }
+ </script>}
  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} />
  {locales.map(locale => <link rel="alternate" hreflang={locale.code} href={new URL(`/${locale.code}/${path}`, origin)} />)}<link rel="alternate" hreflang="x-default" href={new URL(`/es/${path}`, origin)} />
  <meta property="og:type" content="website" /><meta property="og:site_name" content={artist} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} />

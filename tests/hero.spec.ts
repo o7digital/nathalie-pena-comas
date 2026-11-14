@@ -143,12 +143,14 @@ for (const failure of ['error','blocked','timeout'] as const) {
  });
 }
 
-test('a blocked API leaves the portrait visible and starts the slideshow after eight seconds', async ({ page }) => {
+test('a blocked API keeps the intro screen until the fallback after eight seconds', async ({ page }) => {
  await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({contentType:'text/javascript',body:''}));
  await freezeClock(page);
  await page.goto('/en/');
- await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
+ await expect(page.locator('[data-hero-slide]').nth(0)).not.toHaveClass(/is-active/);
+ await expect(page.locator('.hero-inner')).toBeHidden();
  await page.clock.fastForward(8000);
+ await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
  await expect(page.locator('[data-hero-skip]')).toBeHidden();
  await page.clock.fastForward(5000);
  await expect(page.locator('[data-hero-slide]').nth(1)).toHaveClass(/is-active/);
@@ -174,34 +176,64 @@ for (const reason of ['reduced motion','save data','section link'] as const) {
  });
 }
 
-for (const width of [390,768,1024,1440]) {
- test(`film preserves its frame and keeps controls clear at ${width}px`, async ({ page }) => {
+for (const [width,height] of [[390,844],[768,900],[1024,900],[1440,900],[844,390],[1920,1080]]) {
+ test(`film fills the entire ${width}×${height} viewport and keeps controls visible`, async ({ page }) => {
   await mockYouTube(page);
-  await page.setViewportSize({width,height:900});
+  await page.setViewportSize({width,height});
   await freezeClock(page);
   await page.goto('/fr/');
   await expect(page.locator('.signature-hero')).toHaveClass(/is-video-intro/);
   await page.clock.runFor(1000);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const hero = await page.locator('.signature-hero').boundingBox();
+  const stage = await page.locator('[data-hero-player]').boundingBox();
   const frame = await page.locator('[data-hero-player] iframe').boundingBox();
   const skip = await page.locator('[data-hero-skip]').boundingBox();
   const controls = await page.locator('.hero-slider-controls').boundingBox();
   const caption = await page.locator('.hero-video-caption').boundingBox();
-  expect(frame).not.toBeNull(); expect(skip).not.toBeNull(); expect(controls).not.toBeNull(); expect(caption).not.toBeNull();
+  expect(hero).toEqual({x:0,y:0,width,height});
+  expect(stage).toEqual(hero);
+  expect(frame!.x).toBeLessThanOrEqual(0);
+  expect(frame!.y).toBeLessThanOrEqual(0);
+  expect(frame!.x + frame!.width).toBeGreaterThanOrEqual(width - 1);
+  expect(frame!.y + frame!.height).toBeGreaterThanOrEqual(height - 1);
+  expect(frame!.width / frame!.height).toBeCloseTo(16 / 9, 4);
   expect(skip!.x + skip!.width).toBeLessThanOrEqual(controls!.x);
-  expect(frame!.width).toBe(width);
-  expect(controls!.y + controls!.height).toBeLessThanOrEqual(900);
-  if (width <= 780) {
-   expect(frame!.height).toBeGreaterThanOrEqual(width * 9 / 16);
-   expect(caption!.y + caption!.height).toBeLessThan(skip!.y);
-   const copy = await page.locator('.hero-inner').boundingBox();
-   expect(copy!.y).toBeGreaterThan(controls!.y + controls!.height);
-  } else {
-   const listen = await page.locator('.hero [data-video]').boundingBox();
-   const assistant = await page.locator('.olivia-launcher').boundingBox();
-   expect(listen!.x + listen!.width).toBeLessThan(assistant!.x);
-   expect(listen!.y + listen!.height).toBeLessThanOrEqual(900);
-  }
-  await page.screenshot({path:`test-results/hero-film-${width}.png`});
+  expect(controls!.y + controls!.height).toBeLessThanOrEqual(height);
+  expect(caption!.y).toBeGreaterThanOrEqual(0);
+  expect(caption!.y + caption!.height).toBeLessThan(skip!.y);
+  await expect(page.locator('.hero-inner')).toBeHidden();
+  await expect(page.locator('#site-header')).toBeHidden();
+  await expect(page.locator('[data-hero-select="0"]')).toBeHidden();
+  await expect(page.locator('.hero [data-video]')).toBeVisible();
+  const assistant = await page.locator('.olivia-launcher').boundingBox();
+  expect(skip!.x + skip!.width).toBeLessThan(assistant!.x);
+  expect(controls!.y + controls!.height).toBeLessThan(assistant!.y);
+  await page.screenshot({path:`test-results/hero-film-${width}-${height}.png`});
+  // Resizing (including device rotation) must preserve the full-screen cover.
+  await page.setViewportSize({width:height,height:width});
+  expect(await page.locator('[data-hero-player]').boundingBox()).toEqual({x:0,y:0,width:height,height:width});
  });
 }
+
+test('the first paint reserves the film before the application script or YouTube loads', async ({ page }) => {
+ let releaseScripts!: () => void;
+ const scriptsReady = new Promise<void>(resolve => { releaseScripts = resolve; });
+ await page.route('**/_astro/*.js', async route => { await scriptsReady; await route.continue(); });
+ await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({contentType:'text/javascript',body:''}));
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/en/', {waitUntil:'commit'});
+ try {
+  await expect(page.locator('.hero-video-caption')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-hero-intro', 'true');
+  await expect(page.locator('[data-hero-slide]').nth(0)).toBeHidden();
+  await expect(page.locator('.hero-inner')).toBeHidden();
+  expect(await page.locator('[data-hero-player]').boundingBox()).toEqual({x:0,y:0,width:390,height:844});
+ } finally { releaseScripts(); }
+ await expect(page.locator('.signature-hero')).toHaveClass(/is-video-intro/);
+ await expect(page.locator('[data-hero-slide]').nth(0)).toBeHidden();
+ await page.locator('[data-hero-skip]').click();
+ await expect(page.locator('html')).not.toHaveAttribute('data-hero-intro');
+ await expect(page.locator('#site-header')).toBeVisible();
+ await expect(page.locator('.hero-inner')).toBeVisible();
+});

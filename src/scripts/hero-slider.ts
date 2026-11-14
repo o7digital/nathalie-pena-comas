@@ -12,7 +12,7 @@ if (hero) {
  const stage = hero.querySelector<HTMLElement>('[data-hero-player]');
  const motion = matchMedia('(prefers-reduced-motion: reduce)');
  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
- let current = 0, paused = motion.matches, intro = false, playing = false, running = false, inView = true;
+ let current = 0, paused = motion.matches, intro = false, running = false, inView = true;
  let player: YouTubePlayer | undefined;
  let timer: ReturnType<typeof setInterval> | undefined;
  let watchdog: ReturnType<typeof setTimeout> | undefined;
@@ -27,10 +27,12 @@ if (hero) {
    slide.setAttribute('aria-hidden', String(!active));
    slide.inert = !active;
   });
-  video?.classList.toggle('is-active', intro && playing);
-  video?.setAttribute('aria-hidden', String(!intro || !playing));
-  if (video) video.inert = !intro || !playing;
-  hero.classList.toggle('is-video-intro', intro && playing);
+  video?.classList.toggle('is-active', intro);
+  video?.setAttribute('aria-hidden', String(!intro));
+  if (video) video.inert = !intro;
+  hero.classList.toggle('is-video-intro', intro);
+  if (intro) document.documentElement.dataset.heroIntro = 'true';
+  else delete document.documentElement.dataset.heroIntro;
   replay?.setAttribute('aria-pressed', String(intro));
   buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(!intro && i === current)));
   if (skip) skip.hidden = !intro;
@@ -56,15 +58,16 @@ if (hero) {
  };
  const finishIntro = () => {
   generation++;
-  intro = playing = running = false;
+  intro = running = false;
   clearTimeout(watchdog);
   clearInterval(timer);
   const oldPlayer = player;
   player = undefined;
   oldPlayer?.pauseVideo();
   const oldFrame = stage?.querySelector('iframe');
-  if (skip === document.activeElement) buttons[0]?.focus({ preventScroll: true });
+  const focusPhotos = skip === document.activeElement;
   show(0);
+  if (focusPhotos) buttons[0]?.focus({ preventScroll: true });
   // Fade to the portrait before removing the player to avoid a black flash.
   setTimeout(() => { oldPlayer?.destroy(); oldFrame?.remove(); }, motion.matches ? 0 : 850);
   schedule();
@@ -72,14 +75,13 @@ if (hero) {
  const startIntro = async () => {
   if (intro || !stage) return;
   intro = true;
-  playing = running = false;
+  running = false;
   remaining = 18000;
   started = undefined;
   const attempt = ++generation;
   clearInterval(timer);
-  // Keep the portrait visible while YouTube loads or if it is blocked.
+  // Reserve the full-screen film immediately, including while YouTube loads.
   show(0);
-  slides[0]?.classList.add('is-active');
   watchdog = setTimeout(finishIntro, 8000);
   try {
    const api = await loadYouTubePlayer();
@@ -104,7 +106,7 @@ if (hero) {
      if (!intro || generation !== attempt) return;
      if (data === 1) {
       clearTimeout(watchdog);
-      playing = running = true;
+      running = true;
       show(0);
       schedule();
      } else if (data === 0) finishIntro();
@@ -144,4 +146,5 @@ if (hero) {
  if (controls) controls.hidden = false;
  setPaused(paused);
  if (!motion.matches && !connection?.saveData && (!location.hash || location.hash === '#home')) void startIntro();
+ else show(0);
 }
