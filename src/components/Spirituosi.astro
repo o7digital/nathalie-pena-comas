@@ -1,8 +1,59 @@
 ---
 import { localizer } from '../data/locales';
-import Image from './ContentImage.astro';import ensemble from '../assets/official/spirituosi.jpg';import type {Locale} from '../data/translations';
+import Image from './ContentImage.astro';
+import ensemble from '../assets/official/spirituosi.jpg';
+import type {Locale} from '../data/translations';
 import { sectionImage } from '../lib/cms';
+import '../styles/spirituosi.css';
 const sectionPhoto = await sectionImage('spirituosi', ensemble);
-interface Props {lang:Locale}const {lang}=Astro.props;const l = localizer(lang);
+interface Props {lang:Locale}
+const {lang}=Astro.props;
+const l = localizer(lang);
+const members = [
+ {name:'Nathalie Peña-Comas',instrument:l('Soprano'),url:'https://www.spirituosi.com/Nathalie_e.html'},
+ {name:'Evelyn Peña-Comas',instrument:l('Flauta','Flute'),url:'https://www.spirituosi.com/Evelyn_e.html'},
+ {name:'Nicole Peña-Comas',instrument:l('Violonchelo','Cello')},
+ {name:'Damien Lancelle',instrument:l('Guitarra','Guitar')},
+ {name:'Gonzalo Manrique',instrument:l('Guitarra','Guitar'),url:'https://www.spirituosi.com/Gonzalo_e.html'},
+ {name:'Rubén Sánchez',instrument:l('Contrabajo','Double bass'),url:'https://www.spirituosi.com/Ruben_e.html'},
+];
+const countries = [l('Austria'),l('República Dominicana','Dominican Republic'),l('Italia','Italy'),l('España','Spain'),l('Reino Unido','United Kingdom')];
+const venues = [
+ {name:'MuTH — Vienna Boys Choir Hall',place:l('Viena','Vienna')},
+ {name:'Teatrino Hall — Liceu',place:l('Barcelona')},
+ {name:l('Palacio Bauer','Bauer Palace'),place:l('Madrid')},
+ {name:'Teatro Nacional Eduardo Brito',place:l('Santo Domingo')},
+ {name:'Palacio de Bellas Artes',place:l('Santo Domingo')},
+];
 ---
-<section class="spirituosi section" id="spirituosi"><div class="ensemble-photo"><Image src={sectionPhoto} width={1920} widths={[640,960,1440,1920]} sizes="(max-width:780px) 100vw, 60vw" alt={l("Ensemble Spirituosi — fotografía oficial del sexteto", "Ensemble Spirituosi — official sextet photograph")} format="webp" loading="lazy" /></div><div class="ensemble-copy"><div class="kicker">{l("Un proyecto muy personal", "A deeply personal project")}</div><h2>{l("Ensemble")}<br/><em>{l("Spirituosi")}</em></h2><p>{l("La voz de Nathalie, la flauta de Evelyn y el violonchelo de Nicole Peña-Comas se encuentran con las guitarras de Damien Lancelle y Gonzalo Manrique y el contrabajo de Rubén Sánchez.", "Nathalie’s voice, Evelyn’s flute and Nicole Peña-Comas’s cello meet the guitars of Damien Lancelle and Gonzalo Manrique and Rubén Sánchez’s double bass.")}</p><p>{l("Un sexteto que enlaza música clásica y tradiciones de América Latina y el Caribe. Su álbum Souvenir Latino recibió tres medallas de oro en los Global Music Awards 2018.", "A sextet connecting classical music with Latin American and Caribbean traditions. Their album Souvenir Latino received three gold medals at the 2018 Global Music Awards.")}</p><a href="https://music.apple.com/ca/album/souvenir-latino/1268832661" target="_blank" rel="noopener" class="text-link">{l("Escuchar Souvenir Latino", "Listen to Souvenir Latino")} ↗</a></div></section>
+<section class="spirituosi section" id="spirituosi" aria-labelledby="spirituosi-title">
+ <div class="ensemble-overview">
+  <div class="ensemble-photo"><Image src={sectionPhoto} width={1920} widths={[640,960,1440,1920]} sizes="(max-width:1000px) 100vw, 52vw" alt={l('Ensemble Spirituosi — fotografía oficial del sexteto','Ensemble Spirituosi — official sextet photograph')} format="webp" loading="lazy" /></div>
+  <div class="ensemble-copy"><div class="kicker">{l('Mi proyecto favorito','My favourite project')}</div><h2 id="spirituosi-title">{l('Ensemble')}<br/><em>{l('Spirituosi')}</em></h2><p class="ensemble-genre">{l('Música clásica y folclórica de Europa, América Latina y el Caribe.','Classical and folk music from Europe, Latin America and the Caribbean.')}</p><a class="text-link" href="https://www.spirituosi.com/" target="_blank" rel="noopener">{l('Visitar la web de Spirituosi','Visit the Spirituosi website')} ↗</a></div>
+ </div>
+ <div class="ensemble-details">
+  <div class="ensemble-story" data-ensemble-story>
+   <p>{l('Espíritu, fuego, aire, aliento y destilado: las asociaciones que evoca el nombre Spirituosi fueron una elección deliberada para este ensemble.','Spirit, fire, air, breath and distillate: the associations evoked by the name Spirituosi were a deliberate choice for the ensemble.')}</p>
+   <p>{l('La combinación poco habitual de la voz de soprano, la flauta y el violonchelo de las hermanas Nathalie, Evelyn y Nicole Peña-Comas, junto a las guitarras de Damien Lancelle y Gonzalo Manrique y el contrabajo de Rubén Sánchez, abre posibilidades de arreglos inventivos en diversos estilos musicales.','An uncommon instrumentation brings together the sisters Nathalie, Evelyn and Nicole Peña-Comas on soprano voice, flute and cello, the guitars of Damien Lancelle and Gonzalo Manrique, and Rubén Sánchez on double bass. This combination opens up inventive arrangements across a range of musical styles.')}</p>
+   <p>{l('Cada arreglo de su repertorio, tanto clásico como folclórico y principalmente latinoamericano, busca conservar los aspectos esenciales de la obra original y, al mismo tiempo, crear algo nuevo y singular para esta formación.','Each arrangement, whether of classical music or folk repertoire drawn mainly from Latin America, preserves the essential qualities of the original work while creating something new and distinctive for this particular formation.')}</p>
+   <p>{l('Con las introducciones a las obras de sus programas, el ensemble invita al público a participar y le ofrece una experiencia musical interactiva.','By introducing the works in its programmes, the ensemble invites the audience to take part in an interactive musical experience.')}</p>
+  </div>
+  <div class="ensemble-members" data-ensemble-members><header><span class="kicker">{l('Spirituosi')}</span><h3>{l('La formación','The ensemble')}</h3></header><dl>{members.map(member=><div><dt>{member.url?<a href={member.url} target="_blank" rel="noopener">{member.name} <span aria-hidden="true">↗</span></a>:member.name}</dt><dd>{member.instrument}</dd></div>)}</dl></div>
+  <div class="ensemble-travels" data-ensemble-travels><header><span class="kicker">{l('Actuaciones internacionales','International performances')}</span><h3>{l('Salas y teatros','Concert halls and theatres')}</h3></header><ul class="ensemble-countries">{countries.map(country=><li>{country}</li>)}</ul><ul class="ensemble-venues">{venues.map(venue=><li><strong>{venue.name}</strong><span>{venue.place}</span></li>)}</ul></div>
+  <div class="ensemble-milestones" data-ensemble-milestones>
+   <article><span class="ensemble-year">2018</span><div><h3>{l('Souvenir Latino · Tres medallas de oro','Souvenir Latino · Three gold medals')}</h3><p>{l('El primer álbum de Spirituosi, Souvenir Latino, recibió tres medallas de oro en los International Global Music Awards 2018 en Los Ángeles, California.','Spirituosi’s debut album, Souvenir Latino, received three gold medals at the 2018 International Global Music Awards in Los Angeles, California.')}</p><a href="https://music.apple.com/ca/album/souvenir-latino/1268832661" target="_blank" rel="noopener" class="text-link">{l('Escuchar Souvenir Latino','Listen to Souvenir Latino')} ↗</a></div></article>
+   <article><span class="ensemble-year">2015</span><div><h3>{l('Premios Soberano','Soberano Awards')}</h3><p>{l('El ensemble recibió en la República Dominicana el Premio Soberano al mejor concierto clásico de 2015.','In the Dominican Republic, the ensemble received the Soberano Award for Best Classical Concert of 2015.')}</p></div></article>
+   <article><span class="ensemble-year">2018</span><div><h3>{l('Spirituosi · Un proyecto de vino','Spirituosi · A wine project')}</h3><p>{l('En 2018, Spirituosi participó en un proyecto vitivinícola con su propio Chardonnay, elaborado por el viticultor austríaco Bernd Kornherr y distribuido por Sonorwines America.','In 2018, Spirituosi took part in a wine project with its own Chardonnay, made by Austrian winemaker Bernd Kornherr and distributed by Sonorwines America.')}</p><a href="https://www.sonorwines.com/" target="_blank" rel="noopener" class="text-link">{l('Sonorwines America')} ↗</a></div></article>
+   <article><span class="ensemble-year">2018</span><div><h3>{l('BBC Radio 3 · Breakfast')}</h3><p>{l('En noviembre de 2018, Souvenir Latino formó parte de la lista de reproducción del programa Breakfast de BBC Radio 3.','In November 2018, Souvenir Latino was included in the playlist of BBC Radio 3’s Breakfast programme.')}</p><a href="https://www.bbc.co.uk/sounds/play/live:bbc_radio_three" target="_blank" rel="noopener" class="text-link">{l('BBC Radio 3')} ↗</a></div></article>
+  </div>
+  <div class="ensemble-media"><header><span class="kicker">{l('En imágenes y en música','In pictures and music')}</span><h3>{l('Escuchar Spirituosi','Listen to Spirituosi')}</h3></header><div class="ensemble-video-list">
+   <article><span class="ensemble-video-index" aria-hidden="true">01</span><div><h4>{l('Merenguenini — N. Paganini / D. Lancelle')}</h4><a href="https://www.youtube.com/watch?v=HiZvKI6u3qk" target="_blank" rel="noopener" class="text-link">{l('Abrir en YouTube','Open on YouTube')} ↗</a></div><button type="button" data-video="HiZvKI6u3qk" data-title="Merenguenini — N. Paganini / D. Lancelle" aria-label={l('Ver Merenguenini','Watch Merenguenini')}>▷</button></article>
+   <article><span class="ensemble-video-index" aria-hidden="true">02</span><div><h4>{l('Souvenir Latino — Presentación del álbum','Souvenir Latino — Album release highlights')}</h4><a href="https://www.youtube.com/watch?v=kK6DLIKslYE" target="_blank" rel="noopener" class="text-link">{l('Abrir en YouTube','Open on YouTube')} ↗</a></div><button type="button" data-video="kK6DLIKslYE" data-title={l('Souvenir Latino — Presentación del álbum','Souvenir Latino — Album release highlights')} aria-label={l('Ver la presentación de Souvenir Latino','Watch the Souvenir Latino album release')}>▷</button></article>
+  </div>
+   <div class="ensemble-audio"><span class="ensemble-audio-title" id="spirituosi-audio-title">{l('Que Nadie Sepa Mi Sufrir — Spirituosi')}</span>
+    <!-- Original audio published at nathaliepenacomas.net/projects; mirrored locally. -->
+    <audio id="spirituosi-audio" aria-labelledby="spirituosi-audio-title" controls preload="none" src="/audio/spirituosi-que-nadie-sepa-mi-sufrir.mp3"><a href="/audio/spirituosi-que-nadie-sepa-mi-sufrir.mp3">{l('Escuchar el audio','Listen to the audio')}</a></audio>
+   </div>
+  </div>
+ </div>
+</section>

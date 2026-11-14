@@ -1244,6 +1244,111 @@
       "collection": null,
       "fields": [
         {
+          "key": "copy:Soprano",
+          "source": "Soprano",
+          "english": "Soprano",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Flute",
+          "source": "Flauta",
+          "english": "Flute",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Cello",
+          "source": "Violonchelo",
+          "english": "Cello",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Guitar",
+          "source": "Guitarra",
+          "english": "Guitar",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Double bass",
+          "source": "Contrabajo",
+          "english": "Double bass",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Austria",
+          "source": "Austria",
+          "english": "Austria",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Dominican Republic",
+          "source": "República Dominicana",
+          "english": "Dominican Republic",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Italy",
+          "source": "Italia",
+          "english": "Italy",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spain",
+          "source": "España",
+          "english": "Spain",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:United Kingdom",
+          "source": "Reino Unido",
+          "english": "United Kingdom",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Vienna",
+          "source": "Viena",
+          "english": "Vienna",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Barcelona",
+          "source": "Barcelona",
+          "english": "Barcelona",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Bauer Palace",
+          "source": "Palacio Bauer",
+          "english": "Bauer Palace",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Madrid",
+          "source": "Madrid",
+          "english": "Madrid",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Santo Domingo",
+          "source": "Santo Domingo",
+          "english": "Santo Domingo",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Ensemble Spirituosi — official sextet photograph",
           "source": "Ensemble Spirituosi — fotografía oficial del sexteto",
           "english": "Ensemble Spirituosi — official sextet photograph",
@@ -1251,9 +1356,9 @@
           "auxiliary": true
         },
         {
-          "key": "copy:A deeply personal project",
-          "source": "Un proyecto muy personal",
-          "english": "A deeply personal project",
+          "key": "copy:My favourite project",
+          "source": "Mi proyecto favorito",
+          "english": "My favourite project",
           "label": "Antetítulo",
           "auxiliary": false
         },
@@ -1272,23 +1377,205 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Nathalie’s voice, Evelyn’s flute and Nicole Peña-Comas’s cello meet the guitars of Damien Lancelle and Gonzalo Manrique and Rubén Sánchez’s double bass.",
-          "source": "La voz de Nathalie, la flauta de Evelyn y el violonchelo de Nicole Peña-Comas se encuentran con las guitarras de Damien Lancelle y Gonzalo Manrique y el contrabajo de Rubén Sánchez.",
-          "english": "Nathalie’s voice, Evelyn’s flute and Nicole Peña-Comas’s cello meet the guitars of Damien Lancelle and Gonzalo Manrique and Rubén Sánchez’s double bass.",
-          "label": "Párrafo 1",
+          "key": "copy:Classical and folk music from Europe, Latin America and the Caribbean.",
+          "source": "Música clásica y folclórica de Europa, América Latina y el Caribe.",
+          "english": "Classical and folk music from Europe, Latin America and the Caribbean.",
+          "label": "Descripción",
           "auxiliary": false
         },
         {
-          "key": "copy:A sextet connecting classical music with Latin American and Caribbean traditions. Their album Souvenir Latino received three gold medals at the 2018 Global Music Awards.",
-          "source": "Un sexteto que enlaza música clásica y tradiciones de América Latina y el Caribe. Su álbum Souvenir Latino recibió tres medallas de oro en los Global Music Awards 2018.",
-          "english": "A sextet connecting classical music with Latin American and Caribbean traditions. Their album Souvenir Latino received three gold medals at the 2018 Global Music Awards.",
+          "key": "copy:Visit the Spirituosi website",
+          "source": "Visitar la web de Spirituosi",
+          "english": "Visit the Spirituosi website",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spirit, fire, air, breath and distillate: the associations evoked by the name Spirituosi were a deliberate choice for the ensemble.",
+          "source": "Espíritu, fuego, aire, aliento y destilado: las asociaciones que evoca el nombre Spirituosi fueron una elección deliberada para este ensemble.",
+          "english": "Spirit, fire, air, breath and distillate: the associations evoked by the name Spirituosi were a deliberate choice for the ensemble.",
+          "label": "Párrafo 1",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:An uncommon instrumentation brings together the sisters Nathalie, Evelyn and Nicole Peña-Comas on soprano voice, flute and cello, the guitars of Damien Lancelle and Gonzalo Manrique, and Rubén Sánchez on double bass. This combination opens up inventive arrangements across a range of musical styles.",
+          "source": "La combinación poco habitual de la voz de soprano, la flauta y el violonchelo de las hermanas Nathalie, Evelyn y Nicole Peña-Comas, junto a las guitarras de Damien Lancelle y Gonzalo Manrique y el contrabajo de Rubén Sánchez, abre posibilidades de arreglos inventivos en diversos estilos musicales.",
+          "english": "An uncommon instrumentation brings together the sisters Nathalie, Evelyn and Nicole Peña-Comas on soprano voice, flute and cello, the guitars of Damien Lancelle and Gonzalo Manrique, and Rubén Sánchez on double bass. This combination opens up inventive arrangements across a range of musical styles.",
           "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Each arrangement, whether of classical music or folk repertoire drawn mainly from Latin America, preserves the essential qualities of the original work while creating something new and distinctive for this particular formation.",
+          "source": "Cada arreglo de su repertorio, tanto clásico como folclórico y principalmente latinoamericano, busca conservar los aspectos esenciales de la obra original y, al mismo tiempo, crear algo nuevo y singular para esta formación.",
+          "english": "Each arrangement, whether of classical music or folk repertoire drawn mainly from Latin America, preserves the essential qualities of the original work while creating something new and distinctive for this particular formation.",
+          "label": "Párrafo 3",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:By introducing the works in its programmes, the ensemble invites the audience to take part in an interactive musical experience.",
+          "source": "Con las introducciones a las obras de sus programas, el ensemble invita al público a participar y le ofrece una experiencia musical interactiva.",
+          "english": "By introducing the works in its programmes, the ensemble invites the audience to take part in an interactive musical experience.",
+          "label": "Párrafo 4",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The ensemble",
+          "source": "La formación",
+          "english": "The ensemble",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:International performances",
+          "source": "Actuaciones internacionales",
+          "english": "International performances",
+          "label": "Antetítulo",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Concert halls and theatres",
+          "source": "Salas y teatros",
+          "english": "Concert halls and theatres",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Souvenir Latino · Three gold medals",
+          "source": "Souvenir Latino · Tres medallas de oro",
+          "english": "Souvenir Latino · Three gold medals",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spirituosi’s debut album, Souvenir Latino, received three gold medals at the 2018 International Global Music Awards in Los Angeles, California.",
+          "source": "El primer álbum de Spirituosi, Souvenir Latino, recibió tres medallas de oro en los International Global Music Awards 2018 en Los Ángeles, California.",
+          "english": "Spirituosi’s debut album, Souvenir Latino, received three gold medals at the 2018 International Global Music Awards in Los Angeles, California.",
+          "label": "Párrafo 5",
           "auxiliary": false
         },
         {
           "key": "copy:Listen to Souvenir Latino",
           "source": "Escuchar Souvenir Latino",
           "english": "Listen to Souvenir Latino",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Soberano Awards",
+          "source": "Premios Soberano",
+          "english": "Soberano Awards",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In the Dominican Republic, the ensemble received the Soberano Award for Best Classical Concert of 2015.",
+          "source": "El ensemble recibió en la República Dominicana el Premio Soberano al mejor concierto clásico de 2015.",
+          "english": "In the Dominican Republic, the ensemble received the Soberano Award for Best Classical Concert of 2015.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spirituosi · A wine project",
+          "source": "Spirituosi · Un proyecto de vino",
+          "english": "Spirituosi · A wine project",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In 2018, Spirituosi took part in a wine project with its own Chardonnay, made by Austrian winemaker Bernd Kornherr and distributed by Sonorwines America.",
+          "source": "En 2018, Spirituosi participó en un proyecto vitivinícola con su propio Chardonnay, elaborado por el viticultor austríaco Bernd Kornherr y distribuido por Sonorwines America.",
+          "english": "In 2018, Spirituosi took part in a wine project with its own Chardonnay, made by Austrian winemaker Bernd Kornherr and distributed by Sonorwines America.",
+          "label": "Párrafo 6",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Sonorwines America",
+          "source": "Sonorwines America",
+          "english": "Sonorwines America",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:BBC Radio 3 · Breakfast",
+          "source": "BBC Radio 3 · Breakfast",
+          "english": "BBC Radio 3 · Breakfast",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In November 2018, Souvenir Latino was included in the playlist of BBC Radio 3’s Breakfast programme.",
+          "source": "En noviembre de 2018, Souvenir Latino formó parte de la lista de reproducción del programa Breakfast de BBC Radio 3.",
+          "english": "In November 2018, Souvenir Latino was included in the playlist of BBC Radio 3’s Breakfast programme.",
+          "label": "Párrafo 7",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:BBC Radio 3",
+          "source": "BBC Radio 3",
+          "english": "BBC Radio 3",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In pictures and music",
+          "source": "En imágenes y en música",
+          "english": "In pictures and music",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to Spirituosi",
+          "source": "Escuchar Spirituosi",
+          "english": "Listen to Spirituosi",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Merenguenini — N. Paganini / D. Lancelle",
+          "source": "Merenguenini — N. Paganini / D. Lancelle",
+          "english": "Merenguenini — N. Paganini / D. Lancelle",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Open on YouTube",
+          "source": "Abrir en YouTube",
+          "english": "Open on YouTube",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Watch Merenguenini",
+          "source": "Ver Merenguenini",
+          "english": "Watch Merenguenini",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Souvenir Latino — Album release highlights",
+          "source": "Souvenir Latino — Presentación del álbum",
+          "english": "Souvenir Latino — Album release highlights",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Watch the Souvenir Latino album release",
+          "source": "Ver la presentación de Souvenir Latino",
+          "english": "Watch the Souvenir Latino album release",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Que Nadie Sepa Mi Sufrir — Spirituosi",
+          "source": "Que Nadie Sepa Mi Sufrir — Spirituosi",
+          "english": "Que Nadie Sepa Mi Sufrir — Spirituosi",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to the audio",
+          "source": "Escuchar el audio",
+          "english": "Listen to the audio",
           "label": "Texto del enlace",
           "auxiliary": false
         }
