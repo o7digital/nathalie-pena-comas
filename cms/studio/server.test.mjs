@@ -89,6 +89,18 @@ test('concert reservation fields stay editable with validated availability and s
  assert.equal((await write({ticket_status:'free',url:''})).status,200);
 });
 
+test('manual concert creation preserves the chosen day and refuses missing or impossible dates before writing',async t=>{
+ const {request,login,origin,calls}=await setup(t);const {cookie}=await login();
+ const save=(value,path='/api/content/concerts',method='POST')=>request(path,{method,headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(value)});
+ const manual={title:'Recital escrito por Nathalie',date:'2028-02-29',venue:'Mi teatro',city:'Viena',status:'draft',ticket_status:'free',url:''};
+ assert.equal((await save(manual)).status,201);
+ assert(calls.some(call=>call.method==='POST'&&call.path==='/items/concerts'&&JSON.parse(call.body).date==='2028-02-29'&&JSON.parse(call.body).title===manual.title));
+ const writesBefore=calls.filter(call=>call.method==='POST'||call.method==='PATCH').length;
+ for(const date of [undefined,null,'','2027-02-29','2028-02-30','2027-04-31','2027-11-00'])assert.equal((await save({...manual,date})).status,400,String(date));
+ assert.equal((await save({date:'2027-02-31'},'/api/content/concerts/concert-fixture','PATCH')).status,400);
+ assert.equal(calls.filter(call=>call.method==='POST'||call.method==='PATCH').length,writesBefore);
+});
+
 test('read-only identities cannot trigger a preview rebuild',async t=>{
  const {request,login,origin,calls}=await setup(t,{readOnly:true});const {cookie}=await login();
  const response=await request('/api/publish',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:'{}'});

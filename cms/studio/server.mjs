@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve, extname } from 'node:path';
 import siteMap from './site-map.json' with { type: 'json' };
 import { translateSpanish,translationWrites,localizedFields,recordTextKey,assertTranslationsReady,sourceHash,targetLocales } from './translations.mjs';
+import {validDate} from './public/calendar.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
@@ -186,7 +187,7 @@ export function createStudioServer(options = {}) {
   if (input.url) { let link; try {link=new URL(input.url);} catch{} if(!link || link.protocol!=='https:' || link.username || link.password) throw new ApiError(400,'El enlace debe empezar por https://.'); }
   if (input.ticket_status !== undefined && !['available','soon','free','none'].includes(input.ticket_status)) throw new ApiError(400,'Selecciona una disponibilidad válida para las entradas.');
   if (input.youtube_id && !/^[A-Za-z\d_-]{11}$/.test(input.youtube_id)) throw new ApiError(400,'Introduce un enlace o identificador de YouTube válido.');
-  if (input.date && (!/^\d{4}-\d{2}-\d{2}$/.test(input.date) || Number.isNaN(Date.parse(input.date)))) throw new ApiError(400,'Selecciona una fecha válida.');
+  if ((Object.hasOwn(input,'date') && !validDate(input.date)) || (creating && collection==='concerts' && !validDate(input.date))) throw new ApiError(400,'Escribe una fecha válida: día, mes y año.');
   if (input.locale && !locales.includes(input.locale)) throw new ApiError(400,'Selecciona un idioma disponible.');
   if (creating && collection !== 'site_texts' && !input.title?.trim()) throw new ApiError(400,'Escribe un título.');
   return input;
@@ -429,7 +430,7 @@ export function createStudioServer(options = {}) {
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
   const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
-  const relative=staticFiles[path] || (font?'fonts/'+font[1]:null);
+  const relative=(path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
   let bytes;
   try{bytes=await readFile(resolve(here,'public',relative));}
@@ -438,7 +439,7 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}

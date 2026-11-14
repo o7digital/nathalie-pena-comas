@@ -1,5 +1,6 @@
 import {createSocialUI} from './social.js';
 import {createReportingUI} from './reporting.js';
+import {agendaToolbar,calendarMarkup,dateFields,syncDateFields,moveMonth,dateFromParts} from './calendar.js';
 export {};
 const $=s=>document.querySelector(s);
 const icons={home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-8h6v8"/>',photo:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3Z"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2"/>',album:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 6a6 6 0 0 1 6 6"/>',text:'<path d="M4 5h16M12 5v15M8 20h8M5 12h4m6 0h4"/>',layout:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m2-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 4v2"/>',search:'<circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/>',upload:'<path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/>',pin:'<path d="M19 10c0 6-7 11-7 11S5 16 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2"/>',check:'<path d="m5 12 4 4L19 6"/>',briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 13h18m-11 0v3h4v-3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>'};
@@ -11,7 +12,7 @@ const language={es:'Español',en:'English',de:'Deutsch',fr:'Français',it:'Itali
 let nav=[['overview','Resumen','home'],['arm','Relaciones · ARM','people']];
 const collectionFor={gallery:'gallery',videos:'videos',concerts:'concerts',albums:'albums',texts:'site_texts',sections:'site_images'};
 const labels={gallery:'Fotografías',videos:'Vídeos',concerts:'Actuaciones',albums:'Discografía',site_texts:'Textos e idiomas',site_images:'Mi sitio'};
-const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',search:'',locale:'es',editor:null,editorImage:'',arm:null,armTab:'clients',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
+const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',agendaView:'calendar',agendaMonth:'',search:'',locale:'es',editor:null,editorImage:'',arm:null,armTab:'clients',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription','social'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
 const imageId=row=>typeof row?.image==='string'?row.image:row?.image?.id;
@@ -48,20 +49,27 @@ function render(){
  const definition=state.site.sections.find(section=>section.id===current);
  if(!definition)return dashboard();
  if(!definition.collection)return renderSiteSection(definition);
- const descriptions={gallery:'Momentos que cuentan tu historia. Elige cómo quieres compartirlos.',videos:'Tu voz, en imágenes. Organiza tus interpretaciones y vídeos oficiales.',concerts:'Cada escenario, una nueva historia. Mantén tu agenda al día.',albums:'Las obras que forman tu universo musical.',texts:'Tu voz también está en las palabras. Cuida cada idioma de tu sitio.',sections:'La imagen de cada espacio de tu sitio, en un solo lugar.'};
+ const descriptions={gallery:'Momentos que cuentan tu historia. Elige cómo quieres compartirlos.',videos:'Tu voz, en imágenes. Organiza tus interpretaciones y vídeos oficiales.',concerts:'Tu calendario personal. Elige un día y escribe los detalles de cada actuación.',albums:'Las obras que forman tu universo musical.',texts:'Tu voz también está en las palabras. Cuida cada idioma de tu sitio.',sections:'La imagen de cada espacio de tu sitio, en un solo lugar.'};
  const currentCollection=collectionFor[current];
- $('#main').innerHTML=heading(definition.title,descriptions[current],true)+languagePages(definition)+sectionEditor(definition,true)+translationReview()+
- `<div class="section-tools">${current==='texts'?`<label class="locale-label">Idioma de edición <select class="locale-picker" id="locale">${Object.entries(language).map(([key,label])=>`<option value="${key}" ${state.locale===key?'selected':''}>${label}</option>`).join('')}</select></label>`:`<div class="tabs" role="group" aria-label="Filtrar contenido">${[['all','Todo'],['published','Publicado'],['draft','Borradores'],['archived','Archivado']].map(([key,label])=>`<button class="tab ${state.filter===key?'active':''}" data-filter="${key}">${label}</button>`).join('')}</div>`}${current==='concerts'?`<label class="locale-label">Fechas<select id="agenda-period"><option value="upcoming" ${state.agendaPeriod==='upcoming'?'selected':''}>Próximas</option><option value="history" ${state.agendaPeriod==='history'?'selected':''}>Historial</option><option value="all" ${state.agendaPeriod==='all'?'selected':''}>Todas</option></select></label>`:''}<label class="search">${icon('search')}<input id="search" type="search" aria-label="Buscar contenido" placeholder="Buscar en ${labels[currentCollection].toLowerCase()}…" value="${escapeHtml(state.search)}"></label></div><div id="items"></div>${current==='gallery'?`<button class="upload-zone" id="dropzone" data-action="upload">${icon('upload')}<span><strong>Un nuevo momento para tu galería</strong><small>Arrastra tus fotos aquí o haz clic para seleccionarlas.</small></span></button>`:''}`;
+ const editorialTools=languagePages(definition)+sectionEditor(definition,true)+translationReview();
+ $('#main').innerHTML=heading(definition.title,descriptions[current],true)+(current==='concerts'?'':editorialTools)+
+ `<div class="section-tools">${current==='texts'?`<label class="locale-label">Idioma de edición <select class="locale-picker" id="locale">${Object.entries(language).map(([key,label])=>`<option value="${key}" ${state.locale===key?'selected':''}>${label}</option>`).join('')}</select></label>`:`<div class="tabs" role="group" aria-label="Filtrar contenido">${[['all','Todo'],['published','Publicado'],['draft','Borradores'],['archived','Archivado']].map(([key,label])=>`<button class="tab ${state.filter===key?'active':''}" data-filter="${key}">${label}</button>`).join('')}</div>`}${current==='concerts'?`<label class="locale-label">Fechas<select id="agenda-period"><option value="upcoming" ${state.agendaPeriod==='upcoming'?'selected':''}>Próximas</option><option value="history" ${state.agendaPeriod==='history'?'selected':''}>Historial</option><option value="all" ${state.agendaPeriod==='all'?'selected':''}>Todas</option></select></label>`:''}<label class="search">${icon('search')}<input id="search" type="search" aria-label="Buscar contenido" placeholder="Buscar en ${labels[currentCollection].toLowerCase()}…" value="${escapeHtml(state.search)}"></label></div><div id="items"></div>${current==='gallery'?`<button class="upload-zone" id="dropzone" data-action="upload">${icon('upload')}<span><strong>Un nuevo momento para tu galería</strong><small>Arrastra tus fotos aquí o haz clic para seleccionarlas.</small></span></button>`:''}`+(current==='concerts'?editorialTools:'');
  renderItems();renderTranslationReview();
 }
-function filtered(){return(state.data[collectionFor[route()]]||[]).filter(row=>(state.filter==='all'||row.status===state.filter)&&(route()!=='texts'||row.locale===state.locale)&&(route()!=='concerts'||state.agendaPeriod==='all'||(state.agendaPeriod==='upcoming'?row.date>=today():row.date<today()))&&(!state.search||[row.title,row.detail,row.credit,row.city,row.venue,row.value].some(value=>plain(value).toLowerCase().includes(state.search.toLowerCase()))));}
+function filtered(){return(state.data[collectionFor[route()]]||[]).filter(row=>(state.filter==='all'||row.status===state.filter)&&(route()!=='texts'||row.locale===state.locale)&&(route()!=='concerts'||state.agendaView==='calendar'||state.agendaPeriod==='all'||(state.agendaPeriod==='upcoming'?row.date>=today():row.date<today()))&&(!state.search||[row.title,row.detail,row.credit,row.city,row.venue,row.value].some(value=>plain(value).toLowerCase().includes(state.search.toLowerCase()))));}
 function renderItems(){
  const current=route(),rows=filtered();
- if(!rows.length){$('#items').innerHTML=`<div class="empty-state">${icon(current==='concerts'?'calendar':current==='texts'?'text':'photo')}<h2>${state.search?'No encontramos ese contenido.':'Un espacio para lo que viene.'}</h2><p>${state.search?'Prueba con otra palabra o cambia el filtro.':'Añade tu contenido y elige cuándo estará listo para compartir.'}</p></div>`;return;}
  if(current==='concerts'){
+  state.agendaMonth||=today().slice(0,7);
+  $('#agenda-period').closest('label').hidden=state.agendaView!=='list';
+  const toolbar=agendaToolbar(state.agendaView,state.agendaMonth);
+  if(state.agendaView==='calendar'){
+   $('#items').innerHTML=toolbar+calendarMarkup(state.agendaMonth,rows,{escapeHtml,badge,today:today()});return;
+  }
   const sorted=[...rows].sort((a,b)=>{const ap=a.date<today(),bp=b.date<today();return ap!==bp?Number(ap)-Number(bp):ap?b.date.localeCompare(a.date):a.date.localeCompare(b.date);});
-  $('#items').innerHTML=`<div class="panel table-panel"><table class="content-table"><thead><tr><th>Fecha</th><th>Actuación</th><th>Lugar</th><th>Estado</th><th></th></tr></thead><tbody>${sorted.map(row=>`<tr class="${row.date<today()?'past':''}"><td><strong>${escapeHtml(new Intl.DateTimeFormat('es',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(row.date+'T12:00:00Z')))}</strong><small>${row.date<today()?'Actuación pasada':'Próxima actuación'}</small></td><td><strong>${escapeHtml(row.title)}</strong><small>${escapeHtml(row.ensemble)}</small></td><td>${escapeHtml(row.venue)}<small>${escapeHtml(row.city)}</small></td><td>${badge(row.status)}</td><td><button class="text-link" data-edit="${escapeHtml(row.id)}">Editar ↗</button></td></tr>`).join('')}</tbody></table></div>`;return;
+  $('#items').innerHTML=toolbar+(!rows.length?'<div class="empty-state"><h2>No hay actuaciones con estos filtros.</h2><p>Cambia las fechas, la búsqueda o la visibilidad.</p></div>':`<div class="panel table-panel"><table class="content-table"><thead><tr><th>Fecha</th><th>Actuación</th><th>Lugar</th><th>Estado</th><th></th></tr></thead><tbody>${sorted.map(row=>`<tr class="${row.date<today()?'past':''}"><td><strong>${escapeHtml(new Intl.DateTimeFormat('es',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(row.date+'T12:00:00Z')))}</strong><small>${row.date<today()?'Actuación pasada':'Próxima actuación'}</small></td><td><strong>${escapeHtml(row.title)}</strong><small>${escapeHtml(row.ensemble)}</small></td><td>${escapeHtml(row.venue)}<small>${escapeHtml(row.city)}</small></td><td>${badge(row.status)}</td><td><button class="text-link" data-edit="${escapeHtml(row.id)}">Editar ↗</button></td></tr>`).join('')}</tbody></table></div>`);return;
  }
+ if(!rows.length){$('#items').innerHTML=`<div class="empty-state">${icon(current==='concerts'?'calendar':current==='texts'?'text':'photo')}<h2>${state.search?'No encontramos ese contenido.':'Un espacio para lo que viene.'}</h2><p>${state.search?'Prueba con otra palabra o cambia el filtro.':'Añade tu contenido y elige cuándo estará listo para compartir.'}</p></div>`;return;}
  if(current==='texts'){
   $('#items').innerHTML=`<div class="panel table-panel"><table class="content-table"><thead><tr><th>Contenido</th><th>Tu texto · ${language[state.locale]}</th><th></th></tr></thead><tbody>${rows.slice(0,80).map(row=>`<tr><td><strong>${escapeHtml(textName(row))}</strong><small>${language[row.locale]}</small></td><td class="text-cell"><span>${escapeHtml(plain(row.value))}</span></td><td><button class="text-link" data-edit="${escapeHtml(row.id)}">Editar ↗</button></td></tr>`).join('')}</tbody></table></div><p class="list-note">${rows.length} textos en ${language[state.locale]}.${rows.length>80?' Usa la búsqueda para encontrar un texto concreto.':''}</p>`;return;
  }
@@ -137,10 +145,10 @@ function findRow(collection,id){return state.data[collection]?.find(row=>String(
 function field(label,name,value,type='text',extra=''){return `<label>${label}<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${extra}></label>`;}
 function select(label,name,value,choices){return `<label>${label}<select name="${name}">${choices.map(([key,text])=>`<option value="${key}" ${key===value?'selected':''}>${text}</option>`).join('')}</select></label>`;}
 function editorPhoto(){return `<div class="editor-photo ${state.editorImage?'':'empty'}" id="editor-photo">${state.editorImage?`<img src="/api/image/${encodeURIComponent(state.editorImage)}?w=960" alt="Vista previa de la imagen">`:''}<button type="button" class="button" data-action="editor-upload">${state.editorImage?'Cambiar imagen':'Seleccionar fotografía'} ↗</button></div>`;}
-function openEditor(id=null,explicitCollection=null){
+function openEditor(id=null,explicitCollection=null,selectedDate=null){
  const collection=explicitCollection||collectionFor[route()],row=id?findRow(collection,id):{};
  state.editor={collection,id};state.editorImage=imageId(row)||'';
- $('#editor-eyebrow').textContent=labels[collection];$('#editor-title').textContent=id?'Cada detalle cuenta.':'Algo nuevo empieza aquí.';$('#editor-error').textContent='';
+ $('#editor-eyebrow').textContent=labels[collection];$('#editor-title').textContent=collection==='concerts'?(id?'Editar actuación':'Nueva actuación'):(id?'Cada detalle cuenta.':'Algo nuevo empieza aquí.');$('#editor-error').textContent='';
  let html='<p class="editable-hint">✎ Los textos en verde se pueden editar.</p>';
  if(['gallery','albums','videos','site_images'].includes(collection))html+=editorPhoto();
  if(collection==='site_texts')html+=`<span class="badge accent">${language[row.locale]}</span><p class="editor-help">${escapeHtml(textName(row))}</p><label>Tu texto<textarea name="value" rows="10">${escapeHtml(row.value)}</textarea></label>`;
@@ -149,7 +157,7 @@ function openEditor(id=null,explicitCollection=null){
   if(collection==='gallery')html+=field('Crédito fotográfico','credit',row.credit||'');
   if(collection==='albums')html+=field('Artistas y créditos','detail',row.detail||'')+field('Enlace para escuchar','url',row.url||'','url','required')+select('Repertorio','category',row.category||(['album-2','album-4'].includes(row.id)?'classical':'contemporary'),[['classical','Clásico'],['contemporary','Contemporáneo']]);
   if(collection==='videos')html+=field('Enlace de YouTube','youtube_id',row.youtube_id?`https://www.youtube.com/watch?v=${row.youtube_id}`:'','text','required')+'<p class="editor-help">Pega el enlace de tu vídeo de YouTube. El reproductor se abre cuando el visitante decide verlo.</p>'+field('Obra, escenario y créditos','detail',row.detail||'')+select('Colección','category',row.category||'opera',[['opera','Interpretaciones de ópera'],['film','Vídeos musicales']]);
-  if(collection==='concerts')html+=field('Fecha','date',row.date||'','date','required')+field('Orquesta o ensemble','ensemble',row.ensemble||'')+field('Teatro o recinto','venue',row.venue||'')+field('Ciudad y país','city',row.city||'')+select('Entradas','ticket_status',row.ticket_status||'none',[['available','Información y entradas'],['soon','Próximamente'],['free','Entrada libre'],['none','Sin enlace']])+field('Enlace de información o reserva','url',row.url||'','url');
+  if(collection==='concerts')html+=dateFields(row.date||selectedDate||today())+field('Orquesta o ensemble','ensemble',row.ensemble||'')+field('Teatro o recinto','venue',row.venue||'')+field('Ciudad y país','city',row.city||'')+select('Entradas','ticket_status',row.ticket_status||'none',[['available','Información y entradas'],['soon','Próximamente'],['free','Entrada libre'],['none','Sin enlace']])+field('Enlace de información o reserva','url',row.url||'','url');
  }
  html+=select('Visibilidad','status',row.status||'draft',[['draft','Borrador · Solo en tu Studio'],['published','Publicado · Incluir en la vista previa'],['archived','Archivado · Fuera del sitio']]);
  if(['gallery','albums','videos','concerts'].includes(collection))html+='<p class="editor-help">Escribe en español. Las traducciones se generan automáticamente al guardar; los nombres de artistas y obras se conservan.</p>';
@@ -158,12 +166,13 @@ function openEditor(id=null,explicitCollection=null){
 }
 function youtubeId(value){const raw=value.trim();if(/^[A-Za-z\d_-]{11}$/.test(raw))return raw;try{const url=new URL(raw);if(['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(url.hostname)){const id=url.hostname==='youtu.be'?url.pathname.split('/')[1]:url.searchParams.get('v')||url.pathname.split('/').filter(Boolean).at(-1);if(/^[A-Za-z\d_-]{11}$/.test(id||''))return id;}}catch{}throw new Error('Revisa el enlace de YouTube.');}
 async function saveEditor(event){
- event.preventDefault();const button=$('#editor-form button[type=submit]');button.disabled=true;button.textContent='Guardando y traduciendo…';$('#editor-error').textContent='';
+ event.preventDefault();if(state.editor.collection==='concerts'){syncDateFields(event.currentTarget);if(!event.currentTarget.reportValidity())return;}const button=$('#editor-form button[type=submit]');button.disabled=true;button.textContent='Guardando y traduciendo…';$('#editor-error').textContent='';
  try{
   const {collection,id}=state.editor;const data=Object.fromEntries(new FormData(event.currentTarget));
   if(['gallery','albums','videos','site_images'].includes(collection)){if(!state.editorImage)throw new Error('Selecciona una fotografía para este contenido.');data.image=state.editorImage;}
   if(collection==='videos')data.youtube_id=youtubeId(data.youtube_id);
   await api(`/api/content/${collection}${id?'/'+encodeURIComponent(id):''}`,{method:id?'PATCH':'POST',body:data});
+  if(collection==='concerts'){state.agendaMonth=data.date.slice(0,7);state.agendaPeriod='all';}
   $('#editor').close();await reload();toast('Cambios guardados. Tu contenido está en buenas manos.');
  }catch(error){$('#editor-error').textContent=error.message;}finally{button.disabled=false;button.innerHTML='Guardar cambios <span>↗</span>';}
 }
@@ -208,6 +217,10 @@ function newArm(){
 document.addEventListener('click',async event=>{
  const button=event.target.closest('button');if(!button)return;
  try{
+  if(button.dataset.agendaView){state.agendaView=button.dataset.agendaView;return renderItems();}
+  if(button.dataset.agendaStep){state.agendaMonth=moveMonth(state.agendaMonth,Number(button.dataset.agendaStep));renderItems();return $('#items [data-agenda-step="'+button.dataset.agendaStep+'"]').focus();}
+  if(button.hasAttribute('data-agenda-today')){state.agendaMonth=today().slice(0,7);return renderItems();}
+  if(button.dataset.newDate)return openEditor(null,'concerts',button.dataset.newDate);
   if(button.dataset.edit)return openEditor(button.dataset.edit,button.dataset.collection);
   if(button.dataset.filter){state.filter=button.dataset.filter;return render();}
   if(button.dataset.move)return await move(button.dataset.move,Number(button.dataset.direction));
@@ -224,10 +237,16 @@ document.addEventListener('click',async event=>{
  }catch(error){toast(error.message,true);}
 });
 document.addEventListener('input',event=>{
+ if(event.target.dataset.datePart)syncDateFields($('#editor-form'));
  if(event.target.id==='search'){state.search=event.target.value;renderItems();}
  if(event.target.dataset.textKey){const key=event.target.dataset.textKey,definition=state.site.sections.find(section=>section.id===route()),field=definition.fields.find(row=>row.key===key);if(event.target.value===spanishValue(field))delete state.drafts[key];else state.drafts[key]=event.target.value;event.target.closest('form').querySelector('[type=submit]').disabled=!definition.fields.some(row=>Object.hasOwn(state.drafts,row.key));}
 });
 document.addEventListener('change',async event=>{
+ if(event.target.dataset.datePart)syncDateFields($('#editor-form'));
+ if(['agenda-month','agenda-year'].includes(event.target.id)){
+  const year=$('#agenda-year'),month=$('#agenda-month'),date=dateFromParts(1,month.value,year.value);
+  if(!date){year.reportValidity();return;}state.agendaMonth=date.slice(0,7);const focus=event.target.id;renderItems();$('#'+focus).focus();
+ }
  if(event.target.dataset.taskStatus || event.target.dataset.dealStage){
   const control=event.target,task=Boolean(control.dataset.taskStatus),id=control.dataset.taskStatus||control.dataset.dealStage;control.disabled=true;
   try{await api('/api/arm/'+(task?'tasks':'deals')+'/'+encodeURIComponent(id),{method:'PATCH',body:task?{status:control.value}:{stageId:control.value}});state.arm=null;await renderArm();toast('Seguimiento actualizado en O7 Pulse.');}catch(error){toast(error.message,true);state.arm=null;await renderArm();}finally{control.disabled=false;}

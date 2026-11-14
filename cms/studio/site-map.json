@@ -11,6 +11,20 @@
       "collection": null,
       "fields": [
         {
+          "key": "copy:Nathalie Peña-Comas",
+          "source": "Nathalie Peña-Comas",
+          "english": "Nathalie Peña-Comas",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Ave Maria",
+          "source": "Ave Maria",
+          "english": "Ave Maria",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:From the Vatican",
           "source": "Desde El Vaticano",
           "english": "From the Vatican",

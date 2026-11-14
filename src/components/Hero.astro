@@ -13,7 +13,7 @@ const {lang}=Astro.props;const l = localizer(lang);const t = translations[lang];
   <div class="hero-portrait" data-hero-slider>
   <div class="hero-slide hero-video-slide" data-hero-video aria-hidden="true" inert>
     <div class="hero-video-stage" data-hero-player inert></div>
-    <div class="hero-video-caption"><span>Nathalie Peña-Comas</span><strong>Ave Maria</strong><span>{l("Desde El Vaticano", "From the Vatican")}</span></div>
+    <div class="hero-video-caption"><span>{l("Nathalie Peña-Comas")}</span><strong>{l("Ave Maria")}</strong><span>{l("Desde El Vaticano", "From the Vatican")}</span></div>
   </div>
   <div class="hero-slide is-active" data-hero-slide><Image src={sectionPhoto} class="hero-photo" width={2560} alt="Nathalie Peña-Comas — fotografía oficial, retrato profesional" widths={[640,960,1440,1920,2560]} sizes="(max-width: 780px) 1440px, 75vw" format="webp" quality={90} loading="eager" fetchpriority="high" /></div>
   <div class="hero-slide hero-album-slide" data-hero-slide aria-hidden="true" inert>

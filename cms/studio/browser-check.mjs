@@ -35,13 +35,13 @@ try {
  await page.waitForFunction(name=>Array.from(document.querySelectorAll('.media-card')).some(card=>card.textContent.includes(name)&&card.textContent.includes('Archivado')),photoName);
  await page.locator('#navigation a[href="#concerts"]').click();await page.getByRole('button',{name:/Nueva actuación/}).click();
  const title='Studio QA '+Date.now();
- await page.locator('#editor-form [name=title]').fill(title);await page.locator('#editor-form [name=date]').fill('2027-03-15');await page.locator('#editor-form [name=venue]').fill('Private UI verification');
+ await page.locator('#editor-form [name=title]').fill(title);await page.locator('#event-day').fill('15');await page.locator('#event-month').selectOption('3');await page.locator('#event-year').fill('2027');await page.locator('#editor-form [name=venue]').fill('Private UI verification');
  const saved=page.waitForResponse(response=>response.url().endsWith('/api/content/concerts')&&response.request().method()==='POST');
  await page.getByRole('button',{name:/Guardar cambios/}).click();const response=await saved;assert.equal(response.status(),201);
  records.push(['concerts',(await response.json()).data.id]);
  await page.waitForFunction(()=>!document.querySelector('#editor').open);
  await page.getByText(title,{exact:true}).waitFor();
- const row=page.locator('tr').filter({hasText:title});await row.getByRole('button',{name:/Editar/}).click();
+ await page.locator('#items [data-edit]').filter({hasText:title}).click();
  await page.locator('#editor-form [name=title]').fill(title+' edited');await page.getByRole('button',{name:/Guardar cambios/}).click();await page.getByText(title+' edited',{exact:true}).waitFor();
  await page.getByRole('link',{name:/Relaciones · ARM/}).click();
  const config=await page.evaluate(()=>fetch('/api/config').then(r=>r.json()));
