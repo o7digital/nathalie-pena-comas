@@ -25,29 +25,43 @@ const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'ch
 try {
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',error=>errors.push(error.message));
  await page.goto(origin+'/#arm');await page.locator('input[name=email]').fill(process.env.ADMIN_EMAIL);await page.locator('input[name=password]').fill(process.env.ADMIN_PASSWORD);await page.getByRole('button',{name:/Entrar a mi Studio/}).click();
- await page.getByRole('heading',{name:'Las relaciones que te impulsan.'}).waitFor();
+ await page.getByRole('heading',{name:'Tu red. Tu próximo escenario.'}).waitFor();
  assert.match(await page.locator('#workspace-plan').textContent(),/2027/);
  const title='Studio ARM QA '+Date.now();
  async function save(resource) {
   const pending=page.waitForResponse(response=>response.url().endsWith('/api/arm/'+resource)&&response.request().method()==='POST');
   await page.getByRole('button',{name:/Guardar cambios/}).click();const response=await pending;
   assert(response.ok(),'Studio '+resource+' create: '+response.status());const data=await response.json();assert(data.id);created.push([resource,data.id]);
-  await page.waitForFunction(()=>!document.querySelector('#editor').open);
+  await page.waitForFunction(()=>!document.querySelector('#arm-editor').open);
  }
- await page.getByRole('button',{name:/Añadir contacto/}).click();await page.locator('#editor-form [name=name]').fill(title);await page.locator('#editor-form [name=company]').fill('Private verification');await save('clients');
- await page.getByText(title,{exact:true}).waitFor();
- await page.getByRole('button',{name:'Propuestas y oportunidades',exact:true}).click();await page.getByRole('button',{name:/Nueva propuesta/}).click();await page.locator('#editor-form [name=title]').fill(title+' proposal');await page.locator('#editor-form [name=value]').fill('1200');await page.locator('#editor-form [name=currency]').selectOption('EUR');await save('deals');
+ await page.getByRole('button',{name:/Añadir contacto/}).click();await page.locator('#arm-record-form [name=name]').fill(title);await page.locator('#arm-record-form [name=company]').fill('Private verification');await page.locator('#arm-record-form [name=companySector]').selectOption('Festival');await page.locator('#arm-record-form [name=address]').fill('Viena, Austria');await page.locator('#arm-record-form [name=notes]').fill('Private verification notes');await save('clients');
+ await page.getByRole('heading',{name:title,exact:true}).waitFor();
+ const contactId=created[0][1];
+ await page.getByRole('button',{name:'Editar ficha ↗',exact:true}).click();await page.locator('#arm-record-form [name=notes]').fill('Updated private notes');
+ const edited=page.waitForResponse(response=>response.url().endsWith('/api/arm/clients/'+contactId)&&response.request().method()==='PATCH');await page.getByRole('button',{name:/Guardar cambios/}).click();assert((await edited).ok());await page.waitForFunction(()=>!document.querySelector('#arm-editor').open);
+ assert.equal((await crm('/clients/'+contactId)).notes,'Updated private notes');
+ await page.reload();await page.locator('#arm-search').fill(title);await page.getByRole('button',{name:'Abrir ficha de '+title,exact:true}).click();await page.getByText('Updated private notes',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Propuestas y oportunidades',exact:true}).click();await page.getByRole('button',{name:/Nueva propuesta/}).click();await page.locator('#arm-record-form [name=title]').fill(title+' proposal');await page.locator('#arm-record-form [name=clientId]').selectOption(contactId);await page.locator('#arm-record-form [name=value]').fill('1200');await page.locator('#arm-record-form [name=currency]').selectOption('EUR');await save('deals');
  const pipeline=(await crm('/pipelines/'+deployment.crmSubscription.pipelineId));
  const next=pipeline.stages.find(stage=>stage.status==='OPEN'&&stage.position===1);assert(next);
  const moved=page.waitForResponse(response=>response.url().includes('/api/arm/deals/')&&response.request().method()==='PATCH');
  await page.getByRole('combobox',{name:'Etapa de '+title+' proposal'}).selectOption(next.id);assert((await moved).ok());
- await page.waitForFunction(id=>document.querySelector('[data-deal-stage]')?.value===id&&!document.querySelector('[data-deal-stage]').disabled,next.id);
- await page.getByRole('button',{name:'Los siguientes pasos',exact:true}).click();await page.getByRole('button',{name:/Nueva tarea/}).click();await page.locator('#editor-form [name=title]').fill(title+' task');await save('tasks');
+ await page.waitForFunction(id=>document.querySelector('[data-arm-stage]')?.value===id&&!document.querySelector('[data-arm-stage]').disabled,next.id);
+ await page.getByRole('button',{name:'Los siguientes pasos',exact:true}).click();await page.getByRole('button',{name:/Nueva tarea/}).click();await page.locator('#arm-record-form [name=title]').fill(title+' task');await page.locator('#arm-record-form [name=clientId]').selectOption(contactId);await save('tasks');
  const completed=page.waitForResponse(response=>response.url().includes('/api/arm/tasks/')&&response.request().method()==='PATCH');
  await page.getByRole('combobox',{name:'Estado de '+title+' task'}).selectOption('DONE');assert((await completed).ok());
- await page.waitForFunction(()=>document.querySelector('[data-task-status]')?.value==='DONE'&&!document.querySelector('[data-task-status]').disabled);
+ await page.waitForFunction(()=>document.querySelector('[data-arm-task]')?.value==='DONE'&&!document.querySelector('[data-arm-task]').disabled);
+ await page.getByRole('button',{name:'Contactos profesionales',exact:true}).click();await page.getByRole('button',{name:'Importar CSV',exact:true}).click();
+ await page.locator('#arm-csv-file').setInputFiles({name:'qa.csv',mimeType:'text/csv',buffer:Buffer.from('name,company,notes\n'+title+' imported,Private verification,CSV persistence verification\n'+title+',Private verification,Duplicate must not overwrite')});
+ const imported=page.waitForResponse(response=>response.url().endsWith('/api/arm/import')&&response.request().method()==='POST');
+ await page.getByRole('button',{name:'Importar 1 contactos',exact:true}).click();const importResponse=await imported;assert(importResponse.ok());const importData=await importResponse.json();
+ for(const row of importData.results)if(row.status==='created')created.push(['clients',row.id]);
+ await page.locator('.arm-import-summary').getByText('1 creadas',{exact:true}).waitFor();await page.getByRole('button',{name:'Cerrar',exact:true}).click();
+ assert.equal((await crm('/clients/'+contactId)).notes,'Updated private notes');
+ const importedRow=await crm('/clients/'+created.at(-1)[1]);assert.equal(importedRow.notes,'CSV persistence verification');
+ await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  assert.deepEqual(errors,[]);
- console.log('Live ARM passed: designated administrator login, real pipeline, contact/proposal/task creation, stage and status changes.');
+ console.log('Live ARM passed: designated administrator login, persisted contact creation/edit/reload, classification, notes, linked proposals/tasks, stage/status updates, CSV import, duplicate preservation and mobile layout.');
 }finally {
  await browser.close();
  const failures=[];

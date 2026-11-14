@@ -46,7 +46,7 @@ try {
  await page.getByRole('link',{name:/Relaciones · ARM/}).click();
  const config=await page.evaluate(()=>fetch('/api/config').then(r=>r.json()));
  const session=await page.evaluate(()=>fetch('/api/session').then(r=>r.json()));
- await page.getByRole('heading',{name:session.armConnected?/Las relaciones que te impulsan/:/Cada relación/}).waitFor();
+ await page.getByRole('heading',{name:session.armConnected?/Tu red\. Tu próximo escenario/:/Tu base de relaciones profesionales/}).waitFor();
  if(!config.armReady)assert.match(await page.locator('#main').textContent(),/pendiente de configuración/);
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Abrir menú'}).click();await page.locator('#navigation a[href="#overview"]').click();
  await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0 && document.querySelector('#nav-backdrop').hidden);

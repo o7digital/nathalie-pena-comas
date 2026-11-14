@@ -147,6 +147,25 @@ test('ARM loads real pipeline stage definitions and prevents tenant injection on
  assert(calls.some(call=>call.path==='/api/clients'&&call.authorization==='Bearer private-crm-token'));
 });
 
+test('ARM import keeps authentication, origin and tenant-field checks before writing any contact',async t=>{
+ const {request,login,origin,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token'});
+ const {cookie}=await login('arm');
+ const imported=(body,headers={})=>request('/api/arm/import',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json',...headers},body:JSON.stringify(body)});
+ assert.equal((await imported({rows:[{name:'Private'}]},{Cookie:''})).status,401);
+ assert.equal((await imported({rows:[{name:'Private'}]},{Origin:'https://untrusted.test'})).status,403);
+ assert.equal((await imported({rows:[{name:'Valid'},{name:'Injected',tenantId:'another-tenant'}]})).status,400);
+ assert(!calls.some(row=>row.path==='/api/clients'&&row.method==='POST'));
+ const response=await imported({rows:[{name:'Imported contact',companySector:'Festival',notes:'Private notes'}]});
+ assert.equal(response.status,200);assert.equal((await response.json()).results[0].status,'created');
+ const save=calls.find(row=>row.path==='/api/clients'&&row.method==='POST');assert.equal(save.authorization,'Bearer private-crm-token');assert.equal(JSON.parse(save.body).companySector,'Festival');
+});
+
+test('ARM modules and styles are served without stale caching; server modules remain private',async t=>{
+ const {request}=await setup(t);
+ for(const path of ['/arm.js','/arm-data.js','/arm.css']){const response=await request(path);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');}
+ assert.equal((await request('/arm.mjs')).status,404);
+});
+
 test('the designated CMS administrator receives tenant-scoped ARM access without changing their CRM account',async t=>{
  const {request,login,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',adminEmail:'owner@example.test',serviceEmail:'connector@example.test',servicePassword:'private-service-password',includedUntil:'2027-11-08T00:00:00.000Z'});
  const {cookie}=await login();

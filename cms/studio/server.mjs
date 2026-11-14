@@ -8,6 +8,8 @@ import { dirname, resolve, extname } from 'node:path';
 import siteMap from './site-map.json' with { type: 'json' };
 import { translateSpanish,translationWrites,localizedFields,recordTextKey,assertTranslationsReady,sourceHash,targetLocales } from './translations.mjs';
 import {validDate} from './public/calendar.js';
+import {createArm} from './arm.mjs';
+import {ArmError} from './public/arm-data.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
@@ -46,6 +48,7 @@ export function createStudioServer(options = {}) {
  let contentQueue=Promise.resolve();
  const contentWrite=work=>{const job=contentQueue.then(work);contentQueue=job.catch(()=>undefined);return job;};
  const socialMedia=createSocialMedia({cms:config.cms,editorToken:config.editorToken,secret:config.secret,origin:config.origin||'https://studio-dev-4236.up.railway.app'});
+ const arm=createArm({request:(path,token,method='GET',data)=>upstream(config.crm,path,token,method,data)});
  const reporting = createReporting({
   connectors: options.reportingConnectors || createReportingConnectors(),
   read: async(start,end) => {
@@ -144,7 +147,7 @@ export function createStudioServer(options = {}) {
   for await (const chunk of req) { size+=chunk.length; if (size>limit) throw new ApiError(413,'El archivo supera el tamaño permitido.'); chunks.push(chunk); }
   return Buffer.concat(chunks);
  }
- async function jsonBody(req) { try { return JSON.parse((await body(req)).toString() || '{}'); } catch(error) { if(error instanceof ApiError) throw error; throw new ApiError(400,'Revisa los datos del formulario.'); } }
+ async function jsonBody(req,limit) { try { return JSON.parse((await body(req,limit)).toString() || '{}'); } catch(error) { if(error instanceof ApiError) throw error; throw new ApiError(400,'Revisa los datos del formulario.'); } }
  function send(res, value, status = 200) { res.writeHead(status, {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}); res.end(JSON.stringify(value)); }
  async function textsFor(token) { return (await upstream(config.cms,'/items/site_texts?limit=-1&fields=*',token)).data; }
  async function requireWrite(token,collection,action,needed=[]) {
@@ -405,24 +408,11 @@ export function createStudioServer(options = {}) {
    }
    if(path.startsWith('/api/arm/')) {
     const crmToken=await crmTokenFor(s);
+    if(path==='/api/arm/import'&&req.method==='POST')return send(res,await arm.importContacts(crmToken,await jsonBody(req,2_000_000)));
     const match=path.match(/^\/api\/arm\/(clients|deals|tasks|pipelines)(?:\/([a-zA-Z\d_-]+))?$/);
     if(!match) throw new ApiError(404,'Recurso no disponible.');
     const [,resource,id]=match;
-    const allowed={clients:['name','firstName','email','phone','company','function','notes','clientStatus'],deals:['title','value','currency','pipelineId','stageId','clientId','expectedCloseDate'],tasks:['title','clientId','dueDate','status','priority'],pipelines:[]};
-    let data;
-    if(req.method!=='GET') {
-     data=await jsonBody(req);
-     if(resource==='pipelines' || Object.keys(data).some(key=>!allowed[resource].includes(key))) throw new ApiError(400,'Campos no permitidos para esta operación ARM.');
-    }
-    const result=await upstream(config.crm,`/${resource}${id?'/'+encodeURIComponent(id):''}`,crmToken,req.method,data);
-    if(resource==='pipelines' && !id && req.method==='GET') {
-     // The list endpoint omits stages; the detail endpoint includes their ordered definitions.
-     if(!Array.isArray(result)) throw new ApiError(502,'No se pudieron cargar los pipelines.');
-     const pipelines=[];
-     for(const pipeline of result) pipelines.push(await upstream(config.crm,'/pipelines/'+encodeURIComponent(pipeline.id),crmToken));
-     return send(res,pipelines);
-    }
-    return send(res,result);
+    return send(res,await arm.execute(crmToken,resource,id,req.method,req.method==='GET'?undefined:await jsonBody(req)));
    }
    throw new ApiError(404,'Página no encontrada.');
   }
@@ -430,7 +420,8 @@ export function createStudioServer(options = {}) {
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
   const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
-  const relative=(path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
+  const armAsset=['/arm.js','/arm-data.js','/arm.css'].includes(path)?path.slice(1):null;
+  const relative=armAsset || (path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
   let bytes;
   try{bytes=await readFile(resolve(here,'public',relative));}
@@ -439,11 +430,11 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':['index.html','app.js','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
-  const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError?error.status:500;
+  const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError || error instanceof ArmError?error.status:500;
   send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message},status);
  }));
 }

@@ -1,3 +1,4 @@
+import {createArmUI} from './arm.js';
 import {createSocialUI} from './social.js';
 import {createReportingUI} from './reporting.js';
 import {agendaToolbar,calendarMarkup,dateFields,syncDateFields,moveMonth,dateFromParts} from './calendar.js';
@@ -12,7 +13,7 @@ const language={es:'Español',en:'English',de:'Deutsch',fr:'Français',it:'Itali
 let nav=[['overview','Resumen','home'],['arm','Relaciones · ARM','people']];
 const collectionFor={gallery:'gallery',videos:'videos',concerts:'concerts',albums:'albums',texts:'site_texts',sections:'site_images'};
 const labels={gallery:'Fotografías',videos:'Vídeos',concerts:'Actuaciones',albums:'Discografía',site_texts:'Textos e idiomas',site_images:'Mi sitio'};
-const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',agendaView:'calendar',agendaMonth:'',search:'',locale:'es',editor:null,editorImage:'',arm:null,armTab:'clients',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
+const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',agendaView:'calendar',agendaMonth:'',search:'',locale:'es',editor:null,editorImage:'',site:{sections:[]},drafts:{},reviewLocale:'en',translating:false};
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription','social'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
 const imageId=row=>typeof row?.image==='string'?row.image:row?.image?.id;
@@ -26,7 +27,7 @@ async function api(path,options={}){
  const data=await response.json().catch(()=>({}));
  if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;throw error;}return data;
 }
-function showLogin(error=''){socialUI.reset();reportingUI.reset();state.session=null;state.data=null;state.arm=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
+function showLogin(error=''){socialUI.reset();reportingUI.reset();armUI.reset();state.session=null;state.data=null;state.editor=null;state.drafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
 async function reload(){const result=await api('/api/content');state.data=result.content;renderNavigation();render();}
 function renderNavigation(){
  $('#navigation').innerHTML=nav.map(([key,title,glyph])=>`<a class="nav-item ${route()===key?'active':''} ${key==='arm'?'arm':''}" href="#${key}" ${route()===key?'aria-current="page"':''}>${icon(glyph)}<span>${title}</span>${['gallery','videos','albums'].includes(key)?`<small class="nav-count">${state.data?.[collectionFor[key]]?.filter(r=>r.status!=='archived').length??''}</small>`:''}</a>`).join('');
@@ -189,31 +190,7 @@ async function move(id,direction){
  const ids=rows.map(row=>row.id);[ids[index],ids[target]]=[ids[target],ids[index]];
  await api('/api/reorder/'+collection,{method:'POST',body:{ids}});await reload();toast('El orden de tu colección se ha actualizado.');
 }
-async function renderArm(){
- const connected=state.session.armConnected;
- if(!connected){
-  $('#main').innerHTML=heading('Cada relación abre un escenario.','Tu ARM, conectado con nuestro CRM O7 Pulse.',false)+`<section class="panel arm-connect"><div><span class="eyebrow">ARTIST RELATIONSHIP MANAGEMENT</span><h2>Más tiempo para tu arte.<br>Más cerca de tu equipo.</h2><p>Reúne tus contactos profesionales, las propuestas de conciertos y los siguientes pasos de tu carrera en tu propio espacio.</p><div class="arm-benefits"><div>${icon('people')}Programadores, representantes y colaboradores</div><div>${icon('briefcase')}Propuestas y oportunidades profesionales</div><div>${icon('clock')}Seguimiento y tareas de tu equipo</div></div></div><div class="arm-form"><h3>Conectar mi espacio ARM</h3>${state.config.armReady?'<form id="arm-login"><label>Correo de tu cuenta ARM<input name="email" type="email" autocomplete="username" required></label><label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label><p class="form-error" id="arm-error" role="alert"></p><button type="submit" class="button primary wide">Conectar mi cuenta ↗</button></form>':'<div class="pending">El espacio de Nathalie está pendiente de configuración. En cuanto se cree su cuenta y se vincule su suscripción, podrás conectar aquí su gestión artística.</div>'}<p class="editor-help">Este espacio se vincula exclusivamente a la cuenta de Nathalie.</p><a href="https://crm.o7digitalgroup.com/" target="_blank" rel="noopener" class="text-link">Abrir O7 Pulse ↗</a></div></section>`;return;
- }
- if(!state.arm){$('#main').innerHTML='<div class="loading-state"><span class="loader"></span><p>Conectando con tu espacio ARM…</p></div>';try{const result=await Promise.all(['clients','deals','tasks','pipelines'].map(key=>api('/api/arm/'+key)));state.arm=Object.fromEntries(['clients','deals','tasks','pipelines'].map((key,i)=>[key,Array.isArray(result[i])?result[i]:result[i].data||[]]));if(route()==='arm')renderArm();}catch(error){$('#main').innerHTML=`<div class="empty-state"><h2>Tu ARM no está disponible.</h2><p>${escapeHtml(error.message)}</p><button class="button" data-action="retry-arm">Volver a intentar</button></div>`;}return;}
- const titles={clients:'Contactos profesionales',deals:'Propuestas y oportunidades',tasks:'Los siguientes pasos'};
- $('#main').innerHTML=heading('Las relaciones que te impulsan.','Tu gestión artística está conectada con O7 Pulse.',false)+`<div class="section-tools"><div class="tabs">${Object.entries(titles).map(([key,title])=>`<button class="tab ${state.armTab===key?'active':''}" data-arm-tab="${key}">${title}</button>`).join('')}</div><button class="button primary" data-action="new-arm">＋ ${state.armTab==='clients'?'Añadir contacto':state.armTab==='deals'?'Nueva propuesta':'Nueva tarea'}</button></div><div id="arm-content"></div>`;
- const rows=state.arm[state.armTab];
- if(!rows.length){$('#arm-content').innerHTML=`<div class="empty-state">${icon('people')}<h2>Tu próxima conexión empieza aquí.</h2><p>${state.armTab==='clients'?'Añade a las personas que acompañan tu carrera.':state.armTab==='deals'?'Organiza tus propuestas y sus próximos pasos.':'Crea una tarea para no perder de vista lo importante.'}</p></div>`;return;}
- if(state.armTab==='clients')$('#arm-content').innerHTML=`<div class="panel table-panel"><table class="content-table"><thead><tr><th>Contacto</th><th>Organización</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody>${rows.map(row=>`<tr><td><strong>${escapeHtml([row.firstName,row.name].filter(Boolean).join(' '))}</strong><small>${escapeHtml(row.function)}</small></td><td>${escapeHtml(row.company)}</td><td>${escapeHtml(row.email)}</td><td>${escapeHtml(row.phone)}</td></tr>`).join('')}</tbody></table></div>`;
- if(state.armTab==='deals')$('#arm-content').innerHTML=`<div class="kanban">${state.arm.pipelines.flatMap(pipeline=>(pipeline.stages||[]).map(stage=>`<section class="kanban-column"><h2>${escapeHtml(stage.name)} <span class="badge">${rows.filter(row=>row.stageId===stage.id).length}</span></h2>${rows.filter(row=>row.stageId===stage.id).map(row=>`<article class="deal-card"><h3>${escapeHtml(row.title)}</h3><p>${escapeHtml(row.client?.name||'')}</p><strong>${new Intl.NumberFormat('es',{style:'currency',currency:['USD','EUR','MXN','CAD'].includes(row.currency)?row.currency:'USD'}).format(row.value||0)}</strong><label class="card-field">Etapa<select data-deal-stage="${escapeHtml(row.id)}" aria-label="Etapa de ${escapeHtml(row.title)}">${(pipeline.stages||[]).map(option=>`<option value="${escapeHtml(option.id)}" ${row.stageId===option.id?'selected':''}>${escapeHtml(option.name)}</option>`).join('')}</select></label></article>`).join('')}</section>`)).join('')}</div>`;
- if(state.armTab==='tasks')$('#arm-content').innerHTML=`<div class="panel table-panel"><table class="content-table"><thead><tr><th>Tarea</th><th>Contacto</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>${rows.map(row=>`<tr><td><strong>${escapeHtml(row.title)}</strong></td><td>${escapeHtml(row.client?.name||'')}</td><td>${escapeHtml(row.dueDate?.slice(0,10)||'Sin fecha')}</td><td><select class="status-picker" data-task-status="${escapeHtml(row.id)}" aria-label="Estado de ${escapeHtml(row.title)}">${Object.entries({PENDING:'Pendiente',IN_PROGRESS:'En curso',DONE:'Terminada'}).map(([value,label])=>`<option value="${value}" ${row.status===value?'selected':''}>${label}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div>`;
-}
-function newArm(){
- const kind=state.armTab;
- if(kind!=='clients'&&!state.arm.clients.length){toast('Añade primero un contacto profesional.',true);return;}
- if(kind==='deals'&&!state.arm.pipelines.length){toast('Configura primero un pipeline en O7 Pulse.',true);return;}
- state.editor={arm:kind};$('#editor-title').textContent=kind==='clients'?'Una nueva conexión.':kind==='deals'?'Una nueva oportunidad.':'Un siguiente paso.';$('#editor-eyebrow').textContent='TU GESTIÓN ARTÍSTICA';$('#editor-error').textContent='';
- const contacts=state.arm.clients.map(row=>[row.id,[row.firstName,row.name].filter(Boolean).join(' ')]);
- let html=kind==='clients'?field('Nombre','firstName','')+field('Apellidos o nombre profesional','name','','text','required')+field('Organización','company','')+field('Cargo o relación','function','')+field('Correo electrónico','email','','email')+field('Teléfono','phone',''):field(kind==='tasks'?'Tarea':'Propuesta','title','','text','required')+select('Contacto','clientId',contacts[0]?.[0],contacts);
- if(kind==='deals')html+=select('Pipeline','pipelineId',state.arm.pipelines[0].id,state.arm.pipelines.map(row=>[row.id,row.name]))+field('Importe previsto','value','0','number','min="0" step="0.01"')+select('Moneda','currency','USD',[['USD','USD'],['EUR','EUR'],['MXN','MXN'],['CAD','CAD']]);
- if(kind==='tasks')html+=field('Fecha','dueDate','','date')+select('Prioridad','priority','MEDIUM',[['LOW','Normal'],['MEDIUM','Media'],['HIGH','Alta'],['URGENT','Urgente']]);
- $('#editor-fields').innerHTML=html;$('#editor').showModal();
-}
+function renderArm(){return armUI.render();}
 document.addEventListener('click',async event=>{
  const button=event.target.closest('button');if(!button)return;
  try{
@@ -225,13 +202,10 @@ document.addEventListener('click',async event=>{
   if(button.dataset.filter){state.filter=button.dataset.filter;return render();}
   if(button.dataset.move)return await move(button.dataset.move,Number(button.dataset.direction));
   if(button.dataset.archive){const collection=collectionFor[route()],row=findRow(collection,button.dataset.archive);await api(`/api/content/${collection}/${encodeURIComponent(row.id)}`,{method:'PATCH',body:{status:row.status==='archived'?'draft':'archived'}});await reload();toast(row.status==='archived'?'Contenido recuperado como borrador.':'Contenido archivado. Puedes recuperarlo cuando quieras.');return;}
-  if(button.dataset.armTab){state.armTab=button.dataset.armTab;return renderArm();}
   const action=button.dataset.action;
   if(action==='new')return route()==='gallery'?$('#gallery-upload').click():openEditor();
   if(action==='upload')return $('#gallery-upload').click();
   if(action==='editor-upload')return $('#editor-upload').click();
-  if(action==='new-arm')return newArm();
-  if(action==='retry-arm'){state.arm=null;return renderArm();}
   if(action==='translate-again')return submitSection(button.closest('[data-section-form]'),true);
   if(action==='publish'){button.disabled=true;try{await api('/api/publish',{method:'POST',body:{}});toast('Actualización iniciada. La vista previa mostrará tus cambios cuando termine.');}finally{button.disabled=false;}}
  }catch(error){toast(error.message,true);}
@@ -247,12 +221,6 @@ document.addEventListener('change',async event=>{
   const year=$('#agenda-year'),month=$('#agenda-month'),date=dateFromParts(1,month.value,year.value);
   if(!date){year.reportValidity();return;}state.agendaMonth=date.slice(0,7);const focus=event.target.id;renderItems();$('#'+focus).focus();
  }
- if(event.target.dataset.taskStatus || event.target.dataset.dealStage){
-  const control=event.target,task=Boolean(control.dataset.taskStatus),id=control.dataset.taskStatus||control.dataset.dealStage;control.disabled=true;
-  try{await api('/api/arm/'+(task?'tasks':'deals')+'/'+encodeURIComponent(id),{method:'PATCH',body:task?{status:control.value}:{stageId:control.value}});state.arm=null;await renderArm();toast('Seguimiento actualizado en O7 Pulse.');}catch(error){toast(error.message,true);state.arm=null;await renderArm();}finally{control.disabled=false;}
-  return;
- }
-
  if(event.target.id==='review-locale'){state.reviewLocale=event.target.value;renderTranslationReview();}
  if(event.target.id==='agenda-period'){state.agendaPeriod=event.target.value;renderItems();}
  if(event.target.id==='locale'){state.locale=event.target.value;renderItems();}
@@ -264,21 +232,13 @@ document.addEventListener('change',async event=>{
 document.addEventListener('dragover',event=>{if(event.target.closest('#dropzone')){event.preventDefault();$('#dropzone').classList.add('dragging');}});
 document.addEventListener('dragleave',event=>{if(event.target.closest('#dropzone'))$('#dropzone').classList.remove('dragging');});
 document.addEventListener('drop',event=>{if(event.target.closest('#dropzone')){event.preventDefault();$('#dropzone').classList.remove('dragging');uploadPhotos([...event.dataTransfer.files]);}});
-$('#editor-form').addEventListener('submit',async event=>{
- if(!state.editor.arm)return saveEditor(event);
- event.preventDefault();const button=event.currentTarget.querySelector('[type=submit]');button.disabled=true;
- try{const data=Object.fromEntries(new FormData(event.currentTarget));if(state.editor.arm==='deals')data.value=Number(data.value);for(const key of Object.keys(data))if(data[key]==='')delete data[key];await api('/api/arm/'+state.editor.arm,{method:'POST',body:data});$('#editor').close();state.arm=null;await renderArm();toast('Guardado en tu espacio O7 Pulse.');}catch(error){$('#editor-error').textContent=error.message;}finally{button.disabled=false;}
-});
+$('#editor-form').addEventListener('submit',saveEditor);
 $('#close-editor').onclick=$('#cancel-editor').onclick=()=>$('#editor').close();
 $('#login-form').addEventListener('submit',async event=>{
  event.preventDefault();const form=event.currentTarget,button=form.querySelector('button[type=submit]');button.disabled=true;$('#login-error').textContent='';
  try{await api('/api/login',{method:'POST',body:Object.fromEntries(new FormData(form))});form.reset();await startSession();}catch(error){$('#login-error').textContent=error.message;}finally{button.disabled=false;}
 });
-document.addEventListener('submit',async event=>{
- if(event.target.matches('[data-section-form]'))return saveSection(event);
- if(event.target.id!=='arm-login')return;event.preventDefault();const button=event.target.querySelector('button');button.disabled=true;
- try{await api('/api/arm/connect',{method:'POST',body:Object.fromEntries(new FormData(event.target))});state.session=await api('/api/session');state.arm=null;renderArm();}catch(error){$('#arm-error').textContent=error.message;button.disabled=false;}
-});
+document.addEventListener('submit',event=>{if(event.target.matches('[data-section-form]'))return saveSection(event);});
 $('#logout').onclick=async()=>{await api('/api/logout',{method:'POST',body:{}});showLogin();};
 $('#mobile-menu').onclick=()=>{const open=$('#sidebar').classList.toggle('open');$('#nav-backdrop').hidden=!open;$('#mobile-menu').setAttribute('aria-expanded',String(open));};
 $('#close-nav').onclick=$('#nav-backdrop').onclick=closeNav;
@@ -295,6 +255,7 @@ async function startSession(){
  await reload();
 }
 async function init(){try{state.config=await api('/api/config');$('#login-mode-label').hidden=!state.config.armReady;await startSession();}catch(error){showLogin(error.status===401?'':error.message);}}
+const armUI=createArmUI({api,session:()=>state.session,config:()=>state.config,isCurrent:()=>Boolean(state.session)&&route()==='arm',toast,onConnect:async()=>{state.session=await api('/api/session');}});
 const socialUI=createSocialUI({api,content:()=>state.data,isCurrent:()=>Boolean(state.session)&&route()==='social',toast});
 const reportingUI=createReportingUI({api,session:()=>state.session||{},config:()=>state.config,isCurrent:key=>Boolean(state.session)&&route()===key,toast});
 init();
