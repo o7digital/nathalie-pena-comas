@@ -30,7 +30,8 @@
   ],
   "functions": {
     "api/nath-ai/*.js": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "includeFiles": "lib/nath-ai-knowledge.generated.json"
     }
   }
 }

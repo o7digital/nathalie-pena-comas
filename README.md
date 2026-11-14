@@ -97,4 +97,6 @@ La preview `dev` appelle un relais serveur sur Vercel puis une instance **Olivia
 
 Les messages sont transmis uniquement après accord ; le contrôle de disponibilité ne transmet aucun message. L’historique de session et le changement de langue sont conservés. Les conversations de cette instance sont isolées de l’ancienne inbox Suitesmine ; les contacts de représentation restent accessibles. Le raccordement d’un tableau opérateur à cette nouvelle base n’est pas effectué par le widget.
 
+Nath AI consulte les 22 pages dans les 11 langues ainsi que le calendrier complet, les 18 rôles d’opéra, les 40 œuvres de concert, les quatre albums et les deux singles. Chaque build produit une base versionnée, synchronisée automatiquement avec le VPS. Les anciennes previews ne peuvent pas rétablir un contenu dépassé ; les conversations des visiteurs ne deviennent pas des informations officielles.
+
 Récupération du cœur 3.6, déploiement VPS, configuration Vercel, contrôles et retour arrière : [guide Nath AI](services/nath-ai/README.md).

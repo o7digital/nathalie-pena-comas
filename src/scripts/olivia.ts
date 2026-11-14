@@ -24,7 +24,7 @@ if(root){
  async function checkPresence(){
   if(document.hidden)return;
   try{
-   const response=await fetch(api+'/health',{cache:'no-store',credentials:'same-origin',signal:AbortSignal.timeout(8000)});
+   const response=await fetch(api+'/health',{cache:'no-store',credentials:'same-origin',signal:AbortSignal.timeout(55000)});
    const data=await response.json();
    presence(response.ok&&data.available===true&&data.version==='3.6.0'?'online':'offline');
   }catch{presence('offline');}

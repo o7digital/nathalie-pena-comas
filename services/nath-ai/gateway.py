@@ -18,7 +18,9 @@ from sqlalchemy import select, text
 from .chat_engine import generate
 from .db import engine, tenant_session
 from .embeddings import get_provider
-from .models import Audit, Conversation, Document, DocumentChunk, Message
+from .models import Audit, Conversation, Message
+from . import knowledge_runtime as knowledge
+from .knowledge_protocol import factual_context,select_page_hits
 from .vector_store import PgVectorStore
 
 TENANT='nathalie-dev'
@@ -31,27 +33,8 @@ busy=set()
 
 
 def seed():
-    documents=json.loads(Path('/app/knowledge/documents.json').read_text())
-    with tenant_session(TENANT) as db:
-        existing={row.source:row for row in db.scalars(select(Document).where(Document.tenant_id==TENANT))}
-        for document in documents:
-            previous=existing.get(document['source'])
-            digest=hashlib.sha256(document['content'].encode()).hexdigest()
-            if previous and json.loads(previous.metadata_json).get('revision')==digest:
-                continue
-            if previous:
-                for chunk in db.scalars(select(DocumentChunk).where(DocumentChunk.tenant_id==TENANT,DocumentChunk.document_id==previous.id)):
-                    db.delete(chunk)
-                db.delete(previous)
-                db.flush()
-            chunks=[document['content'][i:i+1400] for i in range(0,len(document['content']),1220)]
-            vectors=provider.embed(chunks)
-            metadata=json.dumps({'revision':digest,'site':TENANT})
-            row=Document(tenant_id=TENANT,title=document['title'],content=document['content'],source=document['source'],metadata_json=metadata)
-            db.add(row);db.flush()
-            for index,(chunk,vector) in enumerate(zip(chunks,vectors)):
-                db.add(DocumentChunk(tenant_id=TENANT,document_id=row.id,chunk_index=index,content=chunk,source=document['source'],metadata_json=metadata,embedding=vector))
-        db.commit()
+    knowledge.initialize()
+    knowledge.apply(json.loads(Path('/app/knowledge/manifest.json').read_text()),provider)
     with engine.begin() as connection:
         connection.execute(text("CREATE TABLE IF NOT EXISTS website_threads (id TEXT PRIMARY KEY, status TEXT NOT NULL DEFAULT 'ai')"))
         connection.execute(text("CREATE TABLE IF NOT EXISTS website_visitor_messages (id TEXT PRIMARY KEY, thread_id TEXT NOT NULL, content TEXT NOT NULL, language TEXT NOT NULL)"))
@@ -118,7 +101,22 @@ def reserve(body):
 def health():
     with engine.connect() as connection:
         connection.execute(text('SELECT 1'))
-    return {'status':'ok','site':TENANT,'version':'3.6.0','provider_configured':bool(os.getenv('OPENAI_API_KEY'))}
+    return {'status':'ok','site':TENANT,'version':'3.6.0','provider_configured':bool(os.getenv('OPENAI_API_KEY')),**knowledge.status()}
+
+
+@app.get('/knowledge/status')
+def knowledge_status(authorization:str|None=Header(None)):
+    authorize(authorization)
+    return knowledge.status()
+
+
+@app.post('/knowledge/sync')
+def knowledge_sync(manifest:dict,authorization:str|None=Header(None)):
+    authorize(authorization)
+    try:
+        return knowledge.apply(manifest,provider)
+    except ValueError:
+        raise HTTPException(400,'Invalid published knowledge')
 
 
 @app.get('/conversations/{identifier}')
@@ -162,7 +160,10 @@ def chat(body:Chat,authorization:str|None=Header(None)):
     try:
         with tenant_session(TENANT) as db:
             history=list(db.scalars(select(Message).where(Message.tenant_id==TENANT,Message.conversation_id==body.conversation_id).order_by(Message.id.desc()).limit(12)))[::-1]
-            context=store.search(db,TENANT,provider.embed([body.message])[0],body.message,8,0.12)
+            manifest=knowledge.snapshot()
+            today=datetime.now(ZoneInfo('America/Mexico_City')).date().isoformat()
+            search=store.search(db,TENANT,provider.embed([body.message])[0],body.message,64,0.12)
+            context=factual_context(manifest,today,body.language)+select_page_hits(search,body.language)
             prompt=f'Visitor language: {body.language}. Answer strictly in that language. Today in Mexico City: '+datetime.now(ZoneInfo('America/Mexico_City')).date().isoformat()+'\nVisitor question: '+body.message
             answer,model,response_id,duration=generate('BALANCED',prompt,history,context,tenant=TENANT)
             if not db.get(Conversation,body.conversation_id):
@@ -170,7 +171,7 @@ def chat(body:Chat,authorization:str|None=Header(None)):
             db.add_all([Message(tenant_id=TENANT,conversation_id=body.conversation_id,role='user',content=body.message),Message(tenant_id=TENANT,conversation_id=body.conversation_id,role='assistant',content=answer)])
             db.add(Audit(tenant_id=TENANT,action='nath.chat',metadata_json=json.dumps({'model':model,'conversation_id':body.conversation_id,'provider_response_id':response_id,'duration_ms':duration})))
             db.commit()
-        return {'clientCode':'nathalie','reply':answer,'language':body.language,'version':'3.6.0','mode':'olivia-v3.6','model':model,'sources':list(dict.fromkeys(hit.source for hit in context if hit.kind=='document'))}
+        return {'clientCode':'nathalie','reply':answer,'language':body.language,'version':'3.6.0','mode':'olivia-v3.6','model':model,'sources':list(dict.fromkeys(hit.source for hit in context if hit.kind=='document')),'knowledge_revision':manifest['revision']}
     finally:
         with lock:
             busy.discard(body.conversation_id)

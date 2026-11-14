@@ -14,15 +14,26 @@ Only the availability request runs before agreement. Messages are sent after the
 
 ## Recovery and deployment
 
-1. Run `npm run build` and `python3 services/nath-ai/build-knowledge.py`.
+1. Run `npm run build`; it also generates the complete knowledge manifest.
 2. Copy this directory (including generated `knowledge/`, excluding `.env*` and `__pycache__`) to `/opt/o7/apps/nathalie-olivia36` on the VPS.
 3. Run `sudo python3 bootstrap-vps.py` there. It copies the verified core, generates new database/gateway credentials and uses the existing configured AI provider entirely server-side. It never prints secrets.
 4. Run `sudo docker compose up --build -d` and verify loopback port 8138 `/health`.
 5. Run `sudo python3 install-proxy.py`. It adds only the authenticated `/nathalie-preview/` prefix, backs up the existing configuration, validates nginx, and reloads it. Existing routes are preserved.
 6. Set `NATH_AI_GATEWAY_URL` and the sensitive `NATH_AI_GATEWAY_KEY` for the website's **preview/dev** target through stdin. Do not add production variables or promote the preview without an explicit order.
-7. Run `node --test tests/unit/nath-ai-gateway.unit.mjs`, the widget browser tests and the site build/check; deploy with `vercel --yes`. Verify health and a real consented response from the deployed preview.
+7. Run `node --test tests/unit/*.unit.mjs`, the widget browser tests and the site build/check; deploy with `vercel --yes`. Verify health and a real consented response from the deployed preview.
 
-The generated core and knowledge are ignored by Git. The generator reads the built Spanish homepage, including complete About, repertoire, Spirituosi, official concert dates and representation contacts. Refresh knowledge explicitly after relevant content changes. Source knowledge links use the site's canonical routes; no external tool can send mail, book or change CRM records from this assistant.
+## Complete published-site knowledge
+
+Every `npm run build` indexes the full homepages and privacy pages in all 11 languages, including expanded About and Spirituosi text, news, media, voice, gallery, contacts and hidden repertoire rows. `src/pages/nath-ai-data.json.ts` exports the same published CMS snapshot used by the website, including the entire calendar rather than only the upcoming dates visible initially. The manifest currently covers 22 pages, 26 calendar entries (24 performances and two recording releases), 18 opera roles, 40 concert works, four albums and two singles.
+
+Vercel packages the generated manifest server-side. Health checks and authorized chat requests compare its revision/publication timestamp with the dedicated VPS; a new build automatically synchronizes changed and deleted content. Embeddings are prepared before the database transaction replaces documents. The existing knowledge remains active if preparation fails. A durable publication watermark prevents visitors to an older preview from restoring outdated content. Startup also preserves a newer database snapshot over an older bundled seed. Conversations are retained separately and never become published facts.
+
+Every question receives the entire structured calendar, opera/concert repertoire and discography, plus relevant page passages selected in the visitor's language. This avoids missing dates or works through vector search. The instructions distinguish past/upcoming events using the current Mexico City date, roles in preparation, digital releases and published ticket statuses. No unannounced dates, times, prices or remaining seats are inferred.
+
+Generated core and knowledge are ignored by Git. Source links use real website anchors. No external tool sends mail, books tickets or changes CRM records. For knowledge-only content updates, a normal site build and preview deployment suffice; a VPS rebuild is needed only when the service implementation or system instructions change.
+
+Verification: `node --test tests/unit/*.unit.mjs`, `python3 -m unittest discover -s services/nath-ai/tests`, `npm run check`, `npm run test:e2e`.
+Run the non-mutating database/provider-failure integration check on the dedicated VPS with `sudo docker exec -i nathalie-olivia36 python < tests/check-runtime.py`.
 
 ## Rollback
 

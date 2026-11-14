@@ -12,3 +12,4 @@ public/_cms/
 services/nath-ai/core/
 services/nath-ai/knowledge/
 services/nath-ai/__pycache__/
+lib/nath-ai-knowledge.generated.json
