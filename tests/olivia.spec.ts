@@ -56,6 +56,26 @@ test('Nath AI keeps context and visitor identity after changing site language',a
  expect(bodies[1].visitorId).toBe(bodies[0].visitorId);expect(bodies[1].history).toEqual([{role:'user',content:'Son parcours ?'},{role:'assistant',content:'Response fr'}]);
  await page.locator('[data-olivia-reset]').click();await expect(page.locator('[data-role=user]')).toHaveCount(0);await expect(page.locator('[data-olivia-consent]')).not.toBeChecked();
 });
+test('a Spanish interface accepts French and Arabic replies without replacing its labels',async({page})=>{
+ const answers=['Oui, Nathalie est une soprano dominicaine.','ناتالي مغنية سوبرانو من جمهورية الدومينيكان.'];let count=0;
+ await page.route(host+'/**',async route=>{
+  const path=new URL(route.request().url()).pathname;
+  if(path.endsWith('/health'))return route.fulfill({json:{available:true,version:'3.6.0'}});
+  if(path.endsWith('/identity'))return route.fulfill({json:{clientCode:'nathalie',version:'3.6.0',identity:'fixture'}});
+  if(path.endsWith('/conversations'))return route.fulfill({json:{conversation:{status:'ai'},messages:[]}});
+  const data=route.request().postDataJSON();expect(data.language).toBe('es');
+  return route.fulfill({json:{clientCode:'nathalie',version:'3.6.0',language:'es',reply:answers[count++],model:'fixture'}});
+ });
+ await page.goto('/es/#repertorio');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();
+ for(const [index,message]of ['as tu des info sur l artiste','من هي ناتالي؟'].entries()){
+  await page.locator('#olivia-message').fill(message);await page.locator('[data-olivia-form] [type=submit]').click();
+  await expect(page.locator('[data-role=assistant]').last()).toHaveText(answers[index]);await expect(page.locator('[data-olivia-form] [type=submit]')).toBeEnabled();
+ }
+ await expect(page.locator('[data-role=assistant]').last()).toHaveAttribute('dir','auto');
+ expect(await page.locator('[data-role=assistant]').last().evaluate(element=>getComputedStyle(element).direction)).toBe('rtl');
+ await expect(page.locator('#olivia-subtitle')).toHaveText('Asistente artística de Nathalie');await expect(page.locator('[data-olivia-form] [type=submit]')).toHaveText('Enviar ↗');
+});
+
 test('Nath AI displays a localized error when the service fails',async({page})=>{
  await page.route(host+'/**',route=>route.abort());await page.goto('/fr/');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Bonjour');await page.locator('[type=submit]').click();
  await expect(page.locator('[data-olivia-status]')).toContainText('momentanément indisponible');await expect(page.locator('#olivia-message')).toHaveValue('Bonjour');await expect(page.locator('[type=submit]')).toBeEnabled();

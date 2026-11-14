@@ -45,7 +45,7 @@ if(root){
  consent.checked=session.consent;
  function save(){try{sessionStorage.setItem(key,JSON.stringify(session));}catch{}}
  function bubble(message:Message){
-  const p=document.createElement('p');p.className='olivia-message';p.dataset.role=message.role;
+  const p=document.createElement('p');p.className='olivia-message';p.dataset.role=message.role;p.dir='auto';
   // Render model output as text, with ordinary HTTP(S) links only.
   const pattern=/https?:\/\/[^\s<>"\]\)]+/g;
   let end=0;

@@ -55,6 +55,7 @@ class Body(BaseModel):
     conversation_id:str=Field(pattern=r'^[a-f0-9]{48}$')
     session_id:str=Field(pattern=r'^[a-f0-9]{32}$')
     client_hash:str=Field(pattern=r'^[a-f0-9]{64}$')
+    # This is the website/interface locale, not a forced response language.
     language:str=Field(default='es',pattern=LANGUAGES)
     consent:bool
 
@@ -101,7 +102,7 @@ def reserve(body):
 def health():
     with engine.connect() as connection:
         connection.execute(text('SELECT 1'))
-    return {'status':'ok','site':TENANT,'version':'3.6.0','provider_configured':bool(os.getenv('OPENAI_API_KEY')),**knowledge.status()}
+    return {'status':'ok','site':TENANT,'version':'3.6.0','provider_configured':bool(os.getenv('OPENAI_API_KEY')),'response_language_policy':'visitor-message',**knowledge.status()}
 
 
 @app.get('/knowledge/status')
@@ -164,13 +165,18 @@ def chat(body:Chat,authorization:str|None=Header(None)):
             today=datetime.now(ZoneInfo('America/Mexico_City')).date().isoformat()
             search=store.search(db,TENANT,provider.embed([body.message])[0],body.message,64,0.12)
             context=factual_context(manifest,today,body.language)+select_page_hits(search,body.language)
-            prompt=f'Visitor language: {body.language}. Answer strictly in that language. Today in Mexico City: '+datetime.now(ZoneInfo('America/Mexico_City')).date().isoformat()+'\nVisitor question: '+body.message
+            prompt=(f'Today in Mexico City: {today}. Website interface locale (fallback only): {body.language}.\n'
+                    'Reply in the language of the latest visitor message, independently of the interface and retrieved sources. '
+                    'Honor an explicit request for a different response language. For a language-neutral message, '
+                    'keep the language of the visitor’s most recent substantive message in the conversation; '
+                    'use the interface locale only if there is no language evidence.\nVisitor message:\n'+body.message)
             answer,model,response_id,duration=generate('BALANCED',prompt,history,context,tenant=TENANT)
             if not db.get(Conversation,body.conversation_id):
                 db.add(Conversation(id=body.conversation_id,tenant_id=TENANT));db.flush()
             db.add_all([Message(tenant_id=TENANT,conversation_id=body.conversation_id,role='user',content=body.message),Message(tenant_id=TENANT,conversation_id=body.conversation_id,role='assistant',content=answer)])
             db.add(Audit(tenant_id=TENANT,action='nath.chat',metadata_json=json.dumps({'model':model,'conversation_id':body.conversation_id,'provider_response_id':response_id,'duration_ms':duration})))
             db.commit()
+        # Keep the UI-locale envelope compatible with deployed widgets; reply text follows the message.
         return {'clientCode':'nathalie','reply':answer,'language':body.language,'version':'3.6.0','mode':'olivia-v3.6','model':model,'sources':list(dict.fromkeys(hit.source for hit in context if hit.kind=='document')),'knowledge_revision':manifest['revision']}
     finally:
         with lock:

@@ -53,7 +53,8 @@ test('the online dot requires the correct live 3.6 backend and configured provid
   [{version:'3.6.0',site:'another-client',provider_configured:true},503,false],
   [{version:'3.6.0',site:'nathalie-dev',provider_configured:false},503,false],
   [{version:'3.6.0',site:'nathalie-dev',provider_configured:true},200,true],
- ]){globalThis.fetch=async url=>({status:200,json:async()=>url.endsWith('/knowledge/status')?knowledge:health});const res=response();await handle(request('GET'),res,'health');assert.equal(res.code,code);assert.equal(res.body.available,available);}
+  [{version:'3.6.0',site:'nathalie-dev',provider_configured:true,response_language_policy:'visitor-message'},200,true],
+ ]){globalThis.fetch=async url=>({status:200,json:async()=>url.endsWith('/knowledge/status')?knowledge:health});const res=response();await handle(request('GET'),res,'health');assert.equal(res.code,code);assert.equal(res.body.available,available);assert.equal(res.body.responseLanguagePolicy,health.response_language_policy||'page');}
 });
 test('two browser sessions cannot resolve to the same conversation',async()=>{
  const shared=body();for(let i=0;i<2;i++){const res=response();await handle(await authenticated(shared),res,'chat');assert.equal(res.code,200);}
