@@ -1,0 +1,173 @@
+.repertoire-recording { display:flex; align-items:center; gap:24px; padding:24px 0; border-bottom:1px solid #14161926; }
+.repertoire-recording img { width:120px; height:120px; flex-shrink:0; aspect-ratio:1; object-fit:cover; object-position:center; display:block; background:#e3ddd3; }
+.repertoire-recording-copy { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.repertoire-recording strong { font:clamp(23px,2.1vw,32px)/1.15 var(--serif); overflow-wrap:anywhere; }
+.repertoire-recording small,.repertoire-performances small { font-size:13px; color:#655444; line-height:1.6; }
+.repertoire-listen { font-size:12px; color:#725326; }
+.repertoire-performances { list-style:none; padding:0; margin:24px 0 0; }
+.repertoire-performances a { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 0; border-bottom:1px solid #14161926; }
+.repertoire-performances a>span:first-child { display:flex; flex-direction:column; gap:5px; }
+.repertoire-performances strong { font:25px/1.2 var(--serif); }
+/* An editorial score: ink, ivory, fine rules and a moving stage portrait. */
+.repertoire-section { --rep-ink:#31272a; --rep-wine:#552d3c; --rep-gold:#927348; position:relative; padding:100px 6.5% 0; color:var(--rep-ink); background:#f4f0e9; }
+.repertoire-intro { position:relative; border-top:1px solid #92734860; padding-top:24px; }
+.repertoire-overline { display:flex; align-items:center; justify-content:space-between; gap:20px; color:#735b43; }
+.repertoire-edition { font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+.repertoire-intro h2 { position:relative; width:fit-content; max-width:100%; font:clamp(76px,10.7vw,170px)/.85 var(--serif); letter-spacing:-.055em; margin:58px 0 40px; }
+.repertoire-intro h2 em { color:var(--rep-wine); margin-left:16%; }
+.repertoire-title-star { position:absolute; right:-1.1em; top:0; color:#a3845b; font:clamp(40px,5.5vw,84px)/1 var(--serif); animation:repertoire-turn 60s linear infinite; }
+.repertoire-intro-bottom { display:flex; justify-content:space-between; align-items:end; gap:24px; padding-bottom:44px; }
+.repertoire-intro-bottom p { font:clamp(23px,2.4vw,34px)/1.4 var(--serif); margin:0; }
+.repertoire-intro-bottom>span { font-size:11px; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; }
+.repertoire-intro-bottom i { padding:0 12px; color:#a3845b; font-style:normal; }
+.repertoire-body { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr); align-items:start; gap:7%; padding-top:28px; border-top:1px solid #92734860; }
+.repertoire-visual { position:sticky; top:130px; padding-top:6px; }
+.repertoire-photo-frame { position:relative; aspect-ratio:3/4.4; overflow:hidden; background:#291e26; }
+.repertoire-photo-frame:after { content:''; position:absolute; inset:0; background:linear-gradient(0deg,#1c132be0,transparent 55%); pointer-events:none; }
+.repertoire-portrait { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(.65); transition:opacity 1s,transform 1.6s; }
+.repertoire-opera-photo { object-position:50% 35%; }
+.repertoire-concert-photo { opacity:0; object-position:45% 35%; transform:scale(1.05); }
+[data-programme="concert"] .repertoire-opera-photo { opacity:0; transform:scale(1.05); }
+[data-programme="concert"] .repertoire-concert-photo { opacity:1; transform:scale(1); }
+.repertoire-photo-line { position:absolute; z-index:1; inset:20px; border:1px solid #f4f0e970; pointer-events:none; }
+.repertoire-photo-name { position:absolute; z-index:2; top:42px; left:38px; color:#fff; font-size:9px; letter-spacing:.18em; text-transform:uppercase; writing-mode:vertical-rl; }
+.repertoire-photo-number { position:absolute; z-index:2; bottom:25px; left:32px; color:#e5d2b4; font:clamp(80px,9vw,140px)/1 var(--serif); letter-spacing:-.07em; }
+.repertoire-visual-caption { display:flex; justify-content:space-between; gap:15px; margin-top:15px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
+.repertoire-programme { min-width:0; }
+.repertoire-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-bottom:1px solid #92734860; margin-bottom:30px; }
+.repertoire-tabs[hidden] { display:none; }
+.repertoire-tabs button { min-width:0; position:relative; display:flex; align-items:baseline; gap:14px; padding:20px 10px 22px; border:0; background:transparent; color:#7b716e; font:clamp(25px,3vw,42px)/1.2 var(--serif); text-align:left; }
+.repertoire-tabs button:after { content:''; position:absolute; inset:auto 0 -1px; height:2px; background:var(--rep-wine); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+.repertoire-tabs button[aria-selected="true"] { color:var(--rep-wine); }
+.repertoire-tabs button[aria-selected="true"]:after { transform:scaleX(1); }
+.repertoire-tab-index,.repertoire-tabs sup { font:10px var(--sans); letter-spacing:.04em; }
+.repertoire-tabs sup { align-self:start; margin-top:6px; }
+.repertoire-tab-arrow { margin-left:auto; font:24px var(--sans); transition:transform .3s; }
+.repertoire-tabs button:hover .repertoire-tab-arrow { transform:translate(3px,-3px); }
+.repertoire-panel[hidden] { display:none; }
+.repertoire-panel-heading { display:flex; align-items:baseline; justify-content:space-between; gap:20px; margin:16px 0 28px; }
+.repertoire-panel-heading h3 { font:32px var(--serif); margin:0; }
+.repertoire-panel-heading>span { font-size:10px; text-transform:uppercase; letter-spacing:.07em; text-align:right; color:#746459; max-width:60%; }
+.repertoire-composer { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.7fr); gap:24px; border-top:1px solid #92734845; padding:25px 0; position:relative; }
+.repertoire-composer:before { content:''; position:absolute; inset:0 auto 0 -18px; width:2px; background:#a3845b; transform:scaleY(0); transition:transform .4s; }
+.repertoire-composer:hover:before { transform:scaleY(1); }
+.repertoire-composer header { display:flex; align-items:baseline; gap:12px; }
+.repertoire-composer-index { flex-shrink:0; font-size:8px; color:#927348; }
+.repertoire-composer h4 { font:clamp(20px,1.9vw,28px)/1.25 var(--serif); margin:0; }
+.repertoire-composer ul { list-style:none; margin:0; padding:0; min-width:0; }
+.repertoire-entry { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; padding:0 0 18px; }
+.repertoire-entry:last-child { padding-bottom:0; }
+.repertoire-role { font-size:14px; font-weight:500; line-height:1.6; }
+.repertoire-role sup { color:var(--rep-wine); padding-left:3px; }
+.repertoire-work { font-size:13px; line-height:1.75; color:#6c5e59; overflow-wrap:anywhere; }
+[data-repertoire-panel="concert"] .repertoire-entry { display:block; padding-bottom:12px; }
+[data-repertoire-panel="concert"] .repertoire-work { font-size:15px; }
+.repertoire-preparation { border-top:1px solid #92734845; padding-top:20px; font-size:11px; color:#735c54; }
+.repertoire-preparation>span { color:var(--rep-wine); font-size:20px; vertical-align:middle; }
+.repertoire-composer.will-reveal { opacity:0; transform:translateY(22px); transition:opacity .7s var(--reveal-delay,0ms),transform .7s var(--reveal-delay,0ms); }
+.repertoire-composer.is-revealed { opacity:1; transform:none; }
+.repertoire-listening { margin-top:70px; padding:45px 0 60px; border-top:1px solid #92734860; }
+.repertoire-listening>header { display:flex; justify-content:space-between; gap:24px; align-items:baseline; }
+.repertoire-listening h3 { font:clamp(30px,3vw,45px) var(--serif); margin:0 0 30px; }
+.repertoire-listening-grid { display:grid; grid-template-columns:1fr 1fr; gap:7%; }
+.repertoire-section .repertoire-recording { padding:20px 0; gap:22px; }
+.repertoire-section .repertoire-recording img { width:80px; height:80px; }
+.repertoire-section .repertoire-recording strong { font-size:24px; }
+.repertoire-section .repertoire-performances { margin:0; }
+.repertoire-next { display:flex; align-items:center; gap:32px; padding:25px 0; border-top:1px solid #92734860; }
+.repertoire-next>span { font-size:11px; text-transform:uppercase; letter-spacing:.1em; }
+.repertoire-next>strong { margin-left:auto; font:clamp(23px,2.5vw,36px) var(--serif); }
+.repertoire-next>span:last-child { font-size:24px; transition:transform .3s; }
+.repertoire-next:hover>span:last-child { transform:translateY(5px); }
+.repertoire-section :focus-visible { outline:2px solid var(--rep-wine); outline-offset:5px; }
+.contemporary-section { padding:85px 6.5% 100px; background:#30212b; color:#f4f0e9; overflow:hidden; }
+.contemporary-heading { display:flex; justify-content:space-between; align-items:end; gap:35px; margin-bottom:60px; }
+.contemporary-heading .kicker { color:#dfc8aa; }
+.contemporary-heading h2 { font:clamp(50px,7vw,108px)/1.1 var(--serif); letter-spacing:-.045em; margin:20px 0 0; overflow-wrap:anywhere; }
+.contemporary-heading h2>span { color:#c7a881; }
+.contemporary-heading p { max-width:180px; margin:0; color:#d7c9ce; font-size:14px; }
+.contemporary-releases { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px; }
+.contemporary-release:nth-child(even) { padding-top:45px; }
+.contemporary-art { position:relative; aspect-ratio:1; overflow:hidden; background:#201921; }
+.contemporary-art img { width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s; }
+.contemporary-release:hover img { transform:scale(1.05); filter:brightness(.8); }
+.contemporary-play { position:absolute; bottom:15px; right:15px; width:38px; height:38px; display:grid; place-items:center; background:#f4f0e9; color:#30212b; border-radius:50%; transform:rotate(-35deg); transition:transform .4s; }
+.contemporary-release:hover .contemporary-play { transform:rotate(0deg); }
+.contemporary-release-index { display:block; margin-top:22px; font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:#dfc8aa; }
+.contemporary-release h3 { font:clamp(24px,2.4vw,36px)/1.25 var(--serif); margin:12px 0; }
+.contemporary-release p { font-size:11px; color:#d7c9ce; margin:0; }
+@keyframes repertoire-turn { to { transform:rotate(360deg); } }
+@media(min-width:781px) and (max-width:1100px) {
+ .repertoire-body { grid-template-columns:minmax(0,.65fr) minmax(0,1.5fr); gap:5%; }
+ .repertoire-composer { grid-template-columns:1fr; gap:16px; }
+ .repertoire-composer ul { padding-left:25px; }
+ .repertoire-edition { font-size:9px; }
+ .contemporary-releases { grid-template-columns:1fr 1fr; gap:40px 25px; }
+}
+@media(max-width:780px) {
+ .repertoire-section { padding:65px 24px 0; }
+ .repertoire-overline { align-items:start; }
+ .repertoire-edition { max-width:150px; font-size:8px; line-height:1.8; text-align:right; }
+ .repertoire-intro h2 { font-size:clamp(65px,15vw,112px); margin:38px 0 30px; }
+ .repertoire-title-star { font-size:30px; right:-.8em; }
+ .repertoire-intro-bottom { display:block; padding-bottom:28px; }
+ .repertoire-intro-bottom p { font-size:23px; margin-bottom:18px; }
+ .repertoire-intro-bottom>span { font-size:9px; }
+ .repertoire-body { display:block; padding-top:20px; }
+ .repertoire-visual { position:relative; top:auto; margin-bottom:30px; }
+ .repertoire-photo-frame { aspect-ratio:1.65; }
+ .repertoire-photo-line { inset:12px; }
+ .repertoire-photo-name { left:24px; top:24px; font-size:8px; }
+ .repertoire-photo-number { left:auto; right:24px; bottom:14px; font-size:76px; }
+ .repertoire-opera-photo { object-position:50% 30%; }
+ .repertoire-concert-photo { object-position:45% 35%; }
+ .repertoire-visual-caption { font-size:8px; }
+ .repertoire-tabs { position:sticky; top:96px; z-index:5; background:#f4f0e9f5; backdrop-filter:blur(12px); margin-bottom:28px; }
+ .repertoire-tabs button { gap:10px; font-size:30px; padding:18px 8px; }
+ .repertoire-tab-index,.repertoire-tabs sup { font-size:8px; }
+ .repertoire-tab-arrow { font-size:20px; }
+ .repertoire-panel-heading { align-items:center; }
+ .repertoire-panel-heading h3 { font-size:28px; }
+ .repertoire-panel-heading>span { font-size:8px; }
+ .repertoire-composer { grid-template-columns:1fr; padding:22px 0; gap:16px; }
+ .repertoire-composer header { gap:12px; }
+ .repertoire-composer h4 { font-size:26px; }
+ .repertoire-composer ul { padding-left:24px; }
+ .repertoire-role { font-size:14px; }
+ .repertoire-work { font-size:12px; }
+ [data-repertoire-panel="concert"] .repertoire-work { font-size:14px; }
+ .repertoire-listening { margin-top:40px; padding:35px 0; }
+ .repertoire-listening>header { display:block; }
+ .repertoire-listening h3 { margin:15px 0 20px; font-size:34px; }
+ .repertoire-listening-grid { grid-template-columns:1fr; gap:25px; }
+ .repertoire-next { gap:15px; }
+ .repertoire-next>span { font-size:8px; max-width:75px; }
+ .repertoire-next>strong { font-size:26px; }
+ .contemporary-section { padding:60px 24px 70px; }
+ .contemporary-heading { display:block; margin-bottom:35px; }
+ .contemporary-heading h2 { font-size:clamp(42px,10vw,68px); }
+ .contemporary-heading p { max-width:none; margin-top:20px; font-size:12px; }
+ .contemporary-releases { grid-template-columns:1fr 1fr; gap:30px 20px; }
+ .contemporary-release:nth-child(even) { padding-top:30px; }
+ .contemporary-release h3 { font-size:24px; }
+ .contemporary-play { right:10px; bottom:10px; width:30px; height:30px; font-size:15px; }
+}
+@media(max-width:360px) {
+ .repertoire-intro h2 { font-size:59px; }
+ .repertoire-title-star { right:-.65em; font-size:25px; }
+ .contemporary-releases { grid-template-columns:1fr; }
+ .contemporary-release:nth-child(even) { padding-top:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .repertoire-title-star { animation:none; }
+ .repertoire-composer.will-reveal { opacity:1; transform:none; transition:none; }
+ .repertoire-portrait,.repertoire-tabs button:after,.repertoire-tab-arrow,.repertoire-composer:before,.repertoire-next>span:last-child,.contemporary-art img,.contemporary-play { transition:none; }
+}
+
+@media(max-width:400px) {
+ .repertoire-tabs button { font-size:25px; gap:8px; }
+ .repertoire-tab-index,.repertoire-tab-arrow { display:none; }
+ .repertoire-tabs sup { margin-left:auto; }
+ .repertoire-intro-bottom>span { white-space:normal; }
+ .repertoire-title-star { right:-.6em; }
+}

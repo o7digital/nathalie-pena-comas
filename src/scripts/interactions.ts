@@ -133,7 +133,7 @@ if (document.getElementById('home')) {
  }
  function updateSectionLinks() {
   const id = currentSection();
-  const navId = ({voice:'about',music:'media',collection:'media','music-films':'media',newsletter:'contact'} as Record<string,string>)[id] ?? id;
+  const navId = ({voice:'about',music:'media',collection:'media',contemporain:'repertorio','music-films':'media',newsletter:'contact'} as Record<string,string>)[id] ?? id;
   languageLinks.forEach(link => { link.href = `/${link.lang}/#${id}`; });
   links?.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
    if (link.hash === `#${navId}`) link.setAttribute('aria-current','location');

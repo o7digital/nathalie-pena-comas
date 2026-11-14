@@ -548,7 +548,7 @@
     },
     {
       "id": "repertorio",
-      "title": "Repertorio",
+      "title": "Repertorio clásico",
       "icon": "album",
       "anchor": "repertorio",
       "page": "home",
@@ -556,10 +556,10 @@
       "collection": null,
       "fields": [
         {
-          "key": "copy:Soprano · Classical",
-          "source": "Soprano · Clásico",
-          "english": "Soprano · Classical",
-          "label": "Texto",
+          "key": "copy:Repertoire",
+          "source": "Repertorio",
+          "english": "Repertoire",
+          "label": "Antetítulo",
           "auxiliary": false
         },
         {
@@ -570,32 +570,176 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Classical",
+          "source": "Clásico",
+          "english": "Classical",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Soprano",
+          "source": "Soprano",
+          "english": "Soprano",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The voice. The character. The emotion.",
+          "source": "La voz. El personaje. La emoción.",
+          "english": "The voice. The character. The emotion.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:roles",
+          "source": "papeles",
+          "english": "roles",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:concert works",
+          "source": "obras de concierto",
+          "english": "concert works",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas",
+          "source": "Nathalie Peña-Comas",
+          "english": "Nathalie Peña-Comas",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The art of the voice",
+          "source": "El arte de la voz",
+          "english": "The art of the voice",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:NPC",
+          "source": "NPC",
+          "english": "NPC",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Classical repertoire",
+          "source": "Repertorio clásico",
+          "english": "Classical repertoire",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Opera",
+          "source": "Ópera",
+          "english": "Opera",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concert",
+          "source": "Concierto",
+          "english": "Concert",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Role · Work",
+          "source": "Personaje · Obra",
+          "english": "Role · Work",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Role in preparation",
+          "source": "Papel en preparación",
+          "english": "Role in preparation",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Roles in preparation",
+          "source": "Papeles en preparación",
+          "english": "Roles in preparation",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Oratorio · Soprano parts · Art songs · Lieder",
+          "source": "Oratorio · Partes de soprano · Canciones · Lieder",
+          "english": "Oratorio · Soprano parts · Art songs · Lieder",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen",
+          "source": "Escuchar",
+          "english": "Listen",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:The voice, on stage.",
+          "source": "La voz, en escena.",
+          "english": "The voice, on stage.",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Listen to the album",
+          "source": "Escuchar el álbum",
+          "english": "Listen to the album",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Other horizons",
+          "source": "Otros horizontes",
+          "english": "Other horizons",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Contemporary",
           "source": "Contemporáneo",
           "english": "Contemporary",
           "label": "Texto",
+          "auxiliary": false
+        }
+      ]
+    },
+    {
+      "id": "contemporary",
+      "title": "Contemporáneo",
+      "icon": "album",
+      "anchor": "contemporain",
+      "page": "home",
+      "image": null,
+      "collection": null,
+      "fields": [
+        {
+          "key": "copy:Other horizons",
+          "source": "Otros horizontes",
+          "english": "Other horizons",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Contemporary",
+          "source": "Contemporáneo",
+          "english": "Contemporary",
+          "label": "Título",
           "auxiliary": false
         },
         {
           "key": "copy:Songs · Latin roots",
           "source": "Canciones · Raíces latinas",
           "english": "Songs · Latin roots",
-          "label": "Texto",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Selected repertoire",
-          "source": "Selección de repertorio",
-          "english": "Selected repertoire",
-          "label": "Antetítulo",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Repertoire",
-          "source": "Repertorio",
-          "english": "Repertoire",
-          "label": "Título",
-          "auxiliary": false
+          "label": "Descripción",
+          "auxiliary": true
         },
         {
           "key": "copy:Listen",

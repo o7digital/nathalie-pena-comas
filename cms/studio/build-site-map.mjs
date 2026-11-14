@@ -3,7 +3,8 @@ import ts from 'typescript';
 const specs=[
  ['home','Inicio','home','home','Hero','hero'],['concerts','Agenda','calendar','schedule','Schedule,ConcertRow',null,'concerts'],['about','La artista','photo','about','Story','story'],
  ['voice','Trayectoria','briefcase','voice','International'],['albums','Discografía','album','music','Releases',null,'albums'],
- ['repertorio','Repertorio','album','repertorio','Repertoire'],
+ ['repertorio','Repertorio clásico','album','repertorio','Repertoire'],
+ ['contemporary','Contemporáneo','album','contemporain','Contemporary'],
  ['videos','Vídeos','video','media','Videos',null,'videos'],['news','Prensa y noticias','text','news','Editorial','press'],
  ['spirituosi','Spirituosi','people','spirituosi','Spirituosi','spirituosi'],['gallery','Galería','photo','gallery','Gallery',null,'gallery'],
  ['newsletter','Newsletter','text','newsletter','Newsletter'],['contact','Contacto','people','contact','Footer'],
@@ -47,7 +48,7 @@ for(const [id,title,icon,anchor,components,image,collection,page='home']of specs
   for(const row of profiles)fields.set('copy:'+row.name,{key:'copy:'+row.name,source:row.name,english:row.name,label:'Nombre de la red social',auxiliary:false});
   for(const [index,key]of oliviaKeys.entries())fields.set('olivia:'+key,{key:'olivia:'+key,source:oliviaCopy.es[index],english:oliviaCopy.en[index],label:'Nath AI · '+({subtitle:'Presentación',greeting:'Mensaje de bienvenida',placeholder:'Invitación a escribir',send:'Enviar',consent:'Consentimiento',privacy:'Privacidad',thinking:'Respuesta en curso',error:'Mensaje de indisponibilidad',close:'Cerrar',contact:'Contacto',clear:'Nueva conversación',open:'Abrir asistente',privacyDetails:'Información de privacidad',manual:'Atención por el equipo'})[key],auxiliary:false,localizations:Object.fromEntries(Object.entries(oliviaCopy).map(([locale,values])=>[locale,values[index]]))});
  }
- if(id==='repertorio')for(const row of recordings)fields.set('copy:'+row.name,{key:'copy:'+row.name,source:row.name,english:row.name,label:'Título de la grabación',auxiliary:false});
+ if(id==='contemporary')for(const row of recordings)fields.set('copy:'+row.name,{key:'copy:'+row.name,source:row.name,english:row.name,label:'Título de la grabación',auxiliary:false});
  sections.push({id,title,icon,anchor,page,image:image||null,collection:collection||null,fields:[...fields.values()]});
 }
 const output=JSON.stringify({sourceLocale:'es',sections},null,2)+'\n';

@@ -1,0 +1,18 @@
+---
+import { localizedRecord } from '../lib/cms';
+import Image from './ContentImage.astro';
+import { albums } from '../data/albums';
+import { recordings } from '../data/music';
+import { localizer } from '../data/locales';
+import type { Locale } from '../data/translations';
+import sombras from '../assets/sombras-cover.jpg';
+import esclavo from '../assets/esclavo-cover.jpg';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const l = localizer(lang);
+const releases = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording,i) => ({id:'recording-'+i,title:l(recording.name),url:recording.url,image:i===0?sombras:esclavo,detail:'Nathalie Peña-Comas'}))];
+---
+<section class="contemporary-section section" id="contemporain" data-repertoire="contemporary" aria-labelledby="contemporary-title">
+ <header class="contemporary-heading"><div><span class="kicker">{l('Otros horizontes', 'Other horizons')}</span><h2 id="contemporary-title">{l('Contemporáneo', 'Contemporary')}<span aria-hidden="true">.</span></h2></div><p>{l('Canciones · Raíces latinas', 'Songs · Latin roots')}</p></header>
+ <div class="contemporary-releases">{releases.map((release,index) => <a class="contemporary-release" href={release.url} target="_blank" rel="noopener"><div class="contemporary-art"><Image src={release.image} width={640} widths={[240,400,640]} sizes="(max-width:600px) 80vw, (max-width:1000px) 42vw, 22vw" loading="lazy" alt={release.title}/><span class="contemporary-play" aria-hidden="true">↗</span></div><span class="contemporary-release-index">{String(index+1).padStart(2,'0')} / {l('Escuchar', 'Listen')}</span><h3>{release.title}</h3><p>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</p></a>)}</div>
+</section>

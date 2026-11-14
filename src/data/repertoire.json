@@ -1,0 +1,314 @@
+{
+  "source": "https://www.nathaliepenacomas.net/bio",
+  "retrieved": "2026-11-14",
+  "notes": "Complete repertoire from the official biography. Whitespace and display capitalization normalized; titles, catalogue numbers and preparation markers retained as published, including source catalogue anomalies.",
+  "opera": [
+    {
+      "composer": "G. Bizet",
+      "roles": [
+        {
+          "role": "Micaëla",
+          "work": "Carmen",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "P. M. Davis",
+      "roles": [
+        {
+          "role": "Queen of trolls",
+          "work": "The two fiddlers",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "G. Donizetti",
+      "roles": [
+        {
+          "role": "Anna Bolena",
+          "work": "Anna Bolena",
+          "preparation": true
+        },
+        {
+          "role": "Maria Stuarda",
+          "work": "Maria Stuarda",
+          "preparation": true
+        }
+      ]
+    },
+    {
+      "composer": "E. Humperdinck",
+      "roles": [
+        {
+          "role": "Gretel",
+          "work": "Hänsel und Gretel",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "G. Kühr",
+      "roles": [
+        {
+          "role": "Gabi",
+          "work": "Agleia Federweiss",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "W. A. Mozart",
+      "roles": [
+        {
+          "role": "Zerlina",
+          "work": "Don Giovanni",
+          "preparation": false
+        },
+        {
+          "role": "Donna Anna",
+          "work": "Don Giovanni",
+          "preparation": false
+        },
+        {
+          "role": "Pamina",
+          "work": "Die Zauberflöte",
+          "preparation": false
+        },
+        {
+          "role": "Contessa",
+          "work": "Le nozze di Figaro",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "M. Palmeri",
+      "roles": [
+        {
+          "role": "Lucia",
+          "work": "Mateo",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "G. Puccini",
+      "roles": [
+        {
+          "role": "Mimì",
+          "work": "La Bohème",
+          "preparation": false
+        },
+        {
+          "role": "Musette",
+          "work": "La Bohème",
+          "preparation": false
+        },
+        {
+          "role": "Magda",
+          "work": "La Rondine",
+          "preparation": true
+        },
+        {
+          "role": "Liù",
+          "work": "Turandot",
+          "preparation": false
+        }
+      ]
+    },
+    {
+      "composer": "G. Verdi",
+      "roles": [
+        {
+          "role": "Aida",
+          "work": "Aida",
+          "preparation": false
+        },
+        {
+          "role": "Violetta Valéry",
+          "work": "La Traviata",
+          "preparation": false
+        },
+        {
+          "role": "Desdemona",
+          "work": "Otello",
+          "preparation": true
+        }
+      ]
+    }
+  ],
+  "concert": [
+    {
+      "composer": "J. S. Bach",
+      "works": [
+        "Magnificat BWV 243",
+        "Johannes Passion BWV 245"
+      ]
+    },
+    {
+      "composer": "L. V. Beethoven",
+      "works": [
+        "Messe in C-DUR op. 86",
+        "Chorfantasie op. 80",
+        "IX Symphonie op. 125 d-moll"
+      ]
+    },
+    {
+      "composer": "J. Brahms",
+      "works": [
+        "Ein deutsches Requiem op. 458"
+      ]
+    },
+    {
+      "composer": "G. Fauré",
+      "works": [
+        "Requiem op. 48"
+      ]
+    },
+    {
+      "composer": "M. Haydn",
+      "works": [
+        "Missa in honorem Sanctae Ursulae (Chiemsee-Messe), MH 546"
+      ]
+    },
+    {
+      "composer": "F. J. Haydn",
+      "works": [
+        "Missa brevis in F Hob. XXII:1",
+        "Missa brevis in B Hob. XXII:7"
+      ]
+    },
+    {
+      "composer": "G. Mahler",
+      "works": [
+        "Symphonie no. 2 in c-moll"
+      ]
+    },
+    {
+      "composer": "F. Mompou",
+      "works": [
+        "Combat del somni"
+      ]
+    },
+    {
+      "composer": "X. Montsalvatge",
+      "works": [
+        "Cinco canciones negras"
+      ]
+    },
+    {
+      "composer": "W. A. Mozart",
+      "works": [
+        "Exsultate, jubilate KV 165",
+        "Konzertarie “Voi avete un cor fedele” KV 217",
+        "Missa brevis in F KV 192",
+        "Missa in C “Spatzenmesse” KV 220",
+        "Missa brevis in B KV 275",
+        "Missa in C “Krönungsmesse” KV 317",
+        "Vesperae Solennes de Confessore, KV 339",
+        "Requiem KV 626"
+      ]
+    },
+    {
+      "composer": "T. Nicolau",
+      "works": [
+        "Cancionero de ausencias"
+      ]
+    },
+    {
+      "composer": "F. Obradors",
+      "works": [
+        "Various songs (Lieder)"
+      ]
+    },
+    {
+      "composer": "C. Orff",
+      "works": [
+        "Carmina Burana"
+      ]
+    },
+    {
+      "composer": "G. B. Pergolesi",
+      "works": [
+        "Stabat Mater in f-moll"
+      ]
+    },
+    {
+      "composer": "J. B. Plaza",
+      "works": [
+        "Siete canciones venezolanas"
+      ]
+    },
+    {
+      "composer": "J. Rodrigo",
+      "works": [
+        "Doce canciones españolas"
+      ]
+    },
+    {
+      "composer": "G. Rossini",
+      "works": [
+        "Stabat Mater"
+      ]
+    },
+    {
+      "composer": "F. Schubert",
+      "works": [
+        "Messe in G-Dur, D 167",
+        "Messe in Es-Dur, D 950",
+        "Ausgewählte Lieder"
+      ]
+    },
+    {
+      "composer": "R. Schumann",
+      "works": [
+        "Missa in c-moll op. 147"
+      ]
+    },
+    {
+      "composer": "H. Schütz",
+      "works": [
+        "Musikalische Exequien SWV 279–281 (op. 7)"
+      ]
+    },
+    {
+      "composer": "F. Sor",
+      "works": [
+        "Various songs (Lieder)"
+      ]
+    },
+    {
+      "composer": "R. Strauss",
+      "works": [
+        "Vier letzte Lieder"
+      ]
+    },
+    {
+      "composer": "J. Turina",
+      "works": [
+        "Poema en Forma de Canciones op. 19",
+        "Saeta en Forma de Salve op. 60"
+      ]
+    },
+    {
+      "composer": "G. Verdi",
+      "works": [
+        "Messa da Requiem"
+      ]
+    },
+    {
+      "composer": "H. Villa-Lobos",
+      "works": [
+        "Bachianas Brasileiras No. 5/Aria Cantilena"
+      ]
+    },
+    {
+      "composer": "A. Vivaldi",
+      "works": [
+        "Gloria in D RV 589"
+      ]
+    }
+  ]
+}

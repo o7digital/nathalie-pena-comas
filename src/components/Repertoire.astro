@@ -1,42 +1,73 @@
 ---
-import {localizedRecord,readContent} from '../lib/cms';
+import { localizedRecord, readContent } from '../lib/cms';
 import Image from './ContentImage.astro';
 import { albums } from '../data/albums';
-import { recordings } from '../data/music';
+import repertoire from '../data/repertoire.json';
 import { localizer } from '../data/locales';
 import type { Locale } from '../data/translations';
-import sombras from '../assets/sombras-cover.jpg';
-import esclavo from '../assets/esclavo-cover.jpg';
+import operaPhoto from '../assets/official/artist.jpg';
+import concertPhoto from '../assets/official/recital.jpg';
+import '../styles/repertoire.css';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const l = localizer(lang);
 const classical = albums.filter(album => album.category === 'classical');
-const contemporary = [...albums.filter(album => album.category !== 'classical'), ...recordings.map((recording, i) => ({id:'recording-'+i,title:l(recording.name), url:recording.url, image:i === 0 ? sombras : esclavo, detail:'Nathalie Peña-Comas'}))];
+const operaCount = repertoire.opera.reduce((count, group) => count + group.roles.length, 0);
+const concertCount = repertoire.concert.reduce((count, group) => count + group.works.length, 0);
 const localPerformances = [
  { title:'Song to the Moon', detail:'Rusalka · A. Dvořák', id:'pG7lJPLcO-g' },
  { title:'O soave fanciulla', detail:'La Bohème · G. Puccini', id:'NrGZajhOGAc' },
  { title:'Addio del passato', detail:'La Traviata · G. Verdi', id:'U1QDrRtdnAI' },
  { title:'In trutina', detail:'Carmina Burana · C. Orff', id:'Ept9wg2IlDo' },
 ];
-const cmsPerformances=await readContent('videos');
-const performances=cmsPerformances===null?localPerformances:cmsPerformances.filter(row=>row.category==='opera').map(row=>({id:row.youtube_id!,title:localizedRecord('videos',row.id,'title',lang,row.title),detail:localizedRecord('videos',row.id,'detail',lang,row.detail||'')}));
-const columns = [
- { id:'classical', title:l('Soprano · Clásico', 'Soprano · Classical'), description:l('Ópera · Oratorio · Lied', 'Opera · Oratorio · Art song'), releases:classical },
- { id:'contemporary', title:l('Contemporáneo', 'Contemporary'), description:l('Canciones · Raíces latinas', 'Songs · Latin roots'), releases:contemporary },
-];
+const cmsPerformances = await readContent('videos');
+const performances = cmsPerformances === null ? localPerformances : cmsPerformances.filter(row => row.category === 'opera').map(row => ({id:row.youtube_id!,title:localizedRecord('videos',row.id,'title',lang,row.title),detail:localizedRecord('videos',row.id,'detail',lang,row.detail||'')}));
 ---
-<section class="repertoire-section section" id="repertorio" aria-labelledby="repertoire-title">
- <div class="section-top"><div><div class="kicker">{l('Selección de repertorio', 'Selected repertoire')}</div><h2 class="section-title" id="repertoire-title">{l('Repertorio', 'Repertoire')}</h2></div></div>
- <div class="repertoire-columns">
-  {columns.map(column => <article class="repertoire-column" data-repertoire={column.id} aria-labelledby={`repertoire-${column.id}`}>
-   <header class="repertoire-column-heading"><h3 id={`repertoire-${column.id}`}>{column.title}</h3><p>{column.description}</p></header>
-   <div class="repertoire-recordings">
-    {column.releases.map(release => <a class="repertoire-recording" href={release.url} target="_blank" rel="noopener">
-     <Image src={release.image} width={320} widths={[160,320]} sizes="(max-width:600px) 90px, 120px" format="webp" loading="lazy" alt={release.title} />
-     <span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</small><span class="repertoire-listen">{l('Escuchar', 'Listen')} ↗</span></span>
-    </a>)}
+<section class="repertoire-section section" id="repertorio" data-repertoire="classical" aria-labelledby="repertoire-title">
+ <header class="repertoire-intro">
+  <div class="repertoire-overline"><span class="kicker">{l('Repertorio', 'Repertoire')}</span><span class="repertoire-edition">{l('Ópera · Oratorio · Lied', 'Opera · Oratorio · Art song')}</span></div>
+  <h2 id="repertoire-title">{l('Clásico', 'Classical')}<br/><em>{l('Soprano')}</em><span class="repertoire-title-star" aria-hidden="true">✳</span></h2>
+  <div class="repertoire-intro-bottom"><p>{l('La voz. El personaje. La emoción.', 'The voice. The character. The emotion.')}</p><span>{String(operaCount).padStart(2,'0')} {l('papeles', 'roles')} <i aria-hidden="true">/</i> {concertCount} {l('obras de concierto', 'concert works')}</span></div>
+ </header>
+ <div class="repertoire-body" data-repertoire-browser>
+  <aside class="repertoire-visual" aria-hidden="true">
+   <div class="repertoire-photo-frame">
+    <Image src={operaPhoto} alt="" width={800} widths={[400,600,800]} sizes="(max-width:780px) 100vw, 30vw" loading="lazy" class="repertoire-portrait repertoire-opera-photo" />
+    <Image src={concertPhoto} alt="" width={900} widths={[400,600,900]} sizes="(max-width:780px) 100vw, 30vw" loading="lazy" class="repertoire-portrait repertoire-concert-photo" />
+    <span class="repertoire-photo-line"></span><span class="repertoire-photo-name">{l('Nathalie Peña-Comas')}</span>
+    <span class="repertoire-photo-number" data-repertoire-number>01</span>
    </div>
-   {column.id === 'classical' && <ul class="repertoire-performances">{performances.map(performance => <li><a href={`https://www.youtube.com/watch?v=${performance.id}`} target="_blank" rel="noopener"><span><strong>{performance.title}</strong><small>{performance.detail}</small></span><span aria-hidden="true">↗</span></a></li>)}</ul>}
-  </article>)}
+   <div class="repertoire-visual-caption"><span>{l('El arte de la voz', 'The art of the voice')}</span><span>{l('NPC')} <span aria-hidden="true">↗</span></span></div>
+  </aside>
+  <div class="repertoire-programme">
+   <div class="repertoire-tabs" data-repertoire-tabs role="tablist" aria-label={l('Repertorio clásico', 'Classical repertoire')} hidden>
+    <button type="button" role="tab" id="repertoire-tab-opera" aria-controls="repertoire-opera" aria-selected="true" data-repertoire-tab="opera"><span class="repertoire-tab-index">01</span><span>{l('Ópera', 'Opera')}</span><sup>{operaCount}</sup><span class="repertoire-tab-arrow" aria-hidden="true">↗</span></button>
+    <button type="button" role="tab" id="repertoire-tab-concert" aria-controls="repertoire-concert" aria-selected="false" tabindex="-1" data-repertoire-tab="concert"><span class="repertoire-tab-index">02</span><span>{l('Concierto', 'Concert')}</span><sup>{concertCount}</sup><span class="repertoire-tab-arrow" aria-hidden="true">↗</span></button>
+   </div>
+   <div id="repertoire-opera" class="repertoire-panel" data-repertoire-panel="opera" aria-labelledby="opera-heading">
+    <header class="repertoire-panel-heading"><h3 id="opera-heading">{l('Ópera', 'Opera')}</h3><span>{l('Personaje · Obra', 'Role · Work')}</span></header>
+    <div class="repertoire-composers">{repertoire.opera.map((group, index) => <article class="repertoire-composer" data-repertoire-composer>
+     <header><span class="repertoire-composer-index" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><h4>{group.composer}</h4></header>
+     <ul>{group.roles.map(entry => <li class="repertoire-entry" data-opera-role><span class="repertoire-role">{entry.role}{entry.preparation && <sup aria-label={l('Papel en preparación', 'Role in preparation')}>*</sup>}</span><span class="repertoire-work">{entry.work}</span></li>)}</ul>
+    </article>)}</div>
+    <p class="repertoire-preparation"><span aria-hidden="true">*</span> {l('Papeles en preparación', 'Roles in preparation')}</p>
+   </div>
+   <div id="repertoire-concert" class="repertoire-panel" data-repertoire-panel="concert" aria-labelledby="concert-heading">
+    <header class="repertoire-panel-heading"><h3 id="concert-heading">{l('Concierto', 'Concert')}</h3><span>{l('Oratorio · Partes de soprano · Canciones · Lieder', 'Oratorio · Soprano parts · Art songs · Lieder')}</span></header>
+    <div class="repertoire-composers">{repertoire.concert.map((group, index) => <article class="repertoire-composer" data-repertoire-composer>
+     <header><span class="repertoire-composer-index" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><h4>{group.composer}</h4></header>
+     <ul>{group.works.map(work => <li class="repertoire-entry" data-concert-work><span class="repertoire-work">{work}</span></li>)}</ul>
+    </article>)}</div>
+   </div>
+  </div>
  </div>
+ <div class="repertoire-listening">
+  <header><span class="kicker">{l('Escuchar', 'Listen')}</span><h3>{l('La voz, en escena.', 'The voice, on stage.')}</h3></header>
+  <div class="repertoire-listening-grid">
+   <div class="repertoire-recordings">{classical.map(release => <a class="repertoire-recording" href={release.url} target="_blank" rel="noopener"><Image src={release.image} width={240} widths={[120,240]} sizes="80px" loading="lazy" alt={release.title} /><span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</small><span class="repertoire-listen">{l('Escuchar el álbum', 'Listen to the album')} ↗</span></span></a>)}</div>
+   <ul class="repertoire-performances">{performances.map(performance => <li><a href={`https://www.youtube.com/watch?v=${performance.id}`} target="_blank" rel="noopener"><span><strong>{performance.title}</strong><small>{performance.detail}</small></span><span aria-hidden="true">↗</span></a></li>)}</ul>
+  </div>
+ </div>
+ <a class="repertoire-next" href="#contemporain"><span>{l('Otros horizontes', 'Other horizons')}</span><strong>{l('Contemporáneo', 'Contemporary')}</strong><span aria-hidden="true">↓</span></a>
 </section>
+<script>import '../scripts/repertoire';</script>

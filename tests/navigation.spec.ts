@@ -15,8 +15,9 @@ for(const lang of ['es','en'] as const) for(const width of [390,1440]) {
   await expect(contemporary.locator('a[href="https://orcd.co/quintoelemento"]')).toHaveCount(1);
   const left = await classical.boundingBox(), right = await contemporary.boundingBox();
   expect(left).not.toBeNull(); expect(right).not.toBeNull();
-  if(width > 780) { expect(right!.x).toBeGreaterThan(left!.x); expect(right!.y).toBe(left!.y); }
-  else expect(right!.y).toBeGreaterThan(left!.y + left!.height);
+  expect(right!.y).toBeGreaterThanOrEqual(left!.y + left!.height - 1);
+  await expect(classical.locator('[data-opera-role]')).toHaveCount(18);
+  await expect(classical.locator('[data-concert-work]')).toHaveCount(40);
   for(const group of ['#navlinks','.footer-navigation'])for(const id of ids){
    if(group==='#navlinks'&&width<1251)await page.locator('#menu-btn').click();
    const link=page.locator(`${group} a[href="#${id}"]`);await link.click();
@@ -57,7 +58,7 @@ for(const lang of ['es','en'] as const){
 }
 test('language switching retains every section and follows manual scrolling',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
- for(const id of [...ids,'voice','music','collection','music-films','newsletter']){
+ for(const id of [...ids,'voice','music','collection','music-films','newsletter','contemporain']){
   await page.goto(`/es/#${id}`);
   await expect(page.locator('.language-switch a[lang="en"]')).toHaveAttribute('href',`/en/#${id}`);
   await page.locator('.language-switch summary').click();await page.locator('.language-switch a[lang="en"]').click();await expect(page).toHaveURL(new RegExp(`/en/#${id}$`));
