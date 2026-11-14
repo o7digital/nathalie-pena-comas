@@ -2392,6 +2392,66 @@
             "zh-TW": "團隊已接手此對話。您可以繼續在此傳送訊息。",
             "ja": "担当チームが会話を引き継ぎました。引き続きこちらにご記入いただけます。"
           }
+        },
+        {
+          "key": "olivia:online",
+          "source": "En línea",
+          "english": "Online",
+          "label": "Nath AI · Disponible",
+          "auxiliary": false,
+          "localizations": {
+            "es": "En línea",
+            "en": "Online",
+            "de": "Online",
+            "fr": "En ligne",
+            "it": "Online",
+            "sv": "Online",
+            "hu": "Elérhető",
+            "hr": "Na mreži",
+            "ru": "В сети",
+            "zh-TW": "在線",
+            "ja": "オンライン"
+          }
+        },
+        {
+          "key": "olivia:offline",
+          "source": "No disponible",
+          "english": "Unavailable",
+          "label": "Nath AI · Indisponible",
+          "auxiliary": false,
+          "localizations": {
+            "es": "No disponible",
+            "en": "Unavailable",
+            "de": "Nicht verfügbar",
+            "fr": "Indisponible",
+            "it": "Non disponibile",
+            "sv": "Inte tillgänglig",
+            "hu": "Nem elérhető",
+            "hr": "Nedostupno",
+            "ru": "Недоступна",
+            "zh-TW": "暫時無法使用",
+            "ja": "利用できません"
+          }
+        },
+        {
+          "key": "olivia:connecting",
+          "source": "Conectando…",
+          "english": "Connecting…",
+          "label": "Nath AI · Conexión en curso",
+          "auxiliary": false,
+          "localizations": {
+            "es": "Conectando…",
+            "en": "Connecting…",
+            "de": "Verbindung…",
+            "fr": "Connexion…",
+            "it": "Connessione…",
+            "sv": "Ansluter…",
+            "hu": "Kapcsolódás…",
+            "hr": "Povezivanje…",
+            "ru": "Подключение…",
+            "zh-TW": "連線中…",
+            "ja": "接続中…"
+          }
         }
       ]
     },

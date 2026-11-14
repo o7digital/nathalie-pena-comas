@@ -6,11 +6,12 @@ interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = oliviaCopy(lang);
 ---
-<div data-olivia data-language={lang} data-greeting={t.greeting} data-error={t.error} data-thinking={t.thinking} data-manual={t.manual}>
- <button class="olivia-launcher" data-olivia-open aria-label={t.open} aria-haspopup="dialog" aria-controls="olivia-dialog"><span aria-hidden="true">N</span><span>Nath AI</span><span class="olivia-spark" aria-hidden="true">✧</span></button>
+<div data-olivia data-language={lang} data-greeting={t.greeting} data-error={t.error} data-thinking={t.thinking} data-manual={t.manual} data-online={t.online} data-offline={t.offline} data-checking={t.connecting} data-engine="olivia-v3.6">
+ <button class="olivia-launcher" data-olivia-open aria-label={t.open} aria-haspopup="dialog" aria-controls="olivia-dialog"><span class="olivia-avatar" aria-hidden="true">N</span><span class="olivia-launcher-name">Nath AI<span class="olivia-presence" data-presence="checking"><i class="olivia-presence-dot" aria-hidden="true"></i><span data-presence-label>{t.connecting}</span></span></span><span class="olivia-spark" aria-hidden="true">✧</span></button>
  <dialog id="olivia-dialog" class="olivia-dialog" aria-labelledby="olivia-title" aria-describedby="olivia-subtitle">
-  <div class="olivia-header"><div><h2 id="olivia-title">Nath <span>AI</span></h2><p id="olivia-subtitle">{t.subtitle}</p></div><button data-olivia-close aria-label={t.close} type="button">✕</button></div>
+  <div class="olivia-header"><div><h2 id="olivia-title">Nath <span>AI</span></h2><p id="olivia-subtitle">{t.subtitle}</p><span class="olivia-presence" data-presence="checking"><i class="olivia-presence-dot" aria-hidden="true"></i><span data-presence-label>{t.connecting}</span></span></div><button data-olivia-close aria-label={t.close} type="button">✕</button></div>
   <div class="olivia-messages" data-olivia-messages role="log" aria-live="polite" aria-relevant="additions" aria-label="Nath AI"></div>
+  <div class="olivia-typing" data-olivia-typing hidden aria-hidden="true"><i></i><i></i><i></i></div>
   <p class="olivia-status" data-olivia-status role="status"></p>
   <a class="olivia-contact" href={`/${lang}/#contact`}>{t.contact} ↗</a>
   <form data-olivia-form class="olivia-form">

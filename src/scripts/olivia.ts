@@ -3,7 +3,7 @@ type Message = { role:'user'|'assistant'|'operator'; content:string; id?:string 
 type Session = { visitorId:string; consent:boolean; open:boolean; messages:Message[] };
 const root=document.querySelector<HTMLElement>('[data-olivia]');
 if(root){
- const api='https://suitesmine-bot.vercel.app';
+ const api='/api/nath-ai';
  const clientCode='nathalie';
  const key='npc-olivia-v2';
  const lang=root.dataset.language!;
@@ -16,6 +16,25 @@ if(root){
  const status=root.querySelector<HTMLElement>('[data-olivia-status]')!;
  const reset=root.querySelector<HTMLButtonElement>('[data-olivia-reset]')!;
  let identity='',busy=false;
+ const typing=root.querySelector<HTMLElement>('[data-olivia-typing]')!;
+ function presence(state:'online'|'offline'|'checking'){
+  root!.querySelectorAll<HTMLElement>('[data-presence]').forEach(el=>{el.dataset.presence=state;});
+  root!.querySelectorAll<HTMLElement>('[data-presence-label]').forEach(el=>{el.textContent=root!.dataset[state]??'';});
+ }
+ async function checkPresence(){
+  if(document.hidden)return;
+  try{
+   const response=await fetch(api+'/health',{cache:'no-store',credentials:'same-origin',signal:AbortSignal.timeout(8000)});
+   const data=await response.json();
+   presence(response.ok&&data.available===true&&data.version==='3.6.0'?'online':'offline');
+  }catch{presence('offline');}
+ }
+ void checkPresence();
+ const presenceTimer=window.setInterval(checkPresence,60000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)void checkPresence();});
+ window.addEventListener('online',checkPresence);
+ window.addEventListener('offline',()=>presence('offline'));
+ window.addEventListener('pagehide',()=>clearInterval(presenceTimer));
  let session:Session={visitorId:crypto.randomUUID(),consent:false,open:false,messages:[]};
  try{
   const saved=JSON.parse(sessionStorage.getItem(key)??'null');
@@ -47,19 +66,19 @@ if(root){
  reset.addEventListener('click',()=>{if(busy)return;session={visitorId:crypto.randomUUID(),consent:false,open:true,messages:[]};consent.checked=false;status.textContent='';save();render();input.focus();});
  consent.addEventListener('change',()=>{session.consent=consent.checked;save();});
  async function request(path:string,method='GET',body?:unknown){
-  const response=await fetch(api+path,{method,headers:{'Content-Type':'application/json',...(identity?{'X-Olivia-Widget-Identity':identity}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(60000),cache:'no-store',credentials:'omit'});
+  const response=await fetch(api+path,{method,headers:{'Content-Type':'application/json',...(identity?{'X-Olivia-Widget-Identity':identity}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(60000),cache:'no-store',credentials:'same-origin'});
   const data=await response.json();if(!response.ok)throw new Error('Olivia request failed');return data;
  }
  async function identify(){
-  const data=await request('/api/widget/identity');
-  if(data.clientCode!==clientCode||typeof data.identity!=='string')throw new Error('Unregistered site');
+  const data=await request('/identity');
+  if(data.clientCode!==clientCode||data.version!=='3.6.0'||typeof data.identity!=='string')throw new Error('Unregistered site');
   identity=data.identity;
  }
  async function sync(){
   if(!dialog.open||busy||!session.consent||!session.messages.length||document.hidden)return;
   try{
    if(!identity)await identify();
-   const data=await request('/api/widget/conversations?'+new URLSearchParams({clientCode,visitorId:session.visitorId}));
+   const data=await request('/conversations?'+new URLSearchParams({clientCode,visitorId:session.visitorId}));
    if(data.status==='manual')status.textContent=root!.dataset.manual!;
    else if(status.textContent===root!.dataset.manual)status.textContent='';
    for(const message of data.messages??[]){
@@ -73,23 +92,24 @@ if(root){
  window.addEventListener('pagehide',()=>clearInterval(timer));
  form.addEventListener('submit',async event=>{
   event.preventDefault();const message=input.value.trim();if(!message||busy||!consent.checked)return;
-  busy=true;submit.disabled=true;reset.disabled=true;status.textContent=root!.dataset.thinking!;
+  busy=true;typing.hidden=false;submit.disabled=true;reset.disabled=true;status.textContent=root!.dataset.thinking!;
   session.consent=true;
   const history=session.messages.filter(m=>m.role!=='operator').map(({role,content})=>({role,content})).slice(-12);
   session.messages.push({role:'user',content:message});input.value='';save();render();
   const pageContent=document.querySelector('main')?.textContent?.replace(/\s+/g,' ').slice(0,5000)??'';
-  const metadata={language:lang,pageUrl:location.href,pageTitle:document.title,pageContent,dataConsent:true,dataConsentAt:new Date().toISOString(),consentVersion:'npc-olivia-v2-2026-10-15'};
+  const metadata={language:lang,pageUrl:location.href,pageTitle:document.title,pageContent,dataConsent:true,dataConsentAt:new Date().toISOString(),consentVersion:'nath-ai-v36-2026-11-14'};
   const common={clientCode,visitorId:session.visitorId,language:lang,source:'website',metadata};
   try{
    await identify();
-   const stored=await request('/api/widget/conversations','POST',{...common,content:message}).catch(()=>null);
+   const stored=await request('/conversations','POST',{...common,content:message}).catch(()=>null);
    if(stored?.conversation?.status==='manual'){status.textContent=root!.dataset.manual!;return;}
-   const data=await request('/api/olivia/chat','POST',{...common,message,history});
-   if(data.clientCode!==clientCode||data.language!==lang||typeof data.reply!=='string'||!data.model)throw new Error('Olivia v2 unavailable');
+   const data=await request('/chat','POST',{...common,message,history});
+   if(data.clientCode!==clientCode||data.version!=='3.6.0'||data.language!==lang||typeof data.reply!=='string'||!data.model)throw new Error('Nath AI unavailable');
+   presence('online');
    session.messages.push({role:'assistant',content:data.reply});session.messages=session.messages.slice(-24);save();render();status.textContent='';
-   await request('/api/widget/conversations','PATCH',{...common,content:data.reply,model:data.model}).catch(()=>null);
-  }catch{session.messages.pop();save();render();status.textContent=root!.dataset.error!;if(!input.value)input.value=message;}
-  finally{busy=false;submit.disabled=false;reset.disabled=false;input.focus();}
+   await request('/conversations','PATCH',{...common,content:data.reply,model:data.model}).catch(()=>null);
+  }catch{presence('offline');session.messages.pop();save();render();status.textContent=root!.dataset.error!;if(!input.value)input.value=message;}
+  finally{busy=false;typing.hidden=true;submit.disabled=false;reset.disabled=false;input.focus();}
  });
  render();if(session.open)open();
 }

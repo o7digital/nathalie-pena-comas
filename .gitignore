@@ -9,3 +9,6 @@ dist/
 test-results/
 public/_cms/
 .vercel
+services/nath-ai/core/
+services/nath-ai/knowledge/
+services/nath-ai/__pycache__/
