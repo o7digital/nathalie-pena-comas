@@ -81,7 +81,7 @@ export function createArm({request}){
      own.forEach(key=>keys.add(key));results.push({index,status:'created',id:saved.id});
     }catch(error){
      results.push({index,status:'failed',error:error.message});
-     if([401,403].includes(error.status)){for(let i=index+1;i<contacts.length;i++)results.push({index:i,status:'failed',error:'La importación se detuvo. Comprueba tu sesión y permisos.'});break;}
+     if(!error.status||error.status>=500||[401,403].includes(error.status)){for(let i=index+1;i<contacts.length;i++)results.push({index:i,status:'failed',error:'La importación se detuvo. Comprueba la conexión y tu sesión antes de reintentar.'});break;}
     }
    }
    return {results};

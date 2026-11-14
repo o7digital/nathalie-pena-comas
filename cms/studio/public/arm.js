@@ -12,13 +12,13 @@ const linked=(row,id)=>row.clientId===id||row.client?.id===id;
 
 export function createArmUI({api,session,config,isCurrent,toast,onConnect}){
  const $=selector=>document.querySelector(selector);
- const state={data:null,tab:'clients',contact:null,query:'',type:'',status:'',organization:'',sort:'name',page:1,taskStatus:'',editor:null,dirty:false,saving:false,importRows:null,importing:false,loading:null,generation:0};
+ const state={data:null,tab:'clients',contact:null,query:'',type:'',status:'',organization:'',sort:'name',page:1,taskStatus:'',editor:null,dirty:false,saving:false,importRows:null,importing:false,loading:null,generation:0,fileSelection:0,readingCsv:false};
  const modal=document.createElement('dialog');modal.id='arm-editor';modal.className='arm-modal';document.body.append(modal);
- const requestClose=()=>{if(state.saving||state.importing)return;if(state.dirty&&!window.confirm('¿Cerrar sin guardar los cambios de esta ficha?'))return;state.dirty=false;state.editor=null;modal.close();};
+ const requestClose=()=>{if(state.saving||state.importing)return;if(state.dirty&&!window.confirm('¿Cerrar sin guardar los cambios de esta ficha?'))return;state.dirty=false;state.editor=null;state.fileSelection++;state.readingCsv=false;modal.close();};
  modal.addEventListener('cancel',event=>{event.preventDefault();requestClose();});
  modal.addEventListener('input',event=>{if(event.target.closest('#arm-record-form'))state.dirty=true;});
  window.addEventListener('beforeunload',event=>{if(state.dirty||state.importing){event.preventDefault();event.returnValue='';}});
- function reset(){state.generation++;state.data=null;state.loading=null;state.contact=null;state.tab='clients';state.query='';state.type='';state.status='';state.organization='';state.page=1;state.editor=null;state.dirty=false;state.importRows=null;modal.close();modal.innerHTML='';}
+ function reset(){state.fileSelection++;state.readingCsv=false;state.generation++;state.data=null;state.loading=null;state.contact=null;state.tab='clients';state.query='';state.type='';state.status='';state.organization='';state.page=1;state.editor=null;state.dirty=false;state.importRows=null;modal.close();modal.innerHTML='';}
  async function load(){
   if(state.data)return state.data;
   const generation=state.generation;
@@ -100,10 +100,10 @@ export function createArmUI({api,session,config,isCurrent,toast,onConnect}){
  function download(text,filename){const url=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function importMarkup(){
   const rows=state.importRows||[],invalid=rows.filter(row=>row.error),pending=rows.filter(row=>!row.error&&!row.status),created=rows.filter(row=>row.status==='created'),duplicates=rows.filter(row=>row.status==='duplicate'),failed=rows.filter(row=>row.status==='failed');
-  modalBody('Importar tu base de contactos',`<div class="arm-import"><p>Sube un CSV exportado desde Excel o tu agenda. Admitimos coma o punto y coma, campos entre comillas y hasta 500 contactos. Los contactos existentes no se sobrescriben.</p><div class="arm-import-tools"><label class="button quiet">Seleccionar archivo CSV<input type="file" id="arm-csv-file" accept=".csv,text/csv" ${state.importing?'disabled':''}></label><button class="button quiet" data-arm-template ${state.importing?'disabled':''}>Descargar plantilla</button></div><p id="arm-import-error" class="form-error" role="alert"></p>${rows.length?`<div class="arm-import-summary" role="status"><strong>${rows.length} filas</strong><span>${created.length} creadas</span><span>${duplicates.length} ya existentes</span><span>${invalid.length+failed.length} con errores</span><span>${pending.length} pendientes</span></div><div class="arm-table-wrap"><table class="arm-table"><thead><tr><th>Fila</th><th>Contacto</th><th>Organización / Correo</th><th>Resultado</th></tr></thead><tbody>${rows.slice(0,50).map(row=>`<tr><td>${row.line}</td><td>${esc(contactName(row.contact))}</td><td>${esc(row.contact.company)}<small>${esc(row.contact.email)}</small></td><td>${esc(row.error||row.resultError||({created:'Creado',duplicate:'Ya existe · no se importa',failed:'Error al guardar'})[row.status]||'Listo para importar')}</td></tr>`).join('')}</tbody></table></div>${rows.length>50?'<p>Vista previa de las primeras 50 filas. El resumen incluye todo el archivo.</p>':''}`:''}<p class="arm-help">Se detectan duplicados por correo o por nombre completo y organización. Corrige las filas inválidas en el archivo antes de importarlo. Las notas y los contactos son privados.</p></div><footer class="arm-modal-footer"><button type="button" class="button quiet" data-arm-close ${state.importing?'disabled':''}>${created.length?'Cerrar':'Cancelar'}</button><button class="button primary" data-arm-run-import ${state.importing||invalid.length||!(pending.length+failed.length)?'disabled':''}>${state.importing?'Guardando contactos…':`Importar ${pending.length+failed.length} contactos`}</button></footer>`);
+  modalBody('Importar tu base de contactos',`<div class="arm-import"><p>Sube un CSV exportado desde Excel o tu agenda. Admitimos coma o punto y coma, campos entre comillas y hasta 500 contactos. Los contactos existentes no se sobrescriben.</p><div class="arm-import-tools"><label class="button quiet">Seleccionar archivo CSV<input type="file" id="arm-csv-file" accept=".csv,text/csv" ${state.importing?'disabled':''}></label><button class="button quiet" data-arm-template ${state.importing?'disabled':''}>Descargar plantilla</button></div><p id="arm-import-error" class="form-error" role="alert"></p>${rows.length?`<div class="arm-import-summary" role="status"><strong>${rows.length} filas</strong><span>${created.length} creadas</span><span>${duplicates.length} ya existentes</span><span>${invalid.length+failed.length} con errores</span><span>${pending.length} pendientes</span></div><div class="arm-table-wrap"><table class="arm-table"><thead><tr><th>Fila</th><th>Contacto</th><th>Organización / Correo</th><th>Resultado</th></tr></thead><tbody>${rows.slice(0,50).map(row=>`<tr><td>${row.line}</td><td>${esc(contactName(row.contact))}</td><td>${esc(row.contact.company)}<small>${esc(row.contact.email)}</small></td><td>${esc(row.error||row.resultError||({created:'Creado',duplicate:'Ya existe · no se importa',failed:'Error al guardar'})[row.status]||'Listo para importar')}</td></tr>`).join('')}</tbody></table></div>${rows.length>50?'<p>Vista previa de las primeras 50 filas. El resumen incluye todo el archivo.</p>':''}`:''}<p class="arm-help">Se detectan duplicados por correo o por nombre completo y organización. Corrige las filas inválidas en el archivo antes de importarlo. Las notas y los contactos son privados.</p></div><footer class="arm-modal-footer"><button type="button" class="button quiet" data-arm-close ${state.importing?'disabled':''}>${created.length?'Cerrar':'Cancelar'}</button><button class="button primary" data-arm-run-import ${state.importing||state.readingCsv||invalid.length||!(pending.length+failed.length)?'disabled':''}>${state.importing?'Guardando contactos…':`Importar ${pending.length+failed.length} contactos`}</button></footer>`);
  }
  async function runImport(){
-  if(state.importing||!state.importRows||state.importRows.some(row=>row.error))return;
+  if(state.importing||state.readingCsv||!state.importRows||state.importRows.some(row=>row.error))return;
   state.importing=true;
   const pending=state.importRows.filter(row=>!row.status||row.status==='failed');
   try{
@@ -112,6 +112,7 @@ export function createArmUI({api,session,config,isCurrent,toast,onConnect}){
     const result=await api('/api/arm/import',{method:'POST',body:{rows:batch.map(row=>row.contact)}});
     if(!Array.isArray(result.results)||result.results.length!==batch.length)throw Error('No se recibió la confirmación de todas las filas. Reintenta: los contactos ya guardados se detectarán como duplicados.');
     for(const item of result.results){const row=batch[item.index];if(!row||!['created','duplicate','failed'].includes(item.status))throw Error('Resultado de importación no válido.');row.status=item.status;row.resultError=item.error;}
+    if(result.results.some(row=>row.status==='failed'))break;
    }
    state.data=null;await load();if(isCurrent())await render();
   }catch(error){importMarkup();$('#arm-import-error').textContent=error.message;}
@@ -138,7 +139,7 @@ export function createArmUI({api,session,config,isCurrent,toast,onConnect}){
  });
  document.addEventListener('input',event=>{if(event.target.id==='arm-search'){state.query=event.target.value;state.page=1;renderContacts();}});
  document.addEventListener('change',async event=>{
-  const control=event.target;
+  const control=event.target;let selection;
   try{
    const filters={'arm-type':'type','arm-status':'status','arm-org':'organization','arm-sort':'sort'};
    if(filters[control.name]){state[filters[control.name]]=control.value;state.page=1;return renderContacts();}
@@ -149,11 +150,11 @@ export function createArmUI({api,session,config,isCurrent,toast,onConnect}){
     await api('/api/arm/'+(task?'tasks/':'deals/')+encodeURIComponent(id),{method:'PATCH',body:task?{status:control.value}:{stageId:control.value}});await refresh();toast('Seguimiento actualizado.');
    }
    if(control.id==='arm-csv-file'){
-    const file=control.files[0];if(!file)return;if(file.size>2_000_000)throw Error('El CSV puede ocupar como máximo 2 MB.');
-    state.importRows=parseContactsCsv(await file.text());const keys=new Set(state.data.clients.flatMap(contactKeys));
+    const file=control.files[0];if(!file)return;selection=++state.fileSelection;state.readingCsv=true;modal.querySelector('[data-arm-run-import]').disabled=true;$('#arm-import-error').textContent='Leyendo el archivo…';if(file.size>2_000_000)throw Error('El CSV puede ocupar como máximo 2 MB.');
+    const parsed=parseContactsCsv(await file.text());if(selection!==state.fileSelection||!modal.open)return;state.readingCsv=false;state.importRows=parsed;const keys=new Set(state.data.clients.flatMap(contactKeys));
     for(const row of state.importRows){if(row.error)continue;const own=contactKeys(row.contact);if(own.some(key=>keys.has(key)))row.status='duplicate';else own.forEach(key=>keys.add(key));}importMarkup();
    }
-  }catch(error){if(control.id==='arm-csv-file'){$('#arm-import-error').textContent=error.message;control.value='';}else{toast(error.message,true);if(control.dataset.armTask||control.dataset.armStage)await refresh();}}finally{control.disabled=false;}
+  }catch(error){if(control.id==='arm-csv-file'){if(selection!==state.fileSelection||!modal.open)return;state.readingCsv=false;state.importRows=null;importMarkup();$('#arm-import-error').textContent=error.message;}else{toast(error.message,true);if(control.dataset.armTask||control.dataset.armStage)await refresh();}}finally{control.disabled=false;}
  });
  modal.addEventListener('submit',async event=>{
   if(event.target.id!=='arm-record-form')return;event.preventDefault();if(state.saving)return;

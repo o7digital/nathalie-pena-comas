@@ -32,7 +32,8 @@ test('import validates before writing, skips duplicates across files and seriali
  assert(!calls.some(row=>row.method==='POST'));
  const input={rows:[{name:'López',firstName:'Ana',company:'Teatro'},{name:'New',email:'new@example.test'},{name:'Unavailable'},{name:'Another',email:'NEW@example.test'}]};
  const result=await arm.importContacts('tenant-token',input);
- assert.deepEqual(result.results.map(row=>row.status),['duplicate','created','failed','duplicate']);
+ assert.deepEqual(result.results.map(row=>row.status),['duplicate','created','failed','failed']);
+ assert.equal((await arm.importContacts('tenant-token',{rows:[input.rows[3]]})).results[0].status,'duplicate');
  const both=await Promise.all([arm.importContacts('tenant-token',{rows:[{name:'Concurrent',email:'concurrent@example.test'}]}),arm.importContacts('tenant-token',{rows:[{name:'Concurrent',email:'concurrent@example.test'}]})]);
  assert.deepEqual(both.map(row=>row.results[0].status),['created','duplicate']);
  assert.equal(clients.length,3);
