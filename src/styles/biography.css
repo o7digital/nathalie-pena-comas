@@ -1,0 +1,64 @@
+.story { align-items:start; row-gap:50px; }
+.story .story-visual { position:relative; top:auto; align-self:start; }
+.story .story-copy h2 { margin-top:24px; }
+.story-philosophy { margin:30px 0; border-left:2px solid #967653; padding:3px 0 3px 24px; }
+.story-philosophy .kicker { display:block; margin-bottom:12px; }
+.story .story-philosophy p { font:clamp(23px,2vw,31px)/1.5 var(--serif); color:#563442; margin:0; }
+.story-voice-link { margin-top:26px; }
+.story-biography { grid-column:1 / -1; width:100%; min-width:0; margin-top:20px; }
+.biography-chapter { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.1fr); gap:7%; padding:48px 0; border-top:1px solid #9c7c5945; }
+.biography-chapter>header { display:flex; align-items:baseline; gap:18px; }
+.biography-number { font:11px var(--sans); color:#876849; flex-shrink:0; }
+.biography-chapter h3 { font:clamp(30px,3vw,46px)/1.15 var(--serif); margin:0; color:#4c2c3b; letter-spacing:-.025em; overflow-wrap:anywhere; }
+.biography-content { min-width:0; }
+.story .biography-content p { font-size:16px; line-height:1.9; margin-bottom:22px; }
+.biography-content p:last-child { margin-bottom:0; }
+.biography-content h4 { font:11px/1.5 var(--sans); text-transform:uppercase; letter-spacing:.12em; color:#745637; margin:32px 0 18px; }
+.biography-content h4:first-child { margin-top:0; }
+.biography-teachers { margin:24px 0; }
+.biography-teachers>div { display:grid; grid-template-columns:120px 1fr; gap:20px; border-top:1px solid #9c7c5928; padding:13px 0; }
+.biography-teachers dt { font-size:12px; color:#795f46; }
+.biography-teachers dd { margin:0; font-size:15px; }
+.biography-roles { display:grid; grid-template-columns:1fr 1fr; list-style:none; margin:24px 0; padding:0; gap:0 30px; }
+.biography-roles li { display:flex; flex-direction:column; padding:12px 0; border-top:1px solid #9c7c5928; }
+.biography-roles strong { font-size:15px; font-weight:500; }
+.biography-roles span { color:#726861; font-size:13px; }
+.biography-countries { display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0; margin:24px 0 32px; }
+.biography-countries li { border:1px solid #9c7c5940; padding:4px 11px; font-size:12px; color:#5c4c43; }
+.biography-list-pair { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:35px; }
+.biography-list-pair>div { min-width:0; }
+.biography-names { list-style:none; padding:0; margin:0; }
+.biography-names li { position:relative; padding:7px 0 7px 13px; font-size:14px; line-height:1.7; overflow-wrap:anywhere; }
+.biography-names li:before { content:''; position:absolute; width:3px; height:3px; left:0; top:18px; background:#a38766; }
+.story .biography-content .biography-note { font-size:11px; color:#78664e; margin-top:18px; }
+.biography-content .text-link { margin-top:25px; }
+.biography-broadcasts { margin-bottom:12px; }
+.biography-awards { list-style:none; margin:0; padding:0; }
+.biography-awards li { display:grid; grid-template-columns:100px minmax(0,1fr); gap:24px; padding:24px 0; border-bottom:1px solid #9c7c5928; }
+.biography-awards li:first-child { padding-top:0; }
+.biography-award-date { font:22px/1.5 var(--serif); color:#76583b; }
+.story .biography-awards p { margin:0; }
+.story .biography-awards .biography-award-years { margin-top:12px; color:#76583b; font-size:12px; letter-spacing:.02em; }
+@media(max-width:1000px) {
+ .biography-chapter { grid-template-columns:minmax(0,1fr) minmax(0,2.5fr); gap:5%; }
+ .biography-list-pair { gap:25px; }
+}
+@media(max-width:780px) {
+ .story .story-visual { position:relative; top:auto; }
+ .story-biography { margin-top:12px; }
+ .biography-chapter { display:block; padding:32px 0; }
+ .biography-chapter>header { margin-bottom:26px; gap:15px; }
+ .biography-chapter h3 { font-size:34px; }
+ .story .biography-content p { font-size:15px; line-height:1.9; }
+ .biography-list-pair { grid-template-columns:1fr; gap:32px; }
+ .biography-teachers>div { grid-template-columns:90px minmax(0,1fr); gap:16px; }
+ .biography-teachers dd { font-size:14px; }
+ .biography-roles { gap:0 20px; }
+ .biography-roles strong { font-size:14px; }
+ .biography-roles span { font-size:12px; }
+ .biography-awards li { grid-template-columns:75px minmax(0,1fr); gap:18px; }
+ .biography-award-date { font-size:20px; }
+ .story-philosophy { padding-left:20px; }
+ .biography-countries { gap:6px; }
+ .biography-countries li { font-size:11px; padding:4px 9px; }
+}

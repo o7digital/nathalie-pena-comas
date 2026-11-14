@@ -1,8 +1,26 @@
 ---
 import { localizer } from '../data/locales';
-import Image from './ContentImage.astro';import artist from '../assets/official/editorial.jpg';import {type Locale} from '../data/translations';
+import Image from './ContentImage.astro';
+import Biography from './Biography.astro';
+import artist from '../assets/official/editorial.jpg';
+import {type Locale} from '../data/translations';
 import { sectionImage } from '../lib/cms';
+import '../styles/biography.css';
 const sectionPhoto = await sectionImage('story', artist);
-interface Props {lang:Locale}const {lang}=Astro.props;const l = localizer(lang);
+interface Props {lang:Locale}
+const {lang}=Astro.props;
+const l = localizer(lang);
 ---
-<section class="story section" id="about"><div class="story-visual"><Image src={sectionPhoto} width={1280} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[480,800,1280]} sizes="(max-width:780px) 100vw, 60vw" format="webp" loading="lazy" /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div><div class="story-copy"><div class="kicker">{l("La artista", "The artist")}</div><h2>{l("Raíces latinas.", "Latin roots.")}<br/><em>{l("Alma lírica.", "An operatic soul.")}</em></h2><p>{l("Nacida en Santo Domingo y formada en la Universidad de Música y Artes Escénicas de Viena, Nathalie Peña-Comas une la ópera y el repertorio latinoamericano.", "Born in Santo Domingo and trained at Vienna’s University of Music and Performing Arts, Nathalie Peña-Comas brings together opera and Latin American repertoire.")}</p><p>{l("De Mozart a Verdi, de Pamina a Violetta, su recorrido artístico se extiende también al teatro y a la música de cámara con Ensemble Spirituosi. Es embajadora cultural de la República Dominicana desde 2019.", "From Mozart to Verdi, Pamina to Violetta, her artistic journey also embraces theatre and chamber music with Ensemble Spirituosi. She has served as Cultural Ambassador for the Dominican Republic since 2019.")}</p><div class="repertoire"><div class="kicker">{l("Selección de repertorio", "Selected repertoire")}</div><p>{l("Mozart")} <span>{l("Donna Anna · Pamina · Contessa")}</span></p><p>{l("Verdi")} <span>{l("Violetta · Messa da Requiem")}</span></p><p>{l("Puccini")} <span>{l("Musetta · La Bohème")}</span></p><p class="repertoire-link">{l("Ópera · Oratorio · Lied", "Opera · Oratorio · Art song")}</p></div><a class="text-link" href="#media">{l("Escuchar su voz", "Hear her voice")} ↓</a></div></section>
+<section class="story section" id="about" aria-labelledby="about-title">
+ <div class="story-visual"><Image src={sectionPhoto} width={1280} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[480,800,1280]} sizes="(max-width:780px) 100vw, 60vw" format="webp" loading="lazy" /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div>
+ <div class="story-copy">
+  <div class="kicker">{l("La artista", "The artist")}</div>
+  <h2 id="about-title">{l("Raíces latinas.", "Latin roots.")}<br/><em>{l("Alma lírica.", "An operatic soul.")}</em></h2>
+  <p>{l('Nathalie Peña-Comas es una soprano y actriz nacida en Santo Domingo, República Dominicana, y nominada al Latin Grammy.', 'Nathalie Peña-Comas is a Latin Grammy-nominated soprano and actress, born in Santo Domingo, Dominican Republic.')}</p>
+  <p>{l('Formada en Viena, desarrolla una carrera que une la ópera, el teatro, la música de concierto y las raíces latinoamericanas. Desde 2019 es embajadora cultural de la República Dominicana.', 'Trained in Vienna, her career connects opera, theatre, concert music and Latin American roots. Since 2019, she has served as Cultural Ambassador for the Dominican Republic.')}</p>
+  <aside class="story-philosophy"><span class="kicker">{l('Su visión artística', 'Her artistic vision')}</span><p>{l('Para Nathalie, cantar es un acto místico, espiritual y sanador. Su compromiso musical nace de ese propósito: una música para el alma.', 'For Nathalie, singing is mystical, spiritual and healing. Her musical commitment expresses that purpose: music for the soul.')}</p></aside>
+  <div class="repertoire"><div class="kicker">{l("Selección de repertorio", "Selected repertoire")}</div><p>{l("Mozart")} <span>{l("Donna Anna · Pamina · Contessa")}</span></p><p>{l("Verdi")} <span>{l("Violetta · Messa da Requiem")}</span></p><p>{l("Puccini")} <span>{l("Musetta · La Bohème")}</span></p><a class="repertoire-link" href="#repertorio">{l('Explorar el repertorio completo', 'Explore the complete repertoire')} ↗</a></div>
+  <a class="text-link story-voice-link" href="#media">{l("Escuchar su voz", "Hear her voice")} ↓</a>
+ </div>
+ <Biography lang={lang}/>
+</section>

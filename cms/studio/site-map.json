@@ -285,17 +285,31 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Born in Santo Domingo and trained at Vienna’s University of Music and Performing Arts, Nathalie Peña-Comas brings together opera and Latin American repertoire.",
-          "source": "Nacida en Santo Domingo y formada en la Universidad de Música y Artes Escénicas de Viena, Nathalie Peña-Comas une la ópera y el repertorio latinoamericano.",
-          "english": "Born in Santo Domingo and trained at Vienna’s University of Music and Performing Arts, Nathalie Peña-Comas brings together opera and Latin American repertoire.",
+          "key": "copy:Nathalie Peña-Comas is a Latin Grammy-nominated soprano and actress, born in Santo Domingo, Dominican Republic.",
+          "source": "Nathalie Peña-Comas es una soprano y actriz nacida en Santo Domingo, República Dominicana, y nominada al Latin Grammy.",
+          "english": "Nathalie Peña-Comas is a Latin Grammy-nominated soprano and actress, born in Santo Domingo, Dominican Republic.",
           "label": "Párrafo 1",
           "auxiliary": false
         },
         {
-          "key": "copy:From Mozart to Verdi, Pamina to Violetta, her artistic journey also embraces theatre and chamber music with Ensemble Spirituosi. She has served as Cultural Ambassador for the Dominican Republic since 2019.",
-          "source": "De Mozart a Verdi, de Pamina a Violetta, su recorrido artístico se extiende también al teatro y a la música de cámara con Ensemble Spirituosi. Es embajadora cultural de la República Dominicana desde 2019.",
-          "english": "From Mozart to Verdi, Pamina to Violetta, her artistic journey also embraces theatre and chamber music with Ensemble Spirituosi. She has served as Cultural Ambassador for the Dominican Republic since 2019.",
+          "key": "copy:Trained in Vienna, her career connects opera, theatre, concert music and Latin American roots. Since 2019, she has served as Cultural Ambassador for the Dominican Republic.",
+          "source": "Formada en Viena, desarrolla una carrera que une la ópera, el teatro, la música de concierto y las raíces latinoamericanas. Desde 2019 es embajadora cultural de la República Dominicana.",
+          "english": "Trained in Vienna, her career connects opera, theatre, concert music and Latin American roots. Since 2019, she has served as Cultural Ambassador for the Dominican Republic.",
           "label": "Párrafo 2",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her artistic vision",
+          "source": "Su visión artística",
+          "english": "Her artistic vision",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:For Nathalie, singing is mystical, spiritual and healing. Her musical commitment expresses that purpose: music for the soul.",
+          "source": "Para Nathalie, cantar es un acto místico, espiritual y sanador. Su compromiso musical nace de ese propósito: una música para el alma.",
+          "english": "For Nathalie, singing is mystical, spiritual and healing. Her musical commitment expresses that purpose: music for the soul.",
+          "label": "Párrafo 3",
           "auxiliary": false
         },
         {
@@ -348,10 +362,10 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Opera · Oratorio · Art song",
-          "source": "Ópera · Oratorio · Lied",
-          "english": "Opera · Oratorio · Art song",
-          "label": "Descripción",
+          "key": "copy:Explore the complete repertoire",
+          "source": "Explorar el repertorio completo",
+          "english": "Explore the complete repertoire",
+          "label": "Texto del enlace",
           "auxiliary": false
         },
         {
@@ -359,6 +373,223 @@
           "source": "Escuchar su voz",
           "english": "Hear her voice",
           "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:England",
+          "source": "Inglaterra",
+          "english": "England",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Full biography",
+          "source": "Biografía completa",
+          "english": "Full biography",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Training and vocation",
+          "source": "Formación y vocación",
+          "english": "Training and vocation",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:A graduate of the University of Music and Performing Arts Vienna, she holds a Bachelor of Arts in Voice and Piano Pedagogy.",
+          "source": "Se graduó en la Universidad de Música y Artes Escénicas de Viena, donde obtuvo un Bachelor of Arts en Pedagogía del Canto y del Piano.",
+          "english": "A graduate of the University of Music and Performing Arts Vienna, she holds a Bachelor of Arts in Voice and Piano Pedagogy.",
+          "label": "Párrafo 4",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Voice",
+          "source": "Canto",
+          "english": "Voice",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Piano",
+          "source": "Piano",
+          "english": "Piano",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Masterclasses",
+          "source": "Clases magistrales",
+          "english": "Masterclasses",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Since 2018, she has worked with Romanian maestra Irina Gavrilovici.",
+          "source": "Desde 2018 trabaja con la maestra rumana Irina Gavrilovici.",
+          "english": "Since 2018, she has worked with Romanian maestra Irina Gavrilovici.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera and theatre",
+          "source": "Ópera y teatro",
+          "english": "Opera and theatre",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Her operatic appearances in Europe and the Dominican Republic include the following roles:",
+          "source": "Sus papeles operísticos en Europa y en la República Dominicana incluyen:",
+          "english": "Her operatic appearances in Europe and the Dominican Republic include the following roles:",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
+          "source": "Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.",
+          "english": "Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
+          "label": "Párrafo 5",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Stages around the world",
+          "source": "Escenarios del mundo",
+          "english": "Stages around the world",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Her performance itinerary spans:",
+          "source": "Su trayectoria la ha llevado a actuar en:",
+          "english": "Her performance itinerary spans:",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Festivals",
+          "source": "Festivales",
+          "english": "Festivals",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Italy · Austria · Türkiye · Slovenia",
+          "source": "Italia · Austria · Türkiye · Eslovenia",
+          "english": "Italy · Austria · Türkiye · Slovenia",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Concert halls and theatres",
+          "source": "Salas y teatros",
+          "english": "Concert halls and theatres",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Artistic collaborations",
+          "source": "Encuentros artísticos",
+          "english": "Artistic collaborations",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Her orchestral, conducting and artistic collaborations include:",
+          "source": "Ha actuado con las siguientes orquestas, directores y artistas, entre otros:",
+          "english": "Her orchestral, conducting and artistic collaborations include:",
+          "label": "Descripción",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Orchestras",
+          "source": "Orquestas",
+          "english": "Orchestras",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Conductors",
+          "source": "Directores",
+          "english": "Conductors",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Artists",
+          "source": "Artistas",
+          "english": "Artists",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spirituosi and broadcasts",
+          "source": "Spirituosi y difusión",
+          "english": "Spirituosi and broadcasts",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
+          "source": "Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:",
+          "english": "With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
+          "label": "Párrafo 6",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
+          "source": "Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.",
+          "english": "Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
+          "label": "Párrafo 7",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Live broadcasts of some of her concerts have been carried by:",
+          "source": "Algunos de sus conciertos se han transmitido en directo a través de:",
+          "english": "Live broadcasts of some of her concerts have been carried by:",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Discover Ensemble Spirituosi",
+          "source": "Descubrir Ensemble Spirituosi",
+          "english": "Discover Ensemble Spirituosi",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Awards and distinctions",
+          "source": "Premios y distinciones",
+          "english": "Awards and distinctions",
+          "label": "Título",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "source": "Primer premio en el Ebe Stignani International Opera Competition y segundo premio en el Montecatini Opera Festival Singing Competition.",
+          "english": "She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "label": "Párrafo 8",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
+          "source": "Premios Soberano: cantante lírica del año en la República Dominicana.",
+          "english": "Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Finalist at the 14th Osaka International Music Competition.",
+          "source": "Finalista del 14.º Osaka International Music Competition.",
+          "english": "Finalist at the 14th Osaka International Music Competition.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
+          "source": "Premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.",
+          "english": "At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
+          "label": "Párrafo 9",
           "auxiliary": false
         }
       ]

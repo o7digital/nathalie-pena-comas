@@ -1,7 +1,7 @@
 import { readFile,writeFile } from 'node:fs/promises';
 import ts from 'typescript';
 const specs=[
- ['home','Inicio','home','home','Hero','hero'],['concerts','Agenda','calendar','schedule','Schedule,ConcertRow',null,'concerts'],['about','La artista','photo','about','Story','story'],
+ ['home','Inicio','home','home','Hero','hero'],['concerts','Agenda','calendar','schedule','Schedule,ConcertRow',null,'concerts'],['about','La artista','photo','about','Story,Biography','story'],
  ['voice','Trayectoria','briefcase','voice','International'],['albums','Discografía','album','music','Releases',null,'albums'],
  ['repertorio','Repertorio clásico','album','repertorio','Repertoire'],
  ['contemporary','Contemporáneo','album','contemporain','Contemporary'],

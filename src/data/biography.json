@@ -1,0 +1,29 @@
+{
+  "source": "https://www.nathaliepenacomas.net/bio",
+  "retrieved": "2026-11-14",
+  "countries": ["AT", "BY", "CO", "HR", "DO", "EG", "England", "FR", "FI", "DE", "HU", "IT", "MX", "PA", "PE", "PL", "PT", "RO", "RU", "ES", "SE", "TW", "TR", "US", "VA"],
+  "roles": [
+    {"role":"Zerlina", "work":"Don Giovanni"},
+    {"role":"Donna Anna", "work":"Don Giovanni"},
+    {"role":"Pamina", "work":"Die Zauberflöte"},
+    {"role":"Lucia", "work":"Mateo"},
+    {"role":"Queen of trolls", "work":"The two Fiddlers"},
+    {"role":"Gabi", "work":"Agleia Federweiss"},
+    {"role":"Musetta", "work":"La Bohème"},
+    {"role":"Contessa", "work":"Le nozze di Figaro"},
+    {"role":"Micaëla", "work":"Carmen"},
+    {"role":"Violetta", "work":"La Traviata"}
+  ],
+  "festivals": ["Emilia Romagna Festival", "Montecatini Opera Festival", "Taranto Opera Festival", "Wiener Festwochen (Vienna Festival)", "Vienna Opera Summer Festival", "Sommerfestival Kittsee (Burgenland)", "Kültür Yolu Festivali", "IMAGO Sloveniae International Festival"],
+  "venues": ["Golden Hall · Musikverein, Vienna", "Konzerthaus Vienna", "Accademia Nazionale di Santa Cecilia, Rome", "Basilica Papale Santa Maria Maggiore, Vatican City", "Auditorio Nacional de Música de Madrid", "Centro Cultural Miguel Delibes de Valladolid", "Tchaikovsky State Conservatory, Moscow", "CSO ADA Ankara", "National Concert Hall Taipei", "Gran Teatro Nacional, Peru", "Palacio de Bellas Artes, Dominican Republic", "Teatro Nacional Eduardo Brito, Dominican Republic"],
+  "orchestras": ["Russian State Philharmonic Orchestra", "Vienna Chamber Orchestra", "Vienna Concert–Verein Orchestra", "Strauss Festival Orchestra", "Taiwan Philharmonic Orchestra", "Radio Symphony Orchestra of Belarus", "State Philharmonic Orchestra of Târgu Mures", "Györ Philharmonic Orchestra", "National Symphony Orchestra of Peru", "National Symphony Orchestra of the Dominican Republic"],
+  "conductors": ["Eugene Kohn", "Valery Polyansky", "Martin Sieghart", "José Antonio Molina", "Francisco Navarro Lara", "Yao-Yu Wu", "Ernst Kovacic", "Joji Hattori", "Ola Rudner", "Ferenc Gábor", "Harald Krumpöck"],
+  "collaborators": ["Andrea Bocelli", "KS Ramón Vargas", "Gregory Kunde", "Joyce DiDonato", "Aquiles Machado", "Stephen Costello", "Morris Robinson", "Tuomas Katajala", "Johnny Ventura", "Danny Rivera", "Plácido Domingo Jr."],
+  "voiceTeachers": ["Helena Lazarska", "Annamaria Rott"],
+  "pianoTeacher": "Manfred Wagner-Artzt",
+  "masterclasses": ["Gregory Kunde", "Mariella Devia", "Michael Recchiuti", "Kamal Khan"],
+  "coachSince2018": "Irina Gavrilovici",
+  "spirituosiTourCountries": ["AT", "DO", "England", "IT", "ES"],
+  "broadcasts": ["Rai 3 · Italia", "Belarusian Broadcasting Company", "Slovenian National Radio", "Dominican State Radio and Television Corporation"],
+  "soberanoYears": [2014, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2026]
+}
