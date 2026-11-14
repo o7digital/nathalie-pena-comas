@@ -1837,6 +1837,13 @@
           "auxiliary": true
         },
         {
+          "key": "copy:Back to top",
+          "source": "Volver arriba",
+          "english": "Back to top",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:© 2026 NATHALIE PEÑA-COMAS",
           "source": "© 2026 NATHALIE PEÑA-COMAS",
           "english": "© 2026 NATHALIE PEÑA-COMAS",
