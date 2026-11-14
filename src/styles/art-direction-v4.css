@@ -33,6 +33,27 @@ body { background:var(--cream); color:var(--ink); font-size:18px; line-height:1.
 .btn-gold,.btn-outline { min-height:54px; padding:17px 25px; font-size:13px; letter-spacing:.06em; }
 .signature-hero .btn-gold { background:var(--gold); color:var(--ink); border:1px solid var(--gold); }
 .signature-hero .btn-outline { background:#14161955; color:#fff; border:1px solid #ffffffa0; }
+.signature-hero .hero-discover { position:relative; gap:14px; }
+.signature-hero .hero-discover.btn-outline { border-color:var(--gold2); }
+.signature-hero .hero-scroll-cue { display:inline-block; flex-shrink:0; font-size:20px; line-height:1; }
+.hero-bottom > .hero-discover-secondary { display:inline-flex; align-items:center; gap:12px; }
+@media(prefers-reduced-motion:no-preference) {
+ .signature-hero .hero-discover::after { content:''; position:absolute; inset:-3px; border:1px solid var(--gold2); border-radius:inherit; pointer-events:none; opacity:0; animation:hero-discover-pulse 4.2s ease-out infinite; animation-delay:.3s; }
+ .signature-hero .hero-discover:nth-child(2)::after { animation-delay:1.7s; }
+ .signature-hero .hero-scroll-cue { animation:hero-scroll-nudge 2.4s ease-in-out infinite; }
+ .signature-hero .hero-discover:nth-child(2) .hero-scroll-cue { animation-delay:.6s; }
+ .signature-hero .hero-discover-secondary { animation:hero-discover-text 4.2s ease-in-out infinite; animation-delay:2.4s; }
+ .signature-hero .hero-discover:hover::after,.signature-hero .hero-discover:focus-visible::after { animation:none; opacity:.8; box-shadow:0 0 22px #c2a47640; }
+ .signature-hero .hero-discover:hover .hero-scroll-cue,.signature-hero .hero-discover:focus-visible .hero-scroll-cue,.signature-hero .hero-discover-secondary:hover,.signature-hero .hero-discover-secondary:focus-visible,.signature-hero .hero-discover-secondary:hover .hero-scroll-cue,.signature-hero .hero-discover-secondary:focus-visible .hero-scroll-cue { animation-play-state:paused; }
+ html[data-hero-intro] .signature-hero .hero-discover::after,html[data-hero-intro] .signature-hero .hero-scroll-cue { animation-play-state:paused; }
+}
+@keyframes hero-discover-pulse {
+ 0%,55%,100% { opacity:0; transform:scale(1); box-shadow:0 0 0 #c2a47600; }
+ 12% { opacity:.85; transform:scale(1.008); box-shadow:0 0 24px #c2a47666; }
+ 40% { opacity:0; transform:scale(1.045); box-shadow:0 0 32px #c2a47600; }
+}
+@keyframes hero-scroll-nudge { 0%,45%,100% { transform:translateY(0); } 22% { transform:translateY(5px); } }
+@keyframes hero-discover-text { 0%,55%,100% { color:#fff; text-shadow:none; } 20% { color:var(--gold2); text-shadow:0 0 18px #c2a47688; } }
 .signature-hero .hero-bottom { height:80px; font-size:12px; line-height:1.5; letter-spacing:.08em; padding:0 6.5%; background:var(--bg); border-top:1px solid var(--line); }
 .signature-hero .hero-bottom button { padding:12px 0; }
 .kicker,.release-feature .kicker,.ensemble-copy .kicker,.representation .kicker,.press-feature .kicker,.repertoire .kicker { font-size:12px; line-height:1.6; letter-spacing:.12em; }
