@@ -27,3 +27,31 @@ test('the typing animation appears only while a real request is pending',async({
  await page.route('**/api/nath-ai/chat',async route=>{await gate;await route.fulfill({json:{clientCode:'nathalie',version:'3.6.0',reply:'Bonjour, je suis Nath AI.',language:'fr',model:'fixture'}});});
  await page.goto('/fr/#about');await page.locator('[data-olivia-open]').click();await page.locator('[data-olivia-consent]').check();await page.locator('#olivia-message').fill('Bonjour');await page.locator('[data-olivia-form] [type=submit]').click();await expect(page.locator('[data-olivia-typing]')).toBeVisible();release();await expect(page.locator('[data-olivia-typing]')).toBeHidden();
 });
+
+for(const width of [390,1440])test(`Enter and mouse send through the same consented form at ${width}px`,async({page})=>{
+ await ready(page);await page.setViewportSize({width,height:900});
+ await page.route('**/api/nath-ai/identity',r=>r.fulfill({json:{clientCode:'nathalie',version:'3.6.0',identity:'fixture'}}));
+ await page.route('**/api/nath-ai/conversations**',r=>r.fulfill({json:{conversation:{status:'ai'},messages:[]}}));
+ const messages:string[]=[];let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);
+ await page.route('**/api/nath-ai/chat',async route=>{
+  const data=route.request().postDataJSON();messages.push(data.message);if(messages.length===1)await gate;
+  await route.fulfill({json:{clientCode:'nathalie',version:'3.6.0',reply:`Réponse ${messages.length}`,language:'fr',model:'fixture'}});
+ });
+ await page.goto('/fr/#about');await page.locator('[data-olivia-open]').click();
+ const input=page.locator('#olivia-message'),send=page.locator('[data-olivia-form] [type=submit]');
+ await input.fill('Bonjour');await input.press('Enter');expect(messages).toHaveLength(0);await expect(input).toHaveValue('Bonjour');
+ await page.locator('[data-olivia-consent]').check();
+ await input.fill('   ');await input.press('Enter');expect(messages).toHaveLength(0);
+ await input.fill('Bonjour');await input.press('Shift+Enter');await input.pressSequentially('Nath AI');
+ await expect(input).toHaveValue('Bonjour\nNath AI');expect(messages).toHaveLength(0);
+ // Japanese/Chinese composition and a held Enter key must not send prematurely.
+ for(const properties of [{isComposing:true},{keyCode:229},{repeat:true}]){
+  await input.dispatchEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true,...properties});
+  expect(messages).toHaveLength(0);
+ }
+ await input.press('Enter');await expect.poll(()=>messages.length).toBe(1);expect(messages[0]).toBe('Bonjour\nNath AI');
+ await input.fill('Mon deuxième message');await input.press('Enter');await expect(input).toHaveValue('Mon deuxième message');expect(messages).toHaveLength(1);
+ release();await expect(send).toBeEnabled();await expect(page.locator('[data-olivia-typing]')).toBeHidden();
+ await send.click();await expect(page.locator('[data-role=assistant]').last()).toHaveText('Réponse 2');
+ expect(messages).toEqual(['Bonjour\nNath AI','Mon deuxième message']);await expect(input).toHaveValue('');await expect(send).toBeEnabled();
+});

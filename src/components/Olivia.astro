@@ -17,7 +17,7 @@ const t = oliviaCopy(lang);
   <form data-olivia-form class="olivia-form">
    <label class="olivia-consent"><input type="checkbox" data-olivia-consent required /><span>{t.consent} <a href={`/${lang}/privacy/`}>{t.privacy} ↗</a></span></label>
    <label for="olivia-message" class="visually-hidden">{t.placeholder}</label>
-   <div class="olivia-composer"><textarea id="olivia-message" name="message" rows="2" maxlength="2000" placeholder={t.placeholder} required></textarea><button type="submit">{t.send} ↗</button></div>
+   <div class="olivia-composer"><textarea id="olivia-message" name="message" rows="2" maxlength="2000" placeholder={t.placeholder} enterkeyhint="send" aria-keyshortcuts="Enter" required></textarea><button type="submit">{t.send} ↗</button></div>
   </form>
   <div class="olivia-bottom"><span>Nath AI</span><button type="button" data-olivia-reset>{t.clear}</button></div>
  </dialog>

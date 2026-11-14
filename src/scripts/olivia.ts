@@ -90,6 +90,13 @@ if(root){
  }
  const timer=window.setInterval(sync,8000);
  window.addEventListener('pagehide',()=>clearInterval(timer));
+ input.addEventListener('keydown',event=>{
+  // Let Enter confirm an IME candidate before treating it as a send command.
+  if(event.key!=='Enter'||event.shiftKey||event.isComposing||event.keyCode===229)return;
+  event.preventDefault();
+  if(event.repeat||busy)return;
+  form.requestSubmit(submit);
+ });
  form.addEventListener('submit',async event=>{
   event.preventDefault();const message=input.value.trim();if(!message||busy||!consent.checked)return;
   busy=true;typing.hidden=false;submit.disabled=true;reset.disabled=true;status.textContent=root!.dataset.thinking!;
