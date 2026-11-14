@@ -14,7 +14,8 @@ async function setup(t, overrides = {}) {
   calls.push({path:req.url,method:req.method,authorization:req.headers.authorization,body});
   res.setHeader('Content-Type','application/json');
   if(req.url==='/auth/login')return res.end(JSON.stringify({data:{access_token:'private-access',refresh_token:'private-refresh',expires:900000}}));
-  if(req.url.startsWith('/users/me'))return res.end(JSON.stringify({data:{id:'owner',email:overrides.cmsEmail || 'owner@example.test',first_name:'Owner'}}));
+  if(req.url.startsWith('/users/me')&&overrides.cmsLimitedProfile)return res.end(JSON.stringify({data:{id:overrides.cmsUserId||'owner'}}));
+  if(req.url.startsWith('/users/me'))return res.end(JSON.stringify({data:{id:overrides.cmsUserId||'owner',email:overrides.cmsEmail || 'owner@example.test',first_name:overrides.cmsFirstName||'Owner',last_name:overrides.cmsLastName||''}}));
   if(req.url==='/permissions/me')return res.end(JSON.stringify({data:Object.fromEntries(['gallery','albums','videos','concerts','site_images','site_texts','studio_reporting'].map(collection=>[collection,{read:{access:overrides.reportingReadDenied&&collection==='studio_reporting'?'none':'full',fields:['*']},create:{access:overrides.readOnly?'none':'full',fields:['*']},update:{access:overrides.readOnly?'none':'full',fields:['*']}}]))}));
   if(req.url==='/api/auth/login')return res.end(JSON.stringify({token:'private-crm-token',user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test',name:'Artist'}}));
   if(req.url==='/api/auth/me')return res.end(JSON.stringify({user:{tenantId:overrides.returnedTenant||'tenant-nathalie',email:'artist@example.test'}}));
@@ -184,6 +185,27 @@ test('another CMS editor cannot use the administrator ARM connector',async t=>{
  assert.equal((await(await request('/api/session',{headers:{Cookie:cookie}})).json()).armConnected,false);
  assert.equal((await request('/api/arm/clients',{headers:{Cookie:cookie}})).status,401);
  assert(!calls.some(call=>call.path==='/api/auth/login'||call.path==='/api/clients'));
+});
+
+test('the nathalie username authenticates the dedicated artist account and grants only its Studio ARM access',async t=>{
+ const {request,origin,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',adminEmail:'administrator@example.test',artistEmail:'artist@example.test',artistUserId:'artist-id',cmsUserId:'artist-id',cmsLimitedProfile:true,cmsEmail:'artist@example.test',cmsFirstName:'Nathalie',cmsLastName:'Peña-Comas',serviceEmail:'connector@example.test',servicePassword:'private-service-password'});
+ const login=await request('/api/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({email:' Nathalie ',password:'artist-temporary-password',mode:'cms'})});
+ assert.equal(login.status,200);const cookie=login.headers.get('set-cookie').split(';')[0];
+ const session=await(await request('/api/session',{headers:{Cookie:cookie}})).json();
+ assert.equal(session.name,'Nathalie Peña-Comas');assert.equal(session.armConnected,true);assert.equal(session.reportingOwner,false);
+ assert.equal((await request('/api/arm/clients',{headers:{Cookie:cookie}})).status,200);
+ const auth=calls.find(row=>row.path==='/auth/login');assert.equal(JSON.parse(auth.body).email,'artist@example.test');
+ assert(!calls.some(row=>row.path==='/auth/login'&&row.body.includes('administrator@example.test')));
+ assert.doesNotMatch(JSON.stringify(session),/private-service-password|artist-temporary-password|private-crm-token/);
+});
+
+test('the artist username and ARM delegation reject another Directus user with the same submitted email',async t=>{
+ const {request,origin,login,calls}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor-token',artistEmail:'artist@example.test',artistUserId:'artist-id',cmsUserId:'other-id',cmsEmail:'artist@example.test',serviceEmail:'connector@example.test',servicePassword:'private-service-password'});
+ const denied=await request('/api/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({email:'nathalie',password:'test-password',mode:'cms'})});
+ assert.equal(denied.status,403);assert.equal(denied.headers.get('set-cookie'),null);
+ const {cookie}=await login();assert.equal((await(await request('/api/session',{headers:{Cookie:cookie}})).json()).armConnected,false);
+ assert.equal((await request('/api/arm/clients',{headers:{Cookie:cookie}})).status,401);
+ assert(!calls.some(row=>row.path==='/api/auth/login'||row.path==='/api/clients'));
 });
 
 test('delegated ARM access rejects a service account in another tenant',async t=>{

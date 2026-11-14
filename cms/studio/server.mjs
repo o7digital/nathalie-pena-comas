@@ -33,6 +33,8 @@ export function createStudioServer(options = {}) {
   tenant: process.env.ARM_TENANT_ID,
   editorToken: process.env.STUDIO_CONTENT_TOKEN,
   adminEmail: process.env.ARM_ADMIN_EMAIL,
+  artistEmail: process.env.STUDIO_ARTIST_EMAIL,
+  artistUserId: process.env.STUDIO_ARTIST_USER_ID,
   serviceEmail: process.env.ARM_SERVICE_EMAIL,
   servicePassword: process.env.ARM_SERVICE_PASSWORD,
   includedUntil: process.env.STUDIO_INCLUDED_UNTIL,
@@ -77,7 +79,13 @@ export function createStudioServer(options = {}) {
   return Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase());
  }
  const armReady = () => Boolean(config.tenant && config.editorToken);
- const canDelegate = email => armReady() && Boolean(config.adminEmail && config.serviceEmail && config.servicePassword) && email?.toLowerCase() === config.adminEmail.toLowerCase();
+ // Limited Directus editor roles may expose only the verified user ID on /users/me.
+ // The artist email and display name are bound server-side to that exact account.
+ const artistProfile = profile => Boolean(config.artistEmail && config.artistUserId && profile?.id===config.artistUserId && (!profile.email || profile.email.toLowerCase()===config.artistEmail.toLowerCase()));
+ const canDelegate = profile => armReady() && Boolean(config.serviceEmail && config.servicePassword) && Boolean(
+  config.adminEmail && profile?.email?.toLowerCase()===config.adminEmail.toLowerCase() ||
+  artistProfile(profile)
+ );
 
  function seal(value) {
   const iv = randomBytes(12), cipher = createCipheriv('aes-256-gcm', encryptionKey, iv);
@@ -117,10 +125,10 @@ export function createStudioServer(options = {}) {
  }
  async function crmTokenFor(s) {
   if(s.crmToken) { await crmIdentity(s.crmToken); return s.crmToken; }
-  if(s.mode!=='cms' || !canDelegate(s.email)) throw new ApiError(401,'Conecta tu cuenta ARM para continuar.');
+  if(s.mode!=='cms' || !canDelegate({id:s.userId,email:s.email})) throw new ApiError(401,'Conecta tu cuenta ARM para continuar.');
   // Resolve the current Directus identity again; never authorize from a submitted email.
   const profile=await upstream(config.cms,'/users/me?fields=id,email',s.access);
-  if(!canDelegate(profile?.data?.email)) throw new ApiError(403,'Esta cuenta no tiene acceso de administración ARM.');
+  if(!canDelegate(profile?.data)) throw new ApiError(403,'Esta cuenta no tiene acceso al espacio ARM.');
   if(!delegatedToken || delegatedToken.until<Date.now()) {
    const result=await upstream(config.crm,'/auth/login',null,'POST',{email:config.serviceEmail,password:config.servicePassword});
    await crmIdentity(result.token);
@@ -211,28 +219,33 @@ export function createStudioServer(options = {}) {
    if (path==='/api/logout' && req.method==='POST') { const s=session(req); if(s?.refresh) await upstream(config.cms,'/auth/logout',null,'POST',{refresh_token:s.refresh}).catch(()=>{}); setSession(res,null); return send(res,{ok:true}); }
    if (path==='/api/login' && req.method==='POST') {
     const input=await jsonBody(req);
-    if (typeof input.email!=='string' || typeof input.password!=='string' || input.email.length>180 || input.password.length>200) throw new ApiError(400,'Introduce tu correo y contraseña.');
+    if (typeof input.email!=='string' || typeof input.password!=='string' || input.email.length>180 || input.password.length>200) throw new ApiError(400,'Introduce tu usuario o correo y contraseña.');
+    const alias=input.email.trim().toLowerCase()==='nathalie';
+    if(alias&&(input.mode==='arm'||!config.artistEmail||!config.artistUserId))throw new ApiError(400,'Para el usuario nathalie, utiliza el acceso Studio habilitado para la artista.');
+    const loginEmail=alias?config.artistEmail:input.email.trim();
     const ip=(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString().split(',')[0];
-    const key=ip+':'+input.email.toLowerCase(); const attempt=attempts.get(key);
+    const key=ip+':'+loginEmail.toLowerCase(); const attempt=attempts.get(key);
     if (attempt && attempt.until>Date.now() && attempt.count>=10) throw new ApiError(429,'Espera un minuto antes de volver a intentar.');
     if (attempts.size>1000) attempts.clear(); attempts.set(key,{count:attempt?.until>Date.now()?attempt.count+1:1,until:Date.now()+60000});
     let s;
     if(input.mode==='arm') {
      if(!armReady()) throw new ApiError(409,'El acceso ARM estará disponible al activar el espacio de Nathalie.');
-     const result=await upstream(config.crm,'/auth/login',null,'POST',{email:input.email,password:input.password});
+     const result=await upstream(config.crm,'/auth/login',null,'POST',{email:loginEmail,password:input.password});
      await crmIdentity(result.token);
      s={mode:'arm',crmToken:result.token,access:config.editorToken,email:result.user.email,name:result.user.name};
     } else {
-     const result=await upstream(config.cms,'/auth/login',null,'POST',{email:input.email,password:input.password,mode:'json'});
+     const result=await upstream(config.cms,'/auth/login',null,'POST',{email:loginEmail,password:input.password,mode:'json'});
      const profile=await upstream(config.cms,'/users/me?fields=id,email,first_name,last_name',result.data.access_token);
-     s={mode:'cms',access:result.data.access_token,refresh:result.data.refresh_token,accessUntil:Date.now()+result.data.expires,email:profile.data.email,name:[profile.data.first_name,profile.data.last_name].filter(Boolean).join(' ')};
+     if(alias&&!artistProfile(profile.data))throw new ApiError(403,'El usuario no corresponde a la cuenta de Nathalie.');
+     const artist=artistProfile(profile.data);
+     s={mode:'cms',userId:profile.data.id,access:result.data.access_token,refresh:result.data.refresh_token,accessUntil:Date.now()+result.data.expires,email:artist?config.artistEmail:profile.data.email,name:[profile.data.first_name,profile.data.last_name].filter(Boolean).join(' ')||(artist?'Nathalie Peña-Comas':'')};
     }
     s.until=Date.now()+7*86400000; setSession(res,s); attempts.delete(key); return send(res,{ok:true});
    }
    const s=await authenticated(req,res);
    if(path==='/api/session' && req.method==='GET') {
     const profile=s.mode!=='arm'?await upstream(config.cms,'/users/me?fields=id,email',s.access):null;
-    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data?.email)),armReady:armReady(),reportingOwner:Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase())});
+    return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data)),armReady:armReady(),reportingOwner:Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase())});
    }
    if(path==='/api/site-map' && req.method==='GET')return send(res,siteMap);
    if(path.startsWith('/api/social')) {

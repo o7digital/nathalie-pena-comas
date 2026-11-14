@@ -67,7 +67,7 @@ Validation ARM : `node cms/studio/arm-browser-check.mjs` utilise des fixtures is
 
 ## Configuration et sécurité
 
-Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `ARM_API_URL`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`, `ARM_ADMIN_EMAIL`, `ARM_SERVICE_EMAIL`, `ARM_SERVICE_PASSWORD`, `STUDIO_INCLUDED_UNTIL`, `STUDIO_CUSTOMER_EMAIL`, `OPENAI_API_KEY` et `TRANSLATION_MODEL`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
+Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `ARM_API_URL`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`, `ARM_ADMIN_EMAIL`, `STUDIO_ARTIST_EMAIL`, `STUDIO_ARTIST_USER_ID`, `ARM_SERVICE_EMAIL`, `ARM_SERVICE_PASSWORD`, `STUDIO_INCLUDED_UNTIL`, `STUDIO_CUSTOMER_EMAIL`, `OPENAI_API_KEY` et `TRANSLATION_MODEL`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
 
 Les sessions sont chiffrées et authentifiées dans un cookie HttpOnly, Secure en déploiement, SameSite Strict. Les jetons Directus/Pulse restent côté serveur. Les écritures exigent l'origine configurée ; seuls les chemins et champs autorisés sont transmis. Les médias nécessitent une session et sont servis avec un cache privé. Le Studio ne sert aucun fichier serveur ni accès arbitraire aux API d'administration.
 
@@ -167,3 +167,7 @@ Dans le Studio, Agenda suit Inicio et s’ouvre sur un vrai calendrier mensuel, 
 `node cms/import-official-schedule.mjs` prépare un bilan sans écrire ; `--apply` sauvegarde les contenus concernés hors Git dans un dossier privé puis importe uniquement dans Directus dev. Variables privées : `DIRECTUS_URL`, `ADMIN_TOKEN`, `OPENAI_API_KEY` et éventuellement `TRANSLATION_MODEL`. Il préserve les identifiants existants et refuse de publier implicitement un événement auparavant en brouillon/archivé. Il ne déploie jamais en production. Une republication de l’aperçu est nécessaire après les modifications du CMS.
 
 Validation : `tests/schedule.spec.ts`, `node cms/studio/calendar-browser-check.mjs` (création et modification isolées, changement d’année, année bissextile, erreur conservée, clavier et mobile), tests Studio et vérification Astro.
+
+## Provisionnement de l’accès personnel
+
+`node cms/studio/provision-artist.mjs` vérifie la cible sans écriture ; `--apply` crée uniquement le compte personnel de l’artiste avec un mot de passe initial aléatoire, vérifie sa connexion et ses droits éditoriaux, puis configure son ID et son e-mail sur le service Studio dev sans redéploiement automatique. Le compte administrateur et son mot de passe restent inchangés. Les nouveaux accès sont écrits dans un fichier local mode 0600 (`STUDIO_ARTIST_CREDENTIAL_FILE`, par défaut `/tmp/nathalie-studio-artist-access.json`) pour remise au propriétaire ; ils ne sont ni imprimés par le script, ni ajoutés au dépôt, ni envoyés par e-mail. Le script refuse de réinitialiser un compte existant sans son fichier de provisionnement correspondant. Redéployer ensuite Studio dev et vérifier la connexion `nathalie`, le nom affiché, l’édition des contenus et son ARM. Ce mot de passe initial n’a pas d’expiration automatique configurée.
