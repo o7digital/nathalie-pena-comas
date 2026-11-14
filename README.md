@@ -93,7 +93,7 @@ Le widget artistique est disponible sur les 11 versions et leurs pages de confid
 
 Le bouton Nath AI et le panneau flottent avec une ombre et une pastille de disponibilité. Le style reprend le thème partagé de `suitesmine-bot`. La pastille verte dépend du contrôle de santé réel du moteur ; une panne affiche l’indisponibilité. La préférence de réduction des animations est respectée.
 
-La preview `dev` appelle un relais serveur sur Vercel puis une instance **Olivia 3.6.0 dédiée sur le VPS**, avec les contenus complets de Nathalie et une base PostgreSQL/pgvector isolée. Aucune clé privée n’est exposée au navigateur. La production conserve son déploiement et son ancien backend tant qu’une bascule n’est pas explicitement demandée.
+La production, activée sur autorisation explicite le 14 novembre 2026, et la preview `dev` appellent un relais serveur sur Vercel puis la même instance **Olivia 3.6.0 dédiée à Nathalie sur le VPS**, avec les contenus complets du site et une base PostgreSQL/pgvector isolée des autres clients. Aucune clé privée n’est exposée au navigateur. Les deux cibles Vercel disposent des paramètres serveur `NATH_AI_GATEWAY_URL` et `NATH_AI_GATEWAY_KEY` ; la clé est sensible. Un changement de ces paramètres nécessite un nouveau déploiement pour être pris en compte. Tout nouveau déploiement en production reste soumis à un ordre explicite.
 
 Les messages sont transmis uniquement après accord ; le contrôle de disponibilité ne transmet aucun message. L’historique de session et le changement de langue sont conservés. Les conversations de cette instance sont isolées de l’ancienne inbox Suitesmine ; les contacts de représentation restent accessibles. Le raccordement d’un tableau opérateur à cette nouvelle base n’est pas effectué par le widget.
 
