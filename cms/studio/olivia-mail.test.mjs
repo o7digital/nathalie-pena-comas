@@ -39,4 +39,6 @@ test('changed recipient email is rejected after review and HTML links cannot car
  const draft=await mail.save(s,'crm-tenant',{contactIds:['ana'],subject:'Review',html:'<p>Hi</p>'});contacts[0].email='changed@example.test';
  await assert.rejects(()=>mail.send(s,'crm-tenant',draft.id,{revision:1,contactId:'ana'}),{status:409});assert.equal(calls.length,0);
  assert.equal(cleanMailHtml('<a href="https://user:pass@example.test" style="position:fixed">Hi</a>').html,'<a>Hi</a>');
+ contacts[0].email='hidden,second@example.test';
+ await assert.rejects(()=>mail.save(s,'crm-tenant',{contactIds:['ana'],subject:'Review',html:'<p>Hi</p>'}),{status:422});
 });

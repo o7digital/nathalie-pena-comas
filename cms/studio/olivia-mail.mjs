@@ -40,7 +40,7 @@ export function createOliviaMail({drafts,contacts,fetcher=fetch,origin='https://
  async function recipientRows(token,ids){
   const rows=await contacts(token),byId=new Map(rows.map(row=>[row.id,row]));
   const emails=new Set();
-  return ids.map(id=>{const row=byId.get(id);if(!row||!row.email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email)||/[\r\n]/.test(row.email))throw new ArmError('Uno de los contactos no tiene un correo válido. Revisa la selección.',422);
+  return ids.map(id=>{const row=byId.get(id);if(!row||!row.email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email)||/[,;<>()[\]:"\\\r\n]/.test(row.email))throw new ArmError('Uno de los contactos no tiene un correo válido. Revisa la selección.',422);
    const email=normalized(row.email);if(emails.has(email))throw new ArmError('La selección incluye un correo duplicado. Conserva una sola ficha por destinatario.',422);emails.add(email);return {id,email:row.email,name:contactName(row)};});
  }
  return {
