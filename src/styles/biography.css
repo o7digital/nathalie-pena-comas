@@ -1,64 +1,176 @@
-.story { align-items:start; row-gap:50px; }
-.story .story-visual { position:relative; top:auto; align-self:start; }
-.story .story-copy h2 { margin-top:24px; }
-.story-philosophy { margin:30px 0; border-left:2px solid #967653; padding:3px 0 3px 24px; }
-.story-philosophy .kicker { display:block; margin-bottom:12px; }
-.story .story-philosophy p { font:clamp(23px,2vw,31px)/1.5 var(--serif); color:#563442; margin:0; }
-.story-voice-link { margin-top:26px; }
-.story-biography { grid-column:1 / -1; width:100%; min-width:0; margin-top:20px; }
-.biography-chapter { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.1fr); gap:7%; padding:48px 0; border-top:1px solid #9c7c5945; }
-.biography-chapter>header { display:flex; align-items:baseline; gap:18px; }
-.biography-number { font:11px var(--sans); color:#876849; flex-shrink:0; }
-.biography-chapter h3 { font:clamp(30px,3vw,46px)/1.15 var(--serif); margin:0; color:#4c2c3b; letter-spacing:-.025em; overflow-wrap:anywhere; }
+/* One continuous artist dossier, shared by the homepage and the print edition. */
+.story.section { display:block; padding:80px max(6%, calc((100% - 1280px)/2)); background:#fff; color:#29262a; }
+.story .story-heading { display:flex; justify-content:space-between; align-items:center; gap:32px; padding-bottom:30px; border-bottom:1px solid #dcd2ca; }
+.story-heading .kicker { font-size:14px; letter-spacing:.08em; }
+.story-heading .kicker span { margin:0 10px; color:#a38a72; }
+.story .story-heading h2 { margin:12px 0 8px; font:clamp(36px,4vw,60px)/1.12 var(--serif); letter-spacing:-.035em; color:#4c2c3b; }
+.story .story-profession { margin:0; font-size:16px; color:#745326; }
+.story-actions { display:flex; flex-direction:column; align-items:center; gap:10px; flex-shrink:0; }
+.cv-button { display:inline-flex; justify-content:center; align-items:center; gap:10px; padding:14px 20px; min-height:48px; border:1px solid #4c2c3b; background:#4c2c3b; color:#fff; font:500 15px/1.5 var(--sans); text-align:center; text-decoration:none; cursor:pointer; transition:background .2s; }
+.cv-button:hover { background:#674251; }
+.cv-format { font-size:12px; color:#635951; text-align:center; }
+.cv-button:focus-visible,.biography-index a:focus-visible,.cv-return:focus-visible { outline:2px solid #745326; outline-offset:5px; }
+.story-profile { display:grid; grid-template-columns:240px minmax(0,1fr); gap:40px; align-items:center; padding:34px 0; }
+.story .story-visual { position:static; width:100%; max-width:none; margin:0; align-self:start; }
+.story .story-visual img { display:block; width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
+.story .story-caption { display:block; margin-top:10px; font-size:12px; color:#635951; }
+.story .story-copy { max-width:860px; min-width:0; }
+.story .story-roots { margin:0 0 18px; font:30px/1.2 var(--serif); color:#4c2c3b; min-width:0; overflow-wrap:anywhere; }
+.story-roots em { color:#745326; font-style:normal; }
+.story .story-copy>p { font-size:16px; line-height:1.75; margin:0 0 14px; }
+.story-philosophy { margin:20px 0 14px; border-left:2px solid #b39675; padding-left:20px; }
+.story-philosophy .kicker { display:block; margin-bottom:5px; font-size:14px; text-transform:none; letter-spacing:0; }
+.story .story-philosophy p { font:21px/1.5 var(--serif); color:#563442; margin:0; }
+.story .story-voice-link { margin-top:4px; font-size:14px; }
+.biography-index { display:flex; flex-wrap:wrap; gap:8px 24px; padding:18px 0; margin-bottom:28px; border-top:1px solid #dcd2ca; border-bottom:1px solid #dcd2ca; }
+.biography-index a { font-size:14px; line-height:1.7; color:#64482c; text-underline-offset:5px; text-decoration-color:transparent; }
+.biography-index a:hover { text-decoration:underline; }
+.biography-tabs-ready .biography-index { gap:8px; border-bottom:0; margin-bottom:0; padding-bottom:16px; }
+.biography-tabs-ready .biography-index a { padding:10px 15px; border:1px solid #dcd2ca; font-size:14px; }
+.biography-tabs-ready .biography-index a[aria-selected="true"] { background:#4c2c3b; color:#fff; border-color:#4c2c3b; }
+.biography-tabs-ready .story-biography { display:block; }
+.story-biography>[hidden] { display:none!important; }
+.biography-tabs-ready [data-biography="training"] .biography-content { display:grid; grid-template-columns:1fr 1.2fr; gap:0 40px; align-items:start; }
+.biography-tabs-ready [data-biography="training"] .biography-teachers { grid-column:2; grid-row:1/3; margin:0; }
+.biography-tabs-ready .biography-roles { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.story-biography { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; width:100%; min-width:0; }
+.biography-chapter { min-width:0; padding:28px; border:1px solid #e1d8d1; scroll-margin-top:130px; }
+.biography-wide { grid-column:1/-1; }
+.biography-chapter>header { padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid #e1d8d1; }
+.biography-chapter h3 { font:30px/1.15 var(--serif); margin:0; color:#4c2c3b; letter-spacing:-.02em; overflow-wrap:anywhere; }
 .biography-content { min-width:0; }
-.story .biography-content p { font-size:16px; line-height:1.9; margin-bottom:22px; }
+.story .biography-content p { font-size:16px; line-height:1.7; margin:0 0 16px; }
 .biography-content p:last-child { margin-bottom:0; }
-.biography-content h4 { font:11px/1.5 var(--sans); text-transform:uppercase; letter-spacing:.12em; color:#745637; margin:32px 0 18px; }
-.biography-content h4:first-child { margin-top:0; }
-.biography-teachers { margin:24px 0; }
-.biography-teachers>div { display:grid; grid-template-columns:120px 1fr; gap:20px; border-top:1px solid #9c7c5928; padding:13px 0; }
-.biography-teachers dt { font-size:12px; color:#795f46; }
-.biography-teachers dd { margin:0; font-size:15px; }
-.biography-roles { display:grid; grid-template-columns:1fr 1fr; list-style:none; margin:24px 0; padding:0; gap:0 30px; }
-.biography-roles li { display:flex; flex-direction:column; padding:12px 0; border-top:1px solid #9c7c5928; }
-.biography-roles strong { font-size:15px; font-weight:500; }
-.biography-roles span { color:#726861; font-size:13px; }
-.biography-countries { display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0; margin:24px 0 32px; }
-.biography-countries li { border:1px solid #9c7c5940; padding:4px 11px; font-size:12px; color:#5c4c43; }
-.biography-list-pair { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:35px; }
+.biography-content h4 { font:600 14px/1.5 var(--sans); color:#745326; margin:0 0 12px; }
+.biography-teachers { margin:18px 0; }
+.biography-teachers>div { display:grid; grid-template-columns:115px minmax(0,1fr); gap:16px; border-top:1px solid #e9e1db; padding:10px 0; }
+.biography-teachers dt { font-size:14px; color:#745326; }
+.biography-teachers dd { margin:0; font-size:16px; line-height:1.6; }
+.biography-roles { display:grid; grid-template-columns:1fr 1fr; list-style:none; margin:18px 0; padding:0; gap:0 24px; }
+.biography-roles li { display:flex; flex-direction:column; padding:9px 0; border-top:1px solid #e9e1db; break-inside:avoid; }
+.biography-roles strong { font-size:16px; font-weight:500; }
+.biography-roles span { color:#635951; font-size:14px; }
+.biography-selection { margin:18px 0; }
+.biography-countries { display:flex; flex-wrap:wrap; gap:4px 0; list-style:none; padding:0; margin:16px 0 22px; }
+.biography-countries li { font-size:14px; line-height:1.7; color:#63513f; }
+.biography-countries li:not(:last-child)::after { content:'·'; margin:0 9px; color:#a38a72; }
+.biography-list-pair { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:32px; }
+.biography-list-trio { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .biography-list-pair>div { min-width:0; }
 .biography-names { list-style:none; padding:0; margin:0; }
-.biography-names li { position:relative; padding:7px 0 7px 13px; font-size:14px; line-height:1.7; overflow-wrap:anywhere; }
-.biography-names li:before { content:''; position:absolute; width:3px; height:3px; left:0; top:18px; background:#a38766; }
-.story .biography-content .biography-note { font-size:11px; color:#78664e; margin-top:18px; }
-.biography-content .text-link { margin-top:25px; }
+.biography-names li { padding:5px 0; font-size:16px; line-height:1.6; overflow-wrap:anywhere; break-inside:avoid; }
+.story .biography-content .biography-note { font-size:12px; color:#635951; margin:12px 0 0; }
+.biography-content .text-link { margin-top:18px; }
 .biography-broadcasts { margin-bottom:12px; }
 .biography-awards { list-style:none; margin:0; padding:0; }
-.biography-awards li { display:grid; grid-template-columns:100px minmax(0,1fr); gap:24px; padding:24px 0; border-bottom:1px solid #9c7c5928; }
+.biography-awards li { display:grid; grid-template-columns:80px minmax(0,1fr); gap:18px; padding:16px 0; border-bottom:1px solid #e9e1db; }
 .biography-awards li:first-child { padding-top:0; }
-.biography-award-date { font:22px/1.5 var(--serif); color:#76583b; }
+.biography-awards li:last-child { padding-bottom:0; border-bottom:0; }
+.biography-award-date { font:21px/1.4 var(--serif); color:#745326; }
 .story .biography-awards p { margin:0; }
-.story .biography-awards .biography-award-years { margin-top:12px; color:#76583b; font-size:12px; letter-spacing:.02em; }
+.story .biography-awards .biography-award-years { margin-top:8px; color:#745326; font-size:14px; }
 @media(max-width:1000px) {
- .biography-chapter { grid-template-columns:minmax(0,1fr) minmax(0,2.5fr); gap:5%; }
- .biography-list-pair { gap:25px; }
+ .story.section { padding:64px 5%; }
+ .story-profile { grid-template-columns:200px minmax(0,1fr); gap:28px; }
+ .biography-chapter { padding:22px; }
+ .biography-list-trio { grid-template-columns:1fr 1fr; }
+ .biography-list-trio>div:last-child { grid-column:1/-1; }
+ .biography-artists { columns:2; column-gap:32px; }
+ .biography-teachers>div { grid-template-columns:1fr; gap:4px; }
+ .biography-awards li { grid-template-columns:1fr; gap:6px; }
 }
-@media(max-width:780px) {
- .story .story-visual { position:relative; top:auto; }
- .story-biography { margin-top:12px; }
- .biography-chapter { display:block; padding:32px 0; }
- .biography-chapter>header { margin-bottom:26px; gap:15px; }
- .biography-chapter h3 { font-size:34px; }
- .story .biography-content p { font-size:15px; line-height:1.9; }
- .biography-list-pair { grid-template-columns:1fr; gap:32px; }
- .biography-teachers>div { grid-template-columns:90px minmax(0,1fr); gap:16px; }
- .biography-teachers dd { font-size:14px; }
- .biography-roles { gap:0 20px; }
- .biography-roles strong { font-size:14px; }
- .biography-roles span { font-size:12px; }
- .biography-awards li { grid-template-columns:75px minmax(0,1fr); gap:18px; }
- .biography-award-date { font-size:20px; }
- .story-philosophy { padding-left:20px; }
- .biography-countries { gap:6px; }
- .biography-countries li { font-size:11px; padding:4px 9px; }
+@media(max-width:700px) {
+ .story.section { padding:52px 24px; }
+ .story .story-heading { display:block; padding-bottom:24px; }
+ .story .story-heading h2 { font-size:40px; }
+ .story-heading .kicker { font-size:12px; }
+ .story-actions { align-items:flex-start; margin-top:22px; }
+ .story-profile { grid-template-columns:140px minmax(0,1fr); gap:24px; padding:26px 0; align-items:start; }
+ .story .story-copy { display:contents; }
+ .story .story-copy.reveal { opacity:1; transform:none; }
+ .story .story-roots { align-self:center; font-size:30px; }
+ .story .story-copy>p,.story-philosophy,.story-voice-link { grid-column:1/-1; }
+ .story .story-copy>p { margin:0; }
+ .story-philosophy { margin:0; }
+ .story .story-visual { grid-row:1; }
+ .story .story-caption { display:none; }
+ .biography-index { gap:10px 20px; margin-bottom:20px; }
+ .biography-tabs-ready .biography-index { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:thin; padding-block:12px; margin-bottom:4px; }
+ .biography-tabs-ready .biography-index a { flex:0 0 auto; white-space:nowrap; }
+ .story-biography { grid-template-columns:1fr; gap:18px; }
+ .biography-chapter { padding:22px; scroll-margin-top:110px; }
+ .biography-tabs-ready [data-biography="training"] .biography-content { display:block; }
+ .biography-tabs-ready [data-biography="training"] .biography-teachers { margin:18px 0; }
+ .biography-tabs-ready .biography-roles { grid-template-columns:1fr 1fr; }
+ .biography-tabs-ready .biography-selection p { columns:auto; }
+ .biography-chapter h3 { font-size:28px; }
+ .biography-list-pair,.biography-list-trio { grid-template-columns:1fr; gap:24px; }
+ .biography-artists { columns:auto; }
+ .biography-teachers>div { grid-template-columns:90px minmax(0,1fr); gap:12px; }
+ .biography-awards li { grid-template-columns:75px minmax(0,1fr); gap:14px; }
+}
+@media(max-width:380px) {
+ .story.section { padding-inline:18px; }
+ .story .story-heading h2 { font-size:35px; }
+ .story-profile { grid-template-columns:110px minmax(0,1fr); gap:20px; }
+ .story .story-roots { font-size:26px; }
+ .biography-chapter { padding:18px; }
+ .biography-teachers>div,.biography-awards li { grid-template-columns:1fr; gap:5px; }
+ .biography-roles,.biography-tabs-ready .biography-roles { grid-template-columns:1fr; }
+}
+
+/* The print route has no player, navigation, cookies or assistant. */
+.cv-document { margin:0; background:#eeecea; color:#29262a; font-family:var(--sans); }
+.cv-document * { box-sizing:border-box; }
+.cv-document a { color:inherit; }
+.cv-document .cv-return { display:block; max-width:1280px; margin:24px auto; padding:0 28px; font-size:14px; text-underline-offset:4px; }
+.cv-document .story.section { max-width:1280px; padding:40px; margin:0 auto; }
+.cv-document .kicker { text-transform:uppercase; color:#745326; }
+.cv-document .text-link { display:inline-block; font-size:14px; text-underline-offset:4px; color:#745326; }
+.cv-source { max-width:1280px; margin:20px auto 30px; padding:0 28px; font-size:12px; overflow-wrap:anywhere; }
+@media(max-width:700px) { .cv-document .story.section { padding:24px; } }
+@page { size:A4; margin:14mm; }
+@media print {
+ .cv-document { background:#fff; font-size:10pt; }
+ .cv-document .cv-return,.story-actions,.biography-index,.story-voice-link,.biography-content .text-link { display:none!important; }
+ .cv-document .story.section { display:block; max-width:none; padding:0; margin:0; }
+ .story .story-heading { display:block; padding-bottom:5mm; }
+ .story .story-heading h2 { font-size:30pt; margin:3mm 0 1mm; }
+ .story-heading .kicker,.story .story-profession { font-size:10pt; }
+ .story-profile { grid-template-columns:32mm minmax(0,1fr); gap:6mm; padding:6mm 0; break-inside:avoid; }
+ .story .story-copy { display:block; }
+ .story .story-roots { font-size:16pt; margin:0 0 3mm; }
+ .story .story-caption { display:none; }
+ .story .story-copy>p { font-size:10pt; line-height:1.5; margin:0 0 2mm; }
+ .story-philosophy { margin:3mm 0 0; padding-left:4mm; }
+ .story-philosophy .kicker { font-size:9pt; margin-bottom:1mm; }
+ .story .story-philosophy p { font-size:11pt; line-height:1.4; }
+ .story-biography { display:block; }
+ .biography-chapter { padding:4mm 0; border:0; border-top:1px solid #b9ada5; }
+ #about-stage,#about-international { break-before:page; }
+ .biography-chapter>header { border:0; padding:0; margin:0 0 3mm; break-after:avoid; }
+ .biography-chapter h3 { font-size:18pt; }
+ .story .biography-content p,.biography-teachers dd,.biography-names li,.biography-roles strong { font-size:10pt; line-height:1.5; }
+ .story .biography-content p { margin:0 0 3mm; }
+ .biography-teachers { margin:3mm 0; }
+ .biography-teachers>div { grid-template-columns:28mm minmax(0,1fr); gap:4mm; padding:2mm 0; break-inside:avoid; }
+ .biography-teachers dt,.biography-content h4 { font-size:9pt; }
+ .biography-roles { grid-template-columns:1fr 1fr; margin:3mm 0; }
+ .biography-roles li { padding:2mm 0; }
+ .biography-roles span,.biography-countries li { font-size:9pt; }
+ .biography-list-pair,.biography-list-trio { display:block; }
+ .biography-list-pair>div { margin-top:2mm; break-inside:avoid; }
+ .biography-content h4 { margin:0 0 1mm; break-after:avoid; }
+ .biography-names { columns:2; column-gap:8mm; }
+ .biography-list-trio { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5mm; }
+ .biography-list-trio>div:last-child { grid-column:auto; }
+ .biography-list-trio .biography-names { columns:auto; }
+ .biography-names li { padding:.4mm 0; line-height:1.4; }
+ .biography-countries { margin:3mm 0; break-inside:avoid; }
+ .biography-awards li { grid-template-columns:22mm minmax(0,1fr); gap:4mm; padding:3mm 0; break-inside:avoid; }
+ .biography-award-date { font-size:13pt; }
+ .story .biography-awards .biography-award-years { font-size:9pt; margin-top:2mm; }
+ .story .biography-content .biography-note { font-size:9pt; margin:2mm 0; }
+ .cv-source { margin:5mm 0 0; padding:0; font-size:8pt; }
+ a { text-decoration:none; }
 }

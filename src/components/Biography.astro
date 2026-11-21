@@ -2,63 +2,64 @@
 import biography from '../data/biography.json';
 import { localizer } from '../data/locales';
 import type { Locale } from '../data/translations';
-interface Props {lang:Locale}
-const {lang}=Astro.props;
+interface Props {lang:Locale; printable?:boolean}
+const {lang,printable=false}=Astro.props;
 const l=localizer(lang);
 const regions=new Intl.DisplayNames([lang],{type:'region'});
 const country=(code:string)=>code==='England'?l('Inglaterra','England'):regions.of(code)??code;
 ---
 <div class="story-biography" aria-label={l('Biografía completa', 'Full biography')}>
- <article class="biography-chapter" data-biography="training">
-  <header><span class="biography-number" aria-hidden="true">01</span><h3>{l('Formación y vocación', 'Training and vocation')}</h3></header>
+ <article class="biography-chapter" data-biography="training" id="about-training">
+  <header><h3>{l('Formación y vocación', 'Training and vocation')}</h3></header>
   <div class="biography-content">
    <p>{l('Se graduó en la Universidad de Música y Artes Escénicas de Viena, donde obtuvo un Bachelor of Arts en Pedagogía del Canto y del Piano.', 'A graduate of the University of Music and Performing Arts Vienna, she holds a Bachelor of Arts in Voice and Piano Pedagogy.')}</p>
    <dl class="biography-teachers"><div><dt>{l('Canto', 'Voice')}</dt><dd>{biography.voiceTeachers.join(' · ')}</dd></div><div><dt>{l('Piano')}</dt><dd>{biography.pianoTeacher}</dd></div><div><dt>{l('Clases magistrales', 'Masterclasses')}</dt><dd>{biography.masterclasses.join(' · ')}</dd></div></dl>
    <p>{l('Desde 2018 trabaja con la maestra rumana Irina Gavrilovici.', 'Since 2018, she has worked with Romanian maestra Irina Gavrilovici.')}</p>
   </div>
  </article>
- <article class="biography-chapter" data-biography="stage">
-  <header><span class="biography-number" aria-hidden="true">02</span><h3>{l('Ópera y teatro', 'Opera and theatre')}</h3></header>
-  <div class="biography-content">
-   <p>{l('Sus papeles operísticos en Europa y en la República Dominicana incluyen:', 'Her operatic appearances in Europe and the Dominican Republic include the following roles:')}</p>
-   <ul class="biography-roles">{biography.roles.map(entry=><li><strong>{entry.role}</strong><span>{entry.work}</span></li>)}</ul>
-   <p>{l('Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.', 'Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.')}</p>
-   <a class="text-link" href="#repertorio">{l('Explorar el repertorio completo', 'Explore the complete repertoire')} ↗</a>
-  </div>
- </article>
- <article class="biography-chapter" data-biography="international">
-  <header><span class="biography-number" aria-hidden="true">03</span><h3>{l('Escenarios del mundo', 'Stages around the world')}</h3></header>
-  <div class="biography-content">
-   <p>{l('Su trayectoria la ha llevado a actuar en:', 'Her performance itinerary spans:')}</p>
-   <ul class="biography-countries">{biography.countries.map(code=><li>{country(code)}</li>)}</ul>
-   <div class="biography-list-pair"><div><h4>{l('Festivales', 'Festivals')}</h4><ul class="biography-names">{biography.festivals.map(name=><li>{name}</li>)}</ul><p class="biography-note">{l('Italia · Austria · Türkiye · Eslovenia', 'Italy · Austria · Türkiye · Slovenia')}</p></div><div><h4>{l('Salas y teatros', 'Concert halls and theatres')}</h4><ul class="biography-names">{biography.venues.map(name=><li>{name}</li>)}</ul></div></div>
-  </div>
- </article>
- <article class="biography-chapter" data-biography="collaborations">
-  <header><span class="biography-number" aria-hidden="true">04</span><h3>{l('Encuentros artísticos', 'Artistic collaborations')}</h3></header>
-  <div class="biography-content">
-   <p>{l('Ha actuado con las siguientes orquestas, directores y artistas, entre otros:', 'Her orchestral, conducting and artistic collaborations include:')}</p>
-   <div class="biography-list-pair"><div><h4>{l('Orquestas', 'Orchestras')}</h4><ul class="biography-names">{biography.orchestras.map(name=><li>{name}</li>)}</ul></div><div><h4>{l('Directores', 'Conductors')}</h4><ul class="biography-names">{biography.conductors.map(name=><li>{name}</li>)}</ul><h4>{l('Artistas', 'Artists')}</h4><ul class="biography-names biography-artists">{biography.collaborators.map(name=><li>{name}</li>)}</ul></div></div>
-  </div>
- </article>
- <article class="biography-chapter" data-biography="spirituosi">
-  <header><span class="biography-number" aria-hidden="true">05</span><h3>{l('Spirituosi y difusión', 'Spirituosi and broadcasts')}</h3></header>
-  <div class="biography-content">
-   <p>{l('Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:', 'With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:')}</p>
-   <ul class="biography-countries">{biography.spirituosiTourCountries.map(code=><li>{country(code)}</li>)}</ul>
-   <p>{l('Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.', 'Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.')}</p>
-   <p>{l('Algunos de sus conciertos se han transmitido en directo a través de:', 'Live broadcasts of some of her concerts have been carried by:')}</p>
-   <ul class="biography-names biography-broadcasts">{biography.broadcasts.map(name=><li>{name}</li>)}</ul>
-   <a class="text-link" href="#spirituosi">{l('Descubrir Ensemble Spirituosi', 'Discover Ensemble Spirituosi')} ↗</a>
-  </div>
- </article>
- <article class="biography-chapter" data-biography="awards">
-  <header><span class="biography-number" aria-hidden="true">06</span><h3>{l('Premios y distinciones', 'Awards and distinctions')}</h3></header>
+ <article class="biography-chapter" data-biography="awards" id="about-awards">
+  <header><h3>{l('Premios y distinciones', 'Awards and distinctions')}</h3></header>
   <div class="biography-content"><ul class="biography-awards">
    <li><span class="biography-award-date">2022</span><p>{l('Primer premio en el Ebe Stignani International Opera Competition y segundo premio en el Montecatini Opera Festival Singing Competition.', 'She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.')}</p></li>
    <li><span class="biography-award-date">2014—2026</span><div><p>{l('Premios Soberano: cantante lírica del año en la República Dominicana.', 'Soberano Awards: Classical Singer of the Year in the Dominican Republic.')}</p><p class="biography-award-years">{biography.soberanoYears.join(' · ')}</p></div></li>
    <li><span class="biography-award-date">2013</span><p>{l('Finalista del 14.º Osaka International Music Competition.', 'Finalist at the 14th Osaka International Music Competition.')}</p></li>
    <li><span class="biography-award-date">2011</span><p>{l('Premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.', 'At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.')}</p></li>
   </ul></div>
+ </article>
+ <article class="biography-chapter" data-biography="stage" id="about-stage">
+  <header><h3>{l('Ópera y teatro', 'Opera and theatre')}</h3></header>
+  <div class="biography-content">
+   <p>{l('Sus papeles operísticos en Europa y en la República Dominicana incluyen:', 'Her operatic appearances in Europe and the Dominican Republic include the following roles:')}</p>
+   <ul class="biography-roles">{biography.roles.map(entry=><li><strong>{entry.role}</strong><span>{entry.work}</span></li>)}</ul>
+   <div class="biography-selection"><h4>{l("Selección de repertorio", "Selected repertoire")}</h4><p>{l("Mozart")} · {l("Donna Anna · Pamina · Contessa")}<br/>{l("Verdi")} · {l("Violetta · Messa da Requiem")}<br/>{l("Puccini")} · {l("Musetta · La Bohème")}</p></div>
+   <p>{l('Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.', 'Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.')}</p>
+   <a class="text-link" href={printable?`/${lang}/#repertorio`:'#repertorio'}>{l('Explorar el repertorio completo', 'Explore the complete repertoire')}</a>
+  </div>
+ </article>
+ <article class="biography-chapter" data-biography="spirituosi" id="about-spirituosi">
+  <header><h3>{l('Spirituosi y difusión', 'Spirituosi and broadcasts')}</h3></header>
+  <div class="biography-content">
+   <p>{l('Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:', 'With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:')}</p>
+   <ul class="biography-countries">{biography.spirituosiTourCountries.map(code=><li>{country(code)}</li>)}</ul>
+   <p>{l('Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.', 'Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.')}</p>
+   <p>{l('Algunos de sus conciertos se han transmitido en directo a través de:', 'Live broadcasts of some of her concerts have been carried by:')}</p>
+   <ul class="biography-names biography-broadcasts">{biography.broadcasts.map(name=><li>{name}</li>)}</ul>
+   <a class="text-link" href={printable?`/${lang}/#spirituosi`:'#spirituosi'}>{l('Descubrir Ensemble Spirituosi', 'Discover Ensemble Spirituosi')}</a>
+  </div>
+ </article>
+ <article class="biography-chapter biography-wide" data-biography="international" id="about-international">
+  <header><h3>{l('Escenarios del mundo', 'Stages around the world')}</h3></header>
+  <div class="biography-content">
+   <p>{l('Su trayectoria la ha llevado a actuar en:', 'Her performance itinerary spans:')}</p>
+   <ul class="biography-countries">{biography.countries.map(code=><li>{country(code)}</li>)}</ul>
+   <div class="biography-list-pair"><div><h4>{l('Festivales', 'Festivals')}</h4><ul class="biography-names">{biography.festivals.map(name=><li>{name}</li>)}</ul><p class="biography-note">{l('Italia · Austria · Türkiye · Eslovenia', 'Italy · Austria · Türkiye · Slovenia')}</p></div><div><h4>{l('Salas y teatros', 'Concert halls and theatres')}</h4><ul class="biography-names">{biography.venues.map(name=><li>{name}</li>)}</ul></div></div>
+  </div>
+ </article>
+ <article class="biography-chapter biography-wide" data-biography="collaborations" id="about-collaborations">
+  <header><h3>{l('Encuentros artísticos', 'Artistic collaborations')}</h3></header>
+  <div class="biography-content">
+   <p>{l('Ha actuado con las siguientes orquestas, directores y artistas, entre otros:', 'Her orchestral, conducting and artistic collaborations include:')}</p>
+   <div class="biography-list-pair biography-list-trio"><div><h4>{l('Orquestas', 'Orchestras')}</h4><ul class="biography-names">{biography.orchestras.map(name=><li>{name}</li>)}</ul></div><div><h4>{l('Directores', 'Conductors')}</h4><ul class="biography-names">{biography.conductors.map(name=><li>{name}</li>)}</ul></div><div><h4>{l('Artistas', 'Artists')}</h4><ul class="biography-names biography-artists">{biography.collaborators.map(name=><li>{name}</li>)}</ul></div></div>
+  </div>
  </article>
 </div>

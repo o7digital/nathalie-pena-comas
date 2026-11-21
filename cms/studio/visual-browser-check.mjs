@@ -50,7 +50,7 @@ try{
  });
  await page.goto(origin+'/#about');
  const frame=page.frameLocator('.visual-editor iframe'),input=frame.getByRole('textbox',{name:field.label,exact:true}).filter({hasText:field.source});
- await input.waitFor();assert.equal(await page.locator('.visual-editor iframe').evaluate(frame=>frame.contentWindow.getComputedStyle(frame.contentDocument.querySelector('#about')).display),'grid');assert.equal(await page.locator('.studio-text-fields').getAttribute('open'),null);
+ await input.waitFor();assert.equal(await page.locator('.visual-editor iframe').evaluate(frame=>frame.contentWindow.getComputedStyle(frame.contentDocument.querySelector('#about')).display),'block');assert.equal(await page.locator('.studio-text-fields').getAttribute('open'),null);
  const caption=frame.locator('.story-caption[data-studio-editable]'),captionOriginal=await caption.textContent();
  assert.equal(await caption.evaluate(node=>getComputedStyle(node).textTransform),'uppercase');await caption.fill('Mi voz · Mi historia');assert.equal(await page.locator('[data-visual-text]').textContent(),'Mi voz · Mi historia');await caption.fill(captionOriginal);assert.equal(await page.locator('[data-visual-save]').isDisabled(),true);
  await input.fill('Una voz que conecta culturas.');

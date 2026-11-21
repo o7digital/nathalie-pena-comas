@@ -44,7 +44,12 @@ for(const lang of ['es','en'] as const){
  test(`${lang} discovery links and every video button have a real destination`,async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});await page.goto(`/${lang}/`);
   const hrefs=await page.locator('main a[href^="#"]').evaluateAll(links=>[...new Set(links.map(el=>el.getAttribute('href')!))]);
-  for(const href of hrefs){await page.locator(`main a[href="${href}"]`).first().click();await expect(page).toHaveURL(new RegExp(`${href}$`));await expect(page.locator(href)).toHaveCount(1);}
+  for(const href of hrefs){
+   const link=page.locator(`main a[href="${href}"]`).first();
+   const panel=link.locator('xpath=ancestor::*[@role="tabpanel"]');
+   if(await panel.count())await page.locator(`[role="tab"][aria-controls="${await panel.getAttribute('id')}"]`).click();
+   await link.click();await expect(page).toHaveURL(new RegExp(`${href}$`));await expect(page.locator(href)).toHaveCount(1);
+  }
   await page.route('https://www.youtube-nocookie.com/**',route=>route.fulfill({body:'<html>Video</html>',contentType:'text/html'}));
   for(const button of await page.locator('[data-video]').all()){
    const id=await button.getAttribute('data-video');await button.click();await expect(page.locator('#video-modal')).toBeVisible();

@@ -264,6 +264,48 @@
       "collection": null,
       "fields": [
         {
+          "key": "copy:The artist",
+          "source": "La artista",
+          "english": "The artist",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Full biography",
+          "source": "Biografía completa",
+          "english": "Full biography",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas",
+          "source": "Nathalie Peña-Comas",
+          "english": "Nathalie Peña-Comas",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Soprano & actress",
+          "source": "Soprano y actriz",
+          "english": "Soprano & actress",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Save CV as PDF",
+          "source": "Guardar CV en PDF",
+          "english": "Save CV as PDF",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Full biography · Print edition",
+          "source": "Biografía completa · Versión imprimible",
+          "english": "Full biography · Print edition",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Nathalie Peña-Comas — official portrait",
           "source": "Nathalie Peña-Comas — retrato oficial",
           "english": "Nathalie Peña-Comas — official portrait",
@@ -275,13 +317,6 @@
           "source": "Nathalie Peña-Comas / Soprano",
           "english": "Nathalie Peña-Comas / Soprano",
           "label": "Texto",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:The artist",
-          "source": "La artista",
-          "english": "The artist",
-          "label": "Antetítulo",
           "auxiliary": false
         },
         {
@@ -327,65 +362,51 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Selected repertoire",
-          "source": "Selección de repertorio",
-          "english": "Selected repertoire",
-          "label": "Antetítulo",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Mozart",
-          "source": "Mozart",
-          "english": "Mozart",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Donna Anna · Pamina · Contessa",
-          "source": "Donna Anna · Pamina · Contessa",
-          "english": "Donna Anna · Pamina · Contessa",
-          "label": "Texto",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Verdi",
-          "source": "Verdi",
-          "english": "Verdi",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Violetta · Messa da Requiem",
-          "source": "Violetta · Messa da Requiem",
-          "english": "Violetta · Messa da Requiem",
-          "label": "Texto",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Puccini",
-          "source": "Puccini",
-          "english": "Puccini",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Musetta · La Bohème",
-          "source": "Musetta · La Bohème",
-          "english": "Musetta · La Bohème",
-          "label": "Texto",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Explore the complete repertoire",
-          "source": "Explorar el repertorio completo",
-          "english": "Explore the complete repertoire",
+          "key": "copy:Hear her voice",
+          "source": "Escuchar su voz",
+          "english": "Hear her voice",
           "label": "Texto del enlace",
           "auxiliary": false
         },
         {
-          "key": "copy:Hear her voice",
-          "source": "Escuchar su voz",
-          "english": "Hear her voice",
+          "key": "copy:Training and vocation",
+          "source": "Formación y vocación",
+          "english": "Training and vocation",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Awards and distinctions",
+          "source": "Premios y distinciones",
+          "english": "Awards and distinctions",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Opera and theatre",
+          "source": "Ópera y teatro",
+          "english": "Opera and theatre",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Spirituosi and broadcasts",
+          "source": "Spirituosi y difusión",
+          "english": "Spirituosi and broadcasts",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Stages around the world",
+          "source": "Escenarios del mundo",
+          "english": "Stages around the world",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Artistic collaborations",
+          "source": "Encuentros artísticos",
+          "english": "Artistic collaborations",
           "label": "Texto del enlace",
           "auxiliary": false
         },
@@ -395,20 +416,6 @@
           "english": "England",
           "label": "Texto",
           "auxiliary": false
-        },
-        {
-          "key": "copy:Full biography",
-          "source": "Biografía completa",
-          "english": "Full biography",
-          "label": "Texto",
-          "auxiliary": true
-        },
-        {
-          "key": "copy:Training and vocation",
-          "source": "Formación y vocación",
-          "english": "Training and vocation",
-          "label": "Título",
-          "auxiliary": true
         },
         {
           "key": "copy:A graduate of the University of Music and Performing Arts Vienna, she holds a Bachelor of Arts in Voice and Piano Pedagogy.",
@@ -446,11 +453,32 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Opera and theatre",
-          "source": "Ópera y teatro",
-          "english": "Opera and theatre",
-          "label": "Título",
-          "auxiliary": true
+          "key": "copy:She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "source": "Primer premio en el Ebe Stignani International Opera Competition y segundo premio en el Montecatini Opera Festival Singing Competition.",
+          "english": "She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "label": "Párrafo 5",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
+          "source": "Premios Soberano: cantante lírica del año en la República Dominicana.",
+          "english": "Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Finalist at the 14th Osaka International Music Competition.",
+          "source": "Finalista del 14.º Osaka International Music Competition.",
+          "english": "Finalist at the 14th Osaka International Music Competition.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
+          "source": "Premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.",
+          "english": "At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
+          "label": "Párrafo 6",
+          "auxiliary": false
         },
         {
           "key": "copy:Her operatic appearances in Europe and the Dominican Republic include the following roles:",
@@ -460,18 +488,95 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
-          "source": "Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.",
-          "english": "Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
-          "label": "Párrafo 5",
+          "key": "copy:Selected repertoire",
+          "source": "Selección de repertorio",
+          "english": "Selected repertoire",
+          "label": "Título",
           "auxiliary": false
         },
         {
-          "key": "copy:Stages around the world",
-          "source": "Escenarios del mundo",
-          "english": "Stages around the world",
-          "label": "Título",
-          "auxiliary": true
+          "key": "copy:Mozart",
+          "source": "Mozart",
+          "english": "Mozart",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Donna Anna · Pamina · Contessa",
+          "source": "Donna Anna · Pamina · Contessa",
+          "english": "Donna Anna · Pamina · Contessa",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Verdi",
+          "source": "Verdi",
+          "english": "Verdi",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Violetta · Messa da Requiem",
+          "source": "Violetta · Messa da Requiem",
+          "english": "Violetta · Messa da Requiem",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Puccini",
+          "source": "Puccini",
+          "english": "Puccini",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Musetta · La Bohème",
+          "source": "Musetta · La Bohème",
+          "english": "Musetta · La Bohème",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
+          "source": "Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.",
+          "english": "Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
+          "label": "Párrafo 7",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Explore the complete repertoire",
+          "source": "Explorar el repertorio completo",
+          "english": "Explore the complete repertoire",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
+          "source": "Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:",
+          "english": "With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
+          "label": "Párrafo 8",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
+          "source": "Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.",
+          "english": "Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
+          "label": "Párrafo 9",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Live broadcasts of some of her concerts have been carried by:",
+          "source": "Algunos de sus conciertos se han transmitido en directo a través de:",
+          "english": "Live broadcasts of some of her concerts have been carried by:",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Discover Ensemble Spirituosi",
+          "source": "Descubrir Ensemble Spirituosi",
+          "english": "Discover Ensemble Spirituosi",
+          "label": "Texto del enlace",
+          "auxiliary": false
         },
         {
           "key": "copy:Her performance itinerary spans:",
@@ -502,13 +607,6 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Artistic collaborations",
-          "source": "Encuentros artísticos",
-          "english": "Artistic collaborations",
-          "label": "Título",
-          "auxiliary": true
-        },
-        {
           "key": "copy:Her orchestral, conducting and artistic collaborations include:",
           "source": "Ha actuado con las siguientes orquestas, directores y artistas, entre otros:",
           "english": "Her orchestral, conducting and artistic collaborations include:",
@@ -534,76 +632,6 @@
           "source": "Artistas",
           "english": "Artists",
           "label": "Título",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Spirituosi and broadcasts",
-          "source": "Spirituosi y difusión",
-          "english": "Spirituosi and broadcasts",
-          "label": "Título",
-          "auxiliary": true
-        },
-        {
-          "key": "copy:With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
-          "source": "Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:",
-          "english": "With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
-          "label": "Párrafo 6",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
-          "source": "Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.",
-          "english": "Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.",
-          "label": "Párrafo 7",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Live broadcasts of some of her concerts have been carried by:",
-          "source": "Algunos de sus conciertos se han transmitido en directo a través de:",
-          "english": "Live broadcasts of some of her concerts have been carried by:",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Discover Ensemble Spirituosi",
-          "source": "Descubrir Ensemble Spirituosi",
-          "english": "Discover Ensemble Spirituosi",
-          "label": "Texto del enlace",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Awards and distinctions",
-          "source": "Premios y distinciones",
-          "english": "Awards and distinctions",
-          "label": "Título",
-          "auxiliary": true
-        },
-        {
-          "key": "copy:She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
-          "source": "Primer premio en el Ebe Stignani International Opera Competition y segundo premio en el Montecatini Opera Festival Singing Competition.",
-          "english": "She won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
-          "label": "Párrafo 8",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
-          "source": "Premios Soberano: cantante lírica del año en la República Dominicana.",
-          "english": "Soberano Awards: Classical Singer of the Year in the Dominican Republic.",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Finalist at the 14th Osaka International Music Competition.",
-          "source": "Finalista del 14.º Osaka International Music Competition.",
-          "english": "Finalist at the 14th Osaka International Music Competition.",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
-          "source": "Premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.",
-          "english": "At the 14th Ada Sari International Competition of Vocal Art, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition.",
-          "label": "Párrafo 9",
           "auxiliary": false
         }
       ]

@@ -25,7 +25,7 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
   await expect(about.locator('[data-biography="international"] .biography-countries li')).toHaveCount(25);
   await expect(about.locator('[data-biography="spirituosi"] .biography-countries li')).toHaveCount(5);
   await expect(about.locator('[data-biography="collaborations"] .biography-names li')).toHaveCount(32);
-  const text=await about.innerText();
+  const text=await about.textContent()??'';
   for(const fact of facts) {
    // Cities in editorial prose are translated; their international proper names remain in the institution lists.
    if(fact==='Latin Grammy'&&['zh-TW','ja'].includes(lang)) continue;
@@ -41,8 +41,22 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
    await expect(about).toContainText('composition polonaise');
    expect(text).not.toContain('Her acting debut');
   }
-  // All details are available without opening panels or loading another page.
-  await expect(about.locator('details,[hidden]')).toHaveCount(0);
+  // One chapter is shown at a time; each tab exposes its complete content.
+  await expect(about.locator('[role="tab"]')).toHaveCount(6);
+  await expect(about.locator('[role="tabpanel"]:visible')).toHaveCount(1);
+  for(const link of await about.locator('.biography-index a').all()) {
+   const target=await link.getAttribute('href');
+   await link.click();
+   await expect(link).toHaveAttribute('aria-selected','true');
+   await expect(about.locator(target!)).toBeVisible();
+   await expect(about.locator('[role="tabpanel"]:visible')).toHaveCount(1);
+  }
+  if(width===1440) {
+   await about.locator('a[href="#about-training"]').click();
+   const dossier=await about.boundingBox();
+   expect(dossier!.height).toBeLessThan(1300);
+  }
+  await about.locator('a[href="#about-awards"]').click();
   await about.locator('[data-biography="awards"]').scrollIntoViewIfNeeded();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   const awards=await about.locator('[data-biography="awards"]').boundingBox();
@@ -58,5 +72,66 @@ test('the full biography remains readable without JavaScript',async({browser})=>
  await expect(page.locator('#about')).toContainText('Joyce DiDonato');
  await expect(page.locator('#about')).toContainText('Manfred Wagner-Artzt');
  await expect(page.locator('#about')).toContainText('Osaka');
+ await expect(page.locator('#about [data-biography]:visible')).toHaveCount(6);
+ await context.close();
+});
+
+test('CV tabs support keyboard navigation and direct chapter links',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/fr/#about-stage');
+ await expect(page.locator('#about-stage')).toBeVisible();
+ const stage=page.locator('[role="tab"][href="#about-stage"]');
+ await expect(stage).toHaveAttribute('aria-selected','true');
+ await stage.focus();await page.keyboard.press('ArrowRight');
+ await expect(page.locator('[role="tab"][href="#about-spirituosi"]')).toBeFocused();
+ await expect(page.locator('#about-spirituosi')).toBeVisible();
+ await page.keyboard.press('End');await expect(page.locator('#about-collaborations')).toBeVisible();
+ await page.keyboard.press('Home');await expect(page.locator('#about-training')).toBeVisible();
+});
+
+for(const lang of ['es','en','fr','de','it','sv','hu','hr','ru','zh-TW','ja']) {
+ test(`${lang} PDF edition retains the full CV and opens the print dialog`,async({page})=>{
+  await page.addInitScript(()=>{
+   (window as unknown as Window & {printCount:number}).printCount=0;
+   window.print=()=>{(window as unknown as Window & {printCount:number}).printCount++;};
+  });
+  await page.goto(`/${lang}/cv/?print`);
+  await expect(page.locator('html')).toHaveAttribute('lang',lang);
+  await expect.poll(()=>page.evaluate(()=>(window as unknown as Window & {printCount:number}).printCount)).toBe(1);
+  await expect(page.locator('[data-biography]')).toHaveCount(6);
+  for(const fact of ['Helena Lazarska','Violetta','Souvenir Latino','Andrea Bocelli','Osaka'])await expect(page.locator('main')).toContainText(fact);
+  await expect(page.locator('iframe,.olivia-widget,#site-header,dialog')).toHaveCount(0);
+  await page.locator('[data-print-cv]').click();
+  await expect.poll(()=>page.evaluate(()=>(window as unknown as Window & {printCount:number}).printCount)).toBe(2);
+  await page.emulateMedia({media:'print'});
+  await expect(page.locator('.story-actions')).toBeHidden();
+  await expect(page.locator('.biography-index')).toBeHidden();
+  await expect(page.locator('.cv-return')).toBeHidden();
+  for(const chapter of await page.locator('[data-biography]').all())await expect(chapter).toBeVisible();
+ });
+}
+
+test('French PDF button opens its localized print edition and the return link works',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/fr/#about');
+ const exportLink=page.locator('#about .cv-button');
+ await expect(exportLink).toHaveText('Enregistrer le CV en PDF');
+ await expect(exportLink).toHaveAttribute('href','/fr/cv/?print');
+ await page.context().addInitScript(()=>{window.print=()=>{};});
+ const [cv]=await Promise.all([page.waitForEvent('popup'),exportLink.click()]);
+ await cv.waitForLoadState();
+ await expect(cv).toHaveURL(/\/fr\/cv\/\?print$/);
+ await expect(cv.locator('[data-print-cv]')).toHaveText('Enregistrer le CV en PDF');
+ await cv.locator('.cv-return').click();
+ await expect(cv).toHaveURL(/\/fr\/#about$/);
+});
+
+test('the print edition works as a readable document without JavaScript',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,baseURL:process.env.TEST_BASE_URL||'http://localhost:4322'});
+ const page=await context.newPage();
+ await page.goto('/fr/cv/');
+ await expect(page.locator('[data-biography]')).toHaveCount(6);
+ await expect(page.locator('main')).toContainText('Joyce DiDonato');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await context.close();
 });

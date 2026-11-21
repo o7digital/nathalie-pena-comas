@@ -101,7 +101,7 @@ test('official NPC identity, complete navigation and editorial sections are reta
  expect(concertDates.every(date => /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= today)).toBe(true);
  expect(concertDates).toEqual([...concertDates].sort());
  await expect(page.locator('#spirituosi')).toContainText('Ensemble');
- await expect(page.locator('.repertoire')).toContainText('Violetta');
+ await expect(page.locator('.biography-selection')).toContainText('Violetta');
  await expect(page.locator('#gallery figure:not([data-gallery-clone])')).toHaveCount(3);
  await expect(page.locator('#newsletter a, #newsletter button, #newsletter form')).toHaveCount(0);
  await expect(page.locator('#newsletter')).toContainText('unavailable in this demonstration');

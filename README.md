@@ -85,6 +85,8 @@ Routes : `/es/`, `/en/`, `/de/` (Autriche et Allemagne), `/fr/`, `/it/`, `/sv/`,
 
 Les traductions de démonstration sont issues d’une base automatique avec révision éditoriale ; une validation par des locuteurs natifs est recommandée avant une communication officielle. Les titres des œuvres, albums, noms propres et crédits restent dans leur forme officielle. Les textes additionnels se trouvent dans `src/data/localized.json` et le registre des langues dans `src/data/locales.ts`. Le référencement de chaque marché nécessite un travail de localisation complémentaire.
 
+La section « À propos » présente le parcours dans un seul dossier avec six onglets accessibles au clavier et des liens directs vers les rubriques. Sans JavaScript, toutes les rubriques restent lisibles à la suite. Le bouton « Enregistrer le CV en PDF » ouvre `/{lang}/cv/?print`, une version complète qui lance l’impression du navigateur : choisir l’enregistrement en PDF. Le document A4 reprend les mêmes contenus et la même image du CMS que le site, sans navigation ni assistant. Les onze versions `/cv/` sont aussi consultables et imprimables directement, et sont exclues de l’indexation.
+
 ## Nath AI
 
 Nath AI est le nom affiché de l’assistante. Les clés éditoriales `olivia:*`, le stockage de session et le service Olivia restent compatibles ; les anciens textes du CMS sont adaptés au nom Nath AI lors du build.

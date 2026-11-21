@@ -1,0 +1,50 @@
+---
+import Story from '../../components/Story.astro';
+import { locales,localizer } from '../../data/locales';
+import type {Locale} from '../../data/translations';
+export function getStaticPaths() {
+ return locales.map(({code})=>({params:{lang:code},props:{lang:code}}));
+}
+interface Props {lang:Locale}
+const {lang}=Astro.props;
+const l=localizer(lang);
+const title=`Nathalie Peña-Comas — CV — ${lang.toUpperCase()}`;
+const source=new URL(`/${lang}/#about`,Astro.site??'https://nathalie-pena-comas.vercel.app');
+---
+<!doctype html>
+<html lang={lang}>
+ <head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="robots" content="noindex, follow"/><title>{title}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+ </head>
+ <body class="cv-document">
+  <a class="cv-return" href={`/${lang}/#about`}>{l('Volver al sitio', 'Back to the website')}</a>
+  <main><Story lang={lang} printable/></main>
+  <footer class="cv-source"><a href={source}>{source.hostname}</a></footer>
+  <script>
+   let printing=false;
+   async function printCv() {
+    if(printing)return;
+    printing=true;
+    try {
+     await document.fonts.ready;
+     await Promise.all(Array.from(document.images,image=>image.decode().catch(()=>{})));
+     window.print();
+    } finally { printing=false; }
+   }
+   document.querySelector('[data-print-cv]')?.addEventListener('click',printCv);
+   if(new URLSearchParams(location.search).has('print')) {
+    if(document.readyState==='complete')void printCv();
+    else window.addEventListener('load',()=>void printCv(),{once:true});
+   }
+  </script>
+ </body>
+</html>
+<style is:global>
+ @font-face{font-family:Manrope;src:url('/fonts/manrope.ttf') format('truetype');font-display:swap}
+ @font-face{font-family:Italiana;src:url('/fonts/italiana.ttf') format('truetype');font-display:swap}
+ .cv-document{--sans:Manrope,Arial,sans-serif;--serif:Italiana,Georgia,serif;line-height:1.6}
+ html:lang(ru) .cv-document{--serif:Georgia,'Times New Roman',serif}
+ html:lang(ja) .cv-document,html:lang(zh-TW) .cv-document{--serif:Georgia,'Noto Serif CJK TC','Yu Mincho',serif}
+</style>

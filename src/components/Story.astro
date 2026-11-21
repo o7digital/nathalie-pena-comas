@@ -7,20 +7,31 @@ import {type Locale} from '../data/translations';
 import { sectionImage } from '../lib/cms';
 import '../styles/biography.css';
 const sectionPhoto = await sectionImage('story', artist);
-interface Props {lang:Locale}
-const {lang}=Astro.props;
+interface Props {lang:Locale; printable?:boolean}
+const {lang,printable=false}=Astro.props;
 const l = localizer(lang);
 ---
-<section class="story section" id="about" aria-labelledby="about-title">
- <div class="story-visual"><Image src={sectionPhoto} width={1280} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[480,800,1280]} sizes="(max-width:780px) 100vw, 60vw" format="webp" loading="lazy" /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div>
+<section class="story section" id="about" aria-labelledby="about-title" data-biography-tabs={printable?undefined:true}>
+ <header class="story-heading">
+  <div><div class="kicker">{l("La artista", "The artist")} <span aria-hidden="true">/</span> {l('Biografía completa', 'Full biography')}</div><h2 id="about-title">{l('Nathalie Peña-Comas')}</h2><p class="story-profession">{l('Soprano y actriz', 'Soprano & actress')}</p></div>
+  <div class="story-actions">
+   {printable ? <button class="cv-button" type="button" data-print-cv>{l('Guardar CV en PDF', 'Save CV as PDF')}</button> : <a class="cv-button" href={`/${lang}/cv/?print`} target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>{l('Guardar CV en PDF', 'Save CV as PDF')}</a>}
+   <span class="cv-format">{l('Biografía completa · Versión imprimible', 'Full biography · Print edition')}</span>
+  </div>
+ </header>
+ <div class="story-profile">
+ <div class="story-visual"><Image src={sectionPhoto} width={800} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[320,480,800]} sizes="(max-width:600px) 80vw, 240px" format="webp" loading={printable?'eager':'lazy'} /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div>
  <div class="story-copy">
-  <div class="kicker">{l("La artista", "The artist")}</div>
-  <h2 id="about-title">{l("Raíces latinas.", "Latin roots.")}<br/><em>{l("Alma lírica.", "An operatic soul.")}</em></h2>
+  <h3 class="story-roots">{l("Raíces latinas.", "Latin roots.")} <em>{l("Alma lírica.", "An operatic soul.")}</em></h3>
   <p>{l('Nathalie Peña-Comas es una soprano y actriz nacida en Santo Domingo, República Dominicana, y nominada al Latin Grammy.', 'Nathalie Peña-Comas is a Latin Grammy-nominated soprano and actress, born in Santo Domingo, Dominican Republic.')}</p>
   <p>{l('Formada en Viena, desarrolla una carrera que une la ópera, el teatro, la música de concierto y las raíces latinoamericanas. Desde 2019 es embajadora cultural de la República Dominicana.', 'Trained in Vienna, her career connects opera, theatre, concert music and Latin American roots. Since 2019, she has served as Cultural Ambassador for the Dominican Republic.')}</p>
   <aside class="story-philosophy"><span class="kicker">{l('Su visión artística', 'Her artistic vision')}</span><p>{l('Para Nathalie, cantar es un acto místico, espiritual y sanador. Su compromiso musical nace de ese propósito: una música para el alma.', 'For Nathalie, singing is mystical, spiritual and healing. Her musical commitment expresses that purpose: music for the soul.')}</p></aside>
-  <div class="repertoire"><div class="kicker">{l("Selección de repertorio", "Selected repertoire")}</div><p>{l("Mozart")} <span>{l("Donna Anna · Pamina · Contessa")}</span></p><p>{l("Verdi")} <span>{l("Violetta · Messa da Requiem")}</span></p><p>{l("Puccini")} <span>{l("Musetta · La Bohème")}</span></p><a class="repertoire-link" href="#repertorio">{l('Explorar el repertorio completo', 'Explore the complete repertoire')} ↗</a></div>
-  <a class="text-link story-voice-link" href="#media">{l("Escuchar su voz", "Hear her voice")} ↓</a>
+  <a class="text-link story-voice-link" href={printable?`/${lang}/#media`:'#media'}>{l("Escuchar su voz", "Hear her voice")}</a>
  </div>
- <Biography lang={lang}/>
+ </div>
+ <nav class="biography-index" aria-label={l('Biografía completa', 'Full biography')}>
+  <a href="#about-training">{l('Formación y vocación', 'Training and vocation')}</a><a href="#about-awards">{l('Premios y distinciones', 'Awards and distinctions')}</a><a href="#about-stage">{l('Ópera y teatro', 'Opera and theatre')}</a><a href="#about-spirituosi">{l('Spirituosi y difusión', 'Spirituosi and broadcasts')}</a><a href="#about-international">{l('Escenarios del mundo', 'Stages around the world')}</a><a href="#about-collaborations">{l('Encuentros artísticos', 'Artistic collaborations')}</a>
+ </nav>
+ <Biography lang={lang} printable={printable}/>
 </section>
+<script>import '../scripts/biography';</script>
