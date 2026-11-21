@@ -12,6 +12,18 @@ Les rubriques s'ouvrent sur un **éditeur visuel WYSIWYG**, comme Etapel Studio 
 
 Le build génère 22 documents compagnons sous `/_studio/pages/`, annotés avec les identités CMS stables sans modifier le HTML public. Le service Studio les charge uniquement depuis sa preview configurée, après authentification. Le document est nettoyé et chargé dans une iframe sandbox sans scripts : ses CSS, polices et photos restent celles du site, ses animations, lecteurs externes et formulaires actifs sont désactivés. Le proxy authentifié `/api/preview-asset` ne permet que les CSS, polices et images du site configuré ; les liens des CSS passent aussi par ce proxy. `VERCEL_AUTOMATION_BYPASS_SECRET` réutilise un accès d'automatisation Vercel existant pour cet aperçu protégé et reste exclusivement sur Railway dev. Aucun jeton CMS ou Vercel n'est transmis au navigateur ni à l'iframe. Le snapshot de construction intermédiaire est supprimé du résultat du build.
 
+## SEO des sections
+
+Le menu **SEO · Secciones** donne une vue des quinze rubriques : sections figées, expressions protégées et mots-clés encore à incorporer. Le panneau **SEO · Palabras clave y protección** de chaque rubrique permet de régler ces mêmes consignes, avec une expression par ligne et jusqu'à trente expressions par liste.
+
+**Palabras o expresiones que deben conservarse** protège les expressions déjà présentes dans les textes espagnols enregistrés de la section. La sauvegarde refuse d'en supprimer la dernière apparition. La comparaison respecte les accents, ignore la casse et tient compte des limites des mots et du texte à l'intérieur des balises ; « opera » ne correspond pas à « operario ». Les champs partagés entre rubriques et les textes des fiches médias sont aussi contrôlés.
+
+**Palabras o expresiones por incorporar** constitue une liste de travail : le statut s'actualise pendant la saisie et passe à « Incorporada » quand l'expression apparaît. L'utilisateur choisit où écrire l'expression, puis sauvegarde le texte et ses traductions. La demande « Actualizar vista previa » est refusée tant qu'une expression obligatoire est absente des textes espagnols publiés ; une fiche média en brouillon ne la satisfait pas. Aucune expression n'est ajoutée automatiquement aux textes. Les dix traductions suivent leur langue ; une expression espagnole n'y est pas imposée littéralement.
+
+**Fijar esta sección** fige ses textes, traductions, photos, fiches médias et leur ordre. Sauvegarder d'abord les changements de contenu et incorporer les expressions demandées, puis enregistrer le verrouillage. Décocher cette option et enregistrer pour réautoriser les changements. L'éditeur visuel, l'inspecteur et les formulaires indiquent la lecture seule. Le serveur vérifie aussi les API de sauvegarde, d'archivage, de création, de réordonnancement et de traduction forcée, y compris depuis une autre rubrique partageant le même contenu. Une empreinte du contenu figé est contrôlée avant la publication : un changement externe au Studio impose une révision et un déverrouillage explicite. Les révisions des règles empêchent l'écrasement d'une configuration modifiée dans une autre session.
+
+Les réglages sont persistés dans la collection privée `studio_seo`, sans accès anonyme ni accès du compte Website build. Initialisation additive sur le seul Directus dev : `node cms/studio/provision-seo.mjs` avec `DIRECTUS_URL`/`PUBLIC_URL` et `ADMIN_TOKEN` du projet Nathalie. Ce script réutilise la politique existante « Nathalie Studio » ; il ne crée aucune règle et ne modifie aucun texte. Les règles s'éditent via les endpoints authentifiés `GET /api/seo/:section` et `POST /api/seo/:section`.
+
 Le menu suit le site : **Inicio, Agenda, La artista, Trayectoria, Discografía, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages de Nath AI. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
 
 Le catalogue couvre les **190 textes fixes** actuellement utilisés dans le site et ses contrôles, en complément des textes des collections médias. Les textes existants sont préremplis. Le vert, le fond léger et le libellé « Editable » identifient les champs modifiables ; les traductions en relecture restent de couleur neutre.
@@ -101,6 +113,7 @@ Les sessions sont sans stockage local. Tous les contenus restent dans les volume
 npm --prefix cms/studio run check
 npm --prefix cms/studio test
 node cms/studio/visual-browser-check.mjs
+node cms/studio/seo-browser-check.mjs
 node cms/studio/content-browser-check.mjs
 node cms/studio/arm-browser-check.mjs
 railway run --no-local --service directus --environment dev -- node cms/studio/editor-browser-check.mjs
@@ -111,6 +124,8 @@ railway run --no-local --service directus --environment dev -- node cms/studio/b
 Le dernier test attend un Studio local sur le port 4380 ; définir `STUDIO_TEST_URL` pour viser le service déployé. Il vérifie une connexion réelle, les images privées, la création/modification d'un brouillon d'agenda, l'état du connecteur ARM, le mobile et la déconnexion. Son brouillon de test est supprimé en fin de parcours avec le compte administrateur. Les tests unitaires isolent les services et vérifient les frontières de permissions et de tenant.
 
 `visual-browser-check.mjs` utilise le vrai design issu de `npm run build` avec des données CMS isolées. Il vérifie l'édition directe, l'inspecteur, l'enregistrement, les erreurs et brouillons conservés, le remplacement de photo, les trois tailles, la lecture seule, la reprise après une erreur de chargement, la confidentialité et le mobile. Il n'écrit aucun contenu client.
+
+`seo-browser-check.mjs` contrôle la vue des sections, les listes de mots-clés, les brouillons et erreurs conservés, le contrôle pendant la saisie, le verrouillage/déverrouillage du rendu et des photos, le retour d'erreur d'un texte protégé et le mobile. Les tests `seo.test.mjs` et `seo-server.test.mjs` vérifient aussi les limites de mots, les permissions, les révisions, les champs partagés, les fiches médias, l'ordre, les changements externes et le blocage de publication. Les fixtures sont isolées.
 
 `arm-browser-check.mjs` utilise uniquement des données de test isolées pour vérifier les formulaires, les étapes des propositions et les statuts des tâches. Il ne se connecte à aucun compte CRM réel.
 

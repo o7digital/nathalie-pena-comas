@@ -2,7 +2,7 @@
   "name": "nathalie-studio",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node server.mjs", "test": "node --test *.test.mjs", "check": "node --check server.mjs && node --check preview.mjs && node --check build-preview.mjs && node --check public/visual-editor.js && node --check arm.mjs && node --check public/arm.js && node --check public/arm-data.js && node --check social-media.mjs && node --check public/social.js && node --check public/social-billing.js && node --check public/social-callback.js && node --check reporting.mjs && node --check public/reporting.js && node --check translations.mjs && node --check public/calendar.js && node --check public/app.js" },
+  "scripts": { "start": "node server.mjs", "test": "node --test *.test.mjs", "check": "node --check server.mjs && node --check seo.mjs && node --check public/seo-data.js && node --check public/seo.js && node --check provision-seo.mjs && node --check preview.mjs && node --check build-preview.mjs && node --check public/visual-editor.js && node --check arm.mjs && node --check public/arm.js && node --check public/arm-data.js && node --check social-media.mjs && node --check public/social.js && node --check public/social-billing.js && node --check public/social-callback.js && node --check reporting.mjs && node --check public/reporting.js && node --check translations.mjs && node --check public/calendar.js && node --check public/app.js" },
   "engines": { "node": ">=22" },
   "dependencies": { "parse5": "7.3.0" }
 }

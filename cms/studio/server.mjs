@@ -11,6 +11,8 @@ import {validDate} from './public/calendar.js';
 import {createArm} from './arm.mjs';
 import {ArmError} from './public/arm-data.js';
 import {previewPath,previewDocument,assetPath,proxyCss,PreviewError} from './preview.mjs';
+import {assertSeoMutation,assertSeoPublication,sectionFingerprint,publicSeoRule,seoRuleFor,SeoError} from './seo.mjs';
+import {validateSeoInput,proposedContent,seoChecks} from './public/seo-data.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
@@ -162,6 +164,24 @@ export function createStudioServer(options = {}) {
  async function jsonBody(req,limit) { try { return JSON.parse((await body(req,limit)).toString() || '{}'); } catch(error) { if(error instanceof ApiError) throw error; throw new ApiError(400,'Revisa los datos del formulario.'); } }
  function send(res, value, status = 200) { res.writeHead(status, {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}); res.end(JSON.stringify(value)); }
  async function textsFor(token) { return (await upstream(config.cms,'/items/site_texts?limit=-1&fields=*',token)).data; }
+ async function seoRulesFor(token){
+  const rows=(await upstream(config.cms,'/items/studio_seo?limit=-1&fields=*',token)).data;
+  if(!Array.isArray(rows))throw new ApiError(502,'No se pudieron cargar las protecciones SEO.');
+  return rows.filter(row=>siteMap.sections.some(section=>section.id===row.id)).map(row=>{try{return {...row,...validateSeoInput({locked:row.locked,protected_keywords:row.protected_keywords,required_keywords:row.required_keywords,revision:row.revision})};}catch{throw new ApiError(503,'Una configuración SEO necesita revisión. No se han guardado cambios.');}});
+ }
+ async function seoContentFor(token,texts){
+  const content={site_texts:texts||await textsFor(token)};
+  for(const collection of Object.keys(fields).filter(collection=>collection!=='site_texts')){
+   const image=fields[collection].includes('image')?',image.id':'';
+   content[collection]=(await upstream(config.cms,`/items/${collection}?limit=-1&sort=sort,id&fields=*${image}`,token)).data;
+  }
+  return content;
+ }
+ async function guardSeoChange(token,change,texts){
+  const rules=(await seoRulesFor(token)).filter(rule=>rule.locked||rule.protected_keywords.length);if(!rules.length)return;
+  const before=await seoContentFor(token,texts),after=proposedContent(before,change);
+  assertSeoMutation(rules,siteMap.sections,before,after,{touchedKeys:(change.texts||[]).map(row=>row.key)});
+ }
  async function requireWrite(token,collection,action,needed=[]) {
   const permissions=await upstream(config.cms,'/permissions/me',token);
   const permission=(permissions.data||permissions)?.[collection]?.[action];
@@ -342,6 +362,23 @@ export function createStudioServer(options = {}) {
     throw new ApiError(404,'Recurso de reporting no disponible.');
    }
 
+   const seo=path.match(/^\/api\/seo\/([a-z]+)$/);
+   if(seo&&['GET','POST'].includes(req.method)){
+    const definition=siteMap.sections.find(row=>row.id===seo[1]);if(!definition)throw new ApiError(404,'Sección no encontrada.');
+    if(req.method==='GET'){const rule=seoRuleFor(await seoRulesFor(s.access),definition.id),content=await seoContentFor(s.access);return send(res,{rule:publicSeoRule(rule),checks:seoChecks(rule,definition,content)});}
+    return contentWrite(async()=>{
+     const input=validateSeoInput(await jsonBody(req)),rules=await seoRulesFor(s.access),current=seoRuleFor(rules,definition.id);
+     if(input.revision!==current.revision)throw new ApiError(409,'Las reglas SEO cambiaron en otra sesión. Recarga la sección antes de guardar.');
+     await requireWrite(s.access,'studio_seo',current.revision?'update':'create',['locked','protected_keywords','required_keywords','revision']);
+     const content=await seoContentFor(s.access),checks=seoChecks(input,definition,content),missingProtected=checks.protected.filter(row=>!row.present),missingRequired=checks.required.filter(row=>!row.present);
+     if(missingProtected.length)throw new ApiError(422,'Protege expresiones ya presentes en los textos guardados: '+missingProtected.map(row=>row.keyword).join(', ')+'. Añádelas primero al contenido o a la lista de palabras por incorporar.');
+     if(input.locked&&missingRequired.length)throw new ApiError(422,'Incorpora las palabras pendientes antes de fijar esta sección: '+missingRequired.map(row=>row.keyword).join(', ')+'.');
+     if(current.locked&&input.locked&&current.locked_hash!==sectionFingerprint(definition,content))throw new ApiError(409,'Esta sección fijada cambió fuera del Studio. Desbloquéala explícitamente y revisa el contenido antes de volver a fijarla.');
+     const rule={id:definition.id,...input,revision:current.revision+1,locked_hash:input.locked?sectionFingerprint(definition,content):null,updated_at:new Date().toISOString()};
+     await upstream(config.cms,'/items/studio_seo'+(current.revision?'/'+definition.id:''),s.access,current.revision?'PATCH':'POST',rule);
+     return send(res,{rule:publicSeoRule(rule),checks});
+    });
+   }
    const section=path.match(/^\/api\/sections\/([a-z]+)$/);
    if(section && req.method==='POST')return contentWrite(async()=>{
     const definition=siteMap.sections.find(row=>row.id===section[1]);
@@ -354,6 +391,7 @@ export function createStudioServer(options = {}) {
      const baseline=existing?.value??definition.fields.find(item=>item.key===row.key).source;
      return !input.force&&row.value===baseline?[]:[{...row,status:existing?.status||'published'}];
     });
+    if(sources.length)await guardSeoChange(s.access,{texts:sources},current);
     const writes=await prepareSources(sources,current,s.access);
     await persistTexts(writes,current,s.access);
     return send(res,{ok:true,changed:sources.length,translatedLanguages:sources.length?10:0});
@@ -365,7 +403,7 @@ export function createStudioServer(options = {}) {
      const image=fields[collection].includes('image')?',image.id,image.title,image.width,image.height':'';
      content[collection]=(await upstream(config.cms,`/items/${collection}?limit=-1&sort=sort,id&fields=*${image}`,s.access)).data;
     }
-    return send(res,{content});
+    return send(res,{content,seoRules:(await seoRulesFor(s.access)).map(publicSeoRule)});
    }
    const record=path.match(/^\/api\/content\/([a-z_]+)(?:\/([a-zA-Z\d_-]+))?$/);
    if(record && fields[record[1]] && ['POST','PATCH'].includes(req.method))return contentWrite(async()=>{
@@ -385,6 +423,7 @@ export function createStudioServer(options = {}) {
      const value=input.value??current?.value??'',status=input.status||current?.status||'draft';
      const texts=await textsFor(s.access);
      if(!current || value!==current.value || status!==current.status) {
+      await guardSeoChange(s.access,{texts:[{key,value,status}]},texts);
       const writes=await prepareSources([{key,value,status}],texts,s.access);
       await persistTexts(writes,texts,s.access);
       return send(res,{data:writes.find(row=>row.locale==='es'),translatedLanguages:10},id?200:201);
@@ -395,6 +434,7 @@ export function createStudioServer(options = {}) {
      const texts=await textsFor(s.access),status=input.status||current?.status||'draft';
      const needsRepair=field=>{const key=recordTextKey(collection,sourceId,field),bundle=texts.filter(row=>row.key===key);return bundle.some(row=>row.source_hash)&&['es',...targetLocales].some(locale=>bundle.find(row=>row.locale===locale)?.source_hash!==sourceHash(input[field]));};
      const sources=localizedFields[collection].filter(field=>typeof input[field]==='string'&&(input[field]!==current?.[field]||needsRepair(field))).map(field=>({key:recordTextKey(collection,sourceId,field),value:input[field],status}));
+     await guardSeoChange(s.access,{record:{collection,id:sourceId,data},texts:sources},texts);
      const writes=await prepareSources(sources,texts,s.access);
      // Store translations before changing their source; stale/partial bundles block publication.
      await persistTexts(writes,texts,s.access);
@@ -403,7 +443,7 @@ export function createStudioServer(options = {}) {
       const statuses=texts.filter(row=>row.key?.startsWith(prefix)&&!writes.some(write=>write.id===row.id)).map(row=>({id:row.id,status}));
       if(statuses.length)await upstream(config.cms,'/items/site_texts',s.access,'PATCH',statuses);
      }
-    }
+    }else await guardSeoChange(s.access,{record:{collection,id:sourceId,data}});
     const result=await upstream(config.cms,`/items/${collection}${id?'/'+encodeURIComponent(id):''}`,s.access,req.method,data);
     return send(res,result,id?200:201);
    });
@@ -427,11 +467,12 @@ export function createStudioServer(options = {}) {
     res.writeHead(200,{'Content-Type':result.type,'Cache-Control':'private, max-age=180','Vary':'Cookie'}); res.end(result.bytes); return;
    }
    const reorder=path.match(/^\/api\/reorder\/(gallery|albums|videos)$/);
-   if(reorder && req.method==='POST') {
+   if(reorder && req.method==='POST')return contentWrite(async()=>{
     const {ids}=await jsonBody(req);
     if(!Array.isArray(ids)||ids.length>1000||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!idPattern.test(id))) throw new ApiError(400,'El orden no es válido.');
+    await guardSeoChange(s.access,{reorder:{collection:reorder[1],ids}});
     return send(res,await upstream(config.cms,`/items/${reorder[1]}`,s.access,'PATCH',ids.map((id,sort)=>({id,sort}))));
-   }
+   });
    if(path==='/api/publish' && req.method==='POST')return contentWrite(async()=>{
     if(!config.publishHook) throw new ApiError(503,'La actualización de la vista previa no está configurada.');
     // Check write permission without changing a record, including for read-only accounts.
@@ -442,6 +483,7 @@ export function createStudioServer(options = {}) {
     const content={};
     if(texts.some(row=>row.source_hash))for(const collection of Object.keys(localizedFields))content[collection]=(await upstream(config.cms,`/items/${collection}?limit=-1&filter[status][_eq]=published`,s.access)).data;
     try{assertTranslationsReady(texts,content);}catch{throw new ApiError(409,'Hay traducciones pendientes o desactualizadas. Vuelve a guardar el original español antes de actualizar la vista previa.');}
+    const seoRules=(await seoRulesFor(s.access)).filter(rule=>rule.locked||rule.protected_keywords.length||rule.required_keywords.length);if(seoRules.length)assertSeoPublication(seoRules,siteMap.sections,await seoContentFor(s.access));
     const result=await fetch(config.publishHook,{method:'POST',signal:AbortSignal.timeout(20000)});
     if(!result.ok) throw new ApiError(502,'La vista previa no pudo actualizarse. Inténtalo de nuevo.');
     return send(res,{ok:true,url:config.preview});
@@ -464,7 +506,7 @@ export function createStudioServer(options = {}) {
   }
   if(path==='/social-callback.html')res.setHeader('Referrer-Policy','no-referrer');
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/seo.js':'seo.js','/seo-data.js':'seo-data.js','/seo.css':'seo.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const armAsset=['/arm.js','/arm-data.js','/arm.css'].includes(path)?path.slice(1):null;
   const relative=armAsset || (path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
@@ -476,11 +518,11 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','visual-editor.js','visual-editor.css','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','visual-editor.js','visual-editor.css','seo.js','seo-data.js','seo.css','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
-  const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError || error instanceof ArmError?error.status:500;
+  const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError || error instanceof ArmError || error instanceof SeoError?error.status:500;
   send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message},status);
  }));
 }

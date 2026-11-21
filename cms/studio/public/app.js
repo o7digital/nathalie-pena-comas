@@ -3,6 +3,8 @@ import {createSocialUI} from './social.js';
 import {createReportingUI} from './reporting.js';
 import {agendaToolbar,calendarMarkup,dateFields,syncDateFields,moveMonth,dateFromParts} from './calendar.js';
 import {visualEditorMarkup,mountVisualEditor,targetKey} from './visual-editor.js';
+import {createSeoUI} from './seo.js';
+import {proposedContent,sectionRecords} from './seo-data.js';
 export {};
 const $=s=>document.querySelector(s);
 const icons={home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-8h6v8"/>',photo:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3Z"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2"/>',album:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 6a6 6 0 0 1 6 6"/>',text:'<path d="M4 5h16M12 5v15M8 20h8M5 12h4m6 0h4"/>',layout:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m2-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 4v2"/>',search:'<circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/>',upload:'<path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/>',pin:'<path d="M19 10c0 6-7 11-7 11S5 16 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2"/>',check:'<path d="m5 12 4 4L19 6"/>',briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 13h18m-11 0v3h4v-3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>'};
@@ -14,11 +16,11 @@ const language={es:'Español',en:'English',de:'Deutsch',fr:'Français',it:'Itali
 let nav=[['overview','Resumen','home'],['arm','Relaciones · ARM','people']];
 const collectionFor={gallery:'gallery',videos:'videos',concerts:'concerts',albums:'albums',texts:'site_texts',sections:'site_images'};
 const labels={gallery:'Fotografías',videos:'Vídeos',concerts:'Actuaciones',albums:'Discografía',site_texts:'Textos e idiomas',site_images:'Mi sitio'};
-const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',agendaView:'calendar',agendaMonth:'',search:'',locale:'es',editor:null,editorImage:'',site:{sections:[]},drafts:{},recordDrafts:{},photoDrafts:{},visualPrefs:{device:'desktop'},reviewLocale:'en',translating:false};
+const state={data:null,session:null,config:{},filter:'all',agendaPeriod:'upcoming',agendaView:'calendar',agendaMonth:'',search:'',locale:'es',editor:null,editorImage:'',site:{sections:[]},seoRules:[],drafts:{},recordDrafts:{},photoDrafts:{},visualPrefs:{device:'desktop'},reviewLocale:'en',translating:false};
 let visualUI=null;
 const textToolsOpen={};
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription','social'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
+const route=()=>{const key=location.hash.slice(1),alias={music:'albums',schedule:'concerts',media:'videos',texts:'settings',sections:'home'};return ['arm','overview','analytics','subscription','social','seo'].includes(key)||state.site.sections.some(row=>row.id===(alias[key]||key))?(alias[key]||key):'overview';};
 const imageId=row=>typeof row?.image==='string'?row.image:row?.image?.id;
 const image=(row,width=640)=>imageId(row)?`/api/image/${encodeURIComponent(imageId(row))}?w=${width}`:'/artist.webp';
 const badge=status=>`<span class="badge ${escapeHtml(status)}">${({published:'Publicado',draft:'Borrador',archived:'Archivado'})[status]||'Borrador'}</span>`;
@@ -30,8 +32,8 @@ async function api(path,options={}){
  const data=await response.json().catch(()=>({}));
  if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;throw error;}return data;
 }
-function showLogin(error=''){visualUI?.destroy();visualUI=null;socialUI.reset();reportingUI.reset();armUI.reset();state.session=null;state.data=null;state.editor=null;state.drafts={};state.recordDrafts={};state.photoDrafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
-async function reload(){const result=await api('/api/content');state.data=result.content;renderNavigation();render();}
+function showLogin(error=''){visualUI?.destroy();visualUI=null;seoUI.reset();socialUI.reset();reportingUI.reset();armUI.reset();state.session=null;state.data=null;state.editor=null;state.seoRules=[];state.drafts={};state.recordDrafts={};state.photoDrafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
+async function reload(){const result=await api('/api/content');state.data=result.content;state.seoRules=result.seoRules||[];renderNavigation();render();}
 function renderNavigation(){
  $('#navigation').innerHTML=nav.map(([key,title,glyph])=>`<a class="nav-item ${route()===key?'active':''} ${key==='arm'?'arm':''}" href="#${key}" ${route()===key?'aria-current="page"':''}>${icon(glyph)}<span>${title}</span>${['gallery','videos','albums'].includes(key)?`<small class="nav-count">${state.data?.[collectionFor[key]]?.filter(r=>r.status!=='archived').length??''}</small>`:''}</a>`).join('');
  $('#breadcrumb').textContent=nav.find(row=>row[0]===route())?.[1]||'Inicio';
@@ -51,18 +53,20 @@ function render(){
  if(current==='social')return socialUI.show();
  if(current==='analytics')return reportingUI.show();
  if(current==='subscription')return reportingUI.subscription();
+ if(current==='seo'){$('#main').innerHTML=heading('SEO de tu sitio','Conserva las palabras importantes y prepara el contenido de cada sección.',false)+seoUI.overview();return;}
  const definition=state.site.sections.find(section=>section.id===current);
  if(!definition)return dashboard();
  if(!definition.collection)return renderSiteSection(definition);
  const descriptions={gallery:'Momentos que cuentan tu historia. Elige cómo quieres compartirlos.',videos:'Tu voz, en imágenes. Organiza tus interpretaciones y vídeos oficiales.',concerts:'Tu calendario personal. Elige un día y escribe los detalles de cada actuación.',albums:'Las obras que forman tu universo musical.',texts:'Tu voz también está en las palabras. Cuida cada idioma de tu sitio.',sections:'La imagen de cada espacio de tu sitio, en un solo lugar.'};
  const currentCollection=collectionFor[current];
- const editorialTools=visualEditorMarkup()+textTools(definition);
+ const editorialTools=seoUI.markup(definition)+visualEditorMarkup()+textTools(definition);
  $('#main').innerHTML=heading(definition.title,descriptions[current],true)+(current==='concerts'?'':editorialTools)+
  `<div class="section-tools">${current==='texts'?`<label class="locale-label">Idioma de edición <select class="locale-picker" id="locale">${Object.entries(language).map(([key,label])=>`<option value="${key}" ${state.locale===key?'selected':''}>${label}</option>`).join('')}</select></label>`:`<div class="tabs" role="group" aria-label="Filtrar contenido">${[['all','Todo'],['published','Publicado'],['draft','Borradores'],['archived','Archivado']].map(([key,label])=>`<button class="tab ${state.filter===key?'active':''}" data-filter="${key}">${label}</button>`).join('')}</div>`}${current==='concerts'?`<label class="locale-label">Fechas<select id="agenda-period"><option value="upcoming" ${state.agendaPeriod==='upcoming'?'selected':''}>Próximas</option><option value="history" ${state.agendaPeriod==='history'?'selected':''}>Historial</option><option value="all" ${state.agendaPeriod==='all'?'selected':''}>Todas</option></select></label>`:''}<label class="search">${icon('search')}<input id="search" type="search" aria-label="Buscar contenido" placeholder="Buscar en ${labels[currentCollection].toLowerCase()}…" value="${escapeHtml(state.search)}"></label></div><div id="items"></div>${current==='gallery'?`<button class="upload-zone" id="dropzone" data-action="upload">${icon('upload')}<span><strong>Un nuevo momento para tu galería</strong><small>Arrastra tus fotos aquí o haz clic para seleccionarlas.</small></span></button>`:''}`+(current==='concerts'?editorialTools:'');
  renderItems();renderTranslationReview();mountSectionVisual(definition);
 }
 function filtered(){return(state.data[collectionFor[route()]]||[]).filter(row=>(state.filter==='all'||row.status===state.filter)&&(route()!=='texts'||row.locale===state.locale)&&(route()!=='concerts'||state.agendaView==='calendar'||state.agendaPeriod==='all'||(state.agendaPeriod==='upcoming'?row.date>=today():row.date<today()))&&(!state.search||[row.title,row.detail,row.credit,row.city,row.venue,row.value].some(value=>plain(value).toLowerCase().includes(state.search.toLowerCase()))));}
 function renderItems(){
+ queueMicrotask(applySeoLocks);
  const current=route(),rows=filtered();
  if(current==='concerts'){
   state.agendaMonth||=today().slice(0,7);
@@ -116,7 +120,7 @@ function translationReview(){
 }
 function renderSiteSection(section){
  const preview=previewUrl('es',section);
- $('#main').innerHTML=heading(section.title,'Haz clic en los textos y las fotografías para editarlos sobre el diseño real.',false)+`<div class="section-location"><span>${icon('layout')} Mi sitio <span>/</span> ${escapeHtml(section.title)}</span><a class="text-link" href="${escapeHtml(preview)}" target="_blank" rel="noopener">Ver esta sección ↗</a></div>`+visualEditorMarkup()+textTools(section);
+ $('#main').innerHTML=heading(section.title,'Haz clic en los textos y las fotografías para editarlos sobre el diseño real.',false)+`<div class="section-location"><span>${icon('layout')} Mi sitio <span>/</span> ${escapeHtml(section.title)}</span><a class="text-link" href="${escapeHtml(preview)}" target="_blank" rel="noopener">Ver esta sección ↗</a></div>`+seoUI.markup(section)+visualEditorMarkup()+textTools(section);
  renderTranslationReview();mountSectionVisual(section);
 }
 function textTools(section){return `<details class="studio-text-fields" data-text-tools="${section.id}" ${textToolsOpen[section.id]?'open':''}><summary>Campos de texto, idiomas y traducciones</summary>${languagePages(section)}${sectionEditor(section,Boolean(section.collection))}${translationReview()}</details>`;}
@@ -140,7 +144,29 @@ function visualValue(target){
 }
 function visualPhoto(row){return state.photoDrafts[`${row.collection}:${row.id}`]??imageId(findRow(row.collection,row.id));}
 function visualDirty(section){return visualRows(section).filter(row=>row.target.key?Object.hasOwn(state.drafts,row.target.key):Object.hasOwn(state.recordDrafts,targetKey(row.target))).length+visualPhotos(section).filter(row=>Object.hasOwn(state.photoDrafts,`${row.collection}:${row.id}`)).length;}
+function seoDraftContent(){
+ let content=proposedContent(state.data||{},{texts:Object.entries(state.drafts).map(([key,value])=>({key,value,status:state.data?.site_texts.find(row=>row.key===key&&row.locale==='es')?.status||'published'}))});
+ const records=new Map();
+ for(const [key,value]of Object.entries(state.recordDrafts)){const [collection,id,field]=key.split(':'),recordKey=collection+':'+id;if(!records.has(recordKey))records.set(recordKey,{collection,id,data:{}});records.get(recordKey).data[field]=value;}
+ for(const record of records.values())content=proposedContent(content,{record});return content;
+}
+function seoLocks(target){return state.site.sections.filter(section=>state.seoRules.some(rule=>rule.id===section.id&&rule.locked)&&(
+ target.key?section.fields.some(field=>field.key===target.key):target.collection==='site_images'?section.image&&findRow('site_images',target.id)?.key===section.image:section.collection===target.collection||(section.id==='home'&&target.collection==='albums'&&sectionRecords(section,state.data||{}).some(row=>row.id===target.id))
+));}
+function applySeoLocks(){
+ const section=state.site.sections.find(section=>section.id===route());if(!section)return;
+ for(const input of document.querySelectorAll('[data-text-key]'))if(seoLocks({key:input.dataset.textKey}).length){input.disabled=true;input.title='Texto fijado en SEO.';const label=input.closest('label')?.querySelector('small');if(label)label.textContent='Fijado';}
+ const frozen=state.seoRules.some(rule=>rule.id===section.id&&rule.locked);
+ if(frozen)for(const hint of document.querySelectorAll('.section-copy .editable-hint'))hint.textContent='Sección fijada en SEO. Desbloquéala para editar.';
+ for(const button of document.querySelectorAll('[data-section-form] [type=submit], [data-action="translate-again"]'))if(frozen||(button.dataset.action==='translate-again'&&section.fields.some(field=>seoLocks({key:field.key}).length))){button.disabled=true;button.title='Desbloquea la sección correspondiente en SEO antes de modificarla.';}
+ for(const button of document.querySelectorAll('[data-edit],[data-archive],[data-move]')){
+  const collection=button.dataset.collection||collectionFor[route()],id=button.dataset.edit||button.dataset.archive||button.dataset.move;
+  if(seoLocks({collection,id}).length){button.disabled=true;button.title='Contenido fijado en SEO.';}
+ }
+ if(frozen)for(const button of document.querySelectorAll('[data-action="new"],[data-action="upload"],[data-new-date],.section-photo-panel [data-edit]')){button.disabled=true;button.title='Sección fijada en SEO.';}
+}
 function changeVisualText(target,value){
+ if(seoLocks(target).length)return;
  if(target.key){
   const field=state.site.sections.flatMap(section=>section.fields).find(field=>field.key===target.key);
   if(value===spanishValue(field))delete state.drafts[target.key];else state.drafts[target.key]=value;
@@ -149,15 +175,17 @@ function changeVisualText(target,value){
  }else{
   const key=targetKey(target);if(value===findRow(target.collection,target.id)?.[target.field])delete state.recordDrafts[key];else state.recordDrafts[key]=value;
  }
+ seoUI.refresh();
 }
 function mountSectionVisual(section){
  const root=$('.visual-editor');if(!root)return;
- visualUI=mountVisualEditor(root,{section,rows:visualRows(section),photos:visualPhotos(section),valueOf:visualValue,photoOf:visualPhoto,prefs:state.visualPrefs,dirtyCount:()=>visualDirty(section),busy:()=>state.translating,
+ visualUI=mountVisualEditor(root,{section,rows:visualRows(section),photos:visualPhotos(section),valueOf:visualValue,photoOf:visualPhoto,prefs:state.visualPrefs,dirtyCount:()=>visualDirty(section),busy:()=>state.translating,canEdit:target=>!state.seoRules.some(rule=>rule.id===section.id&&rule.locked)&&!seoLocks(target).length,
   onText:changeVisualText,onSave:()=>saveVisual(section),onPhoto:async(row,file)=>{
    if(!['image/jpeg','image/png','image/webp','image/avif'].includes(file.type))throw Error('Selecciona una foto JPG, PNG, WebP o AVIF.');
    if(file.size>25*1024*1024)throw Error('El máximo es 25 MB por fotografía.');
    const result=await uploadFile(file);state.photoDrafts[`${row.collection}:${row.id}`]=result.id;
   }});
+ applySeoLocks();
 }
 async function saveVisual(section){
  if(state.translating)return;
@@ -214,7 +242,7 @@ async function submitSection(form,force=false){
  }
 }
 async function saveSection(event){event.preventDefault();await submitSection(event.target);}
-window.addEventListener('beforeunload',event=>{if(Object.keys(state.drafts).length||Object.keys(state.recordDrafts).length||Object.keys(state.photoDrafts).length||state.translating){event.preventDefault();}});
+window.addEventListener('beforeunload',event=>{if(Object.keys(state.drafts).length||Object.keys(state.recordDrafts).length||Object.keys(state.photoDrafts).length||state.translating||seoUI.isDirty()){event.preventDefault();}});
 
 function findRow(collection,id){return state.data[collection]?.find(row=>String(row.id)===String(id));}
 function field(label,name,value,type='text',extra=''){return `<label>${label}<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${extra}></label>`;}
@@ -222,6 +250,7 @@ function select(label,name,value,choices){return `<label>${label}<select name="$
 function editorPhoto(){return `<div class="editor-photo ${state.editorImage?'':'empty'}" id="editor-photo">${state.editorImage?`<img src="/api/image/${encodeURIComponent(state.editorImage)}?w=960" alt="Vista previa de la imagen">`:''}<button type="button" class="button" data-action="editor-upload">${state.editorImage?'Cambiar imagen':'Seleccionar fotografía'} ↗</button></div>`;}
 function openEditor(id=null,explicitCollection=null,selectedDate=null){
  const collection=explicitCollection||collectionFor[route()],row=id?{...findRow(collection,id)}:{};
+ if(seoLocks({collection,id}).length){toast('Este contenido está fijado en SEO. Desbloquea la sección para modificarlo.',true);return;}
  if(id)for(const field of ['title','detail','credit','ensemble','venue','city']){const key=targetKey({collection,id,field});if(Object.hasOwn(state.recordDrafts,key))row[field]=state.recordDrafts[key];}
  state.editor={collection,id};state.editorImage=(id?state.photoDrafts[`${collection}:${id}`]:null)||imageId(row)||'';
  $('#editor-eyebrow').textContent=labels[collection];$('#editor-title').textContent=collection==='concerts'?(id?'Editar actuación':'Nueva actuación'):(id?'Cada detalle cuenta.':'Algo nuevo empieza aquí.');$('#editor-error').textContent='';
@@ -289,7 +318,7 @@ document.addEventListener('click',async event=>{
 document.addEventListener('input',event=>{
  if(event.target.dataset.datePart)syncDateFields($('#editor-form'));
  if(event.target.id==='search'){state.search=event.target.value;renderItems();}
- if(event.target.dataset.textKey){const key=event.target.dataset.textKey,definition=state.site.sections.find(section=>section.id===route()),field=definition.fields.find(row=>row.key===key);if(event.target.value===spanishValue(field))delete state.drafts[key];else state.drafts[key]=event.target.value;event.target.closest('form').querySelector('[type=submit]').disabled=!definition.fields.some(row=>Object.hasOwn(state.drafts,row.key));visualUI?.refresh();}
+ if(event.target.dataset.textKey){const key=event.target.dataset.textKey,definition=state.site.sections.find(section=>section.id===route()),field=definition.fields.find(row=>row.key===key);if(event.target.value===spanishValue(field))delete state.drafts[key];else state.drafts[key]=event.target.value;event.target.closest('form').querySelector('[type=submit]').disabled=!definition.fields.some(row=>Object.hasOwn(state.drafts,row.key));visualUI?.refresh();seoUI.refresh();applySeoLocks();}
 });
 document.addEventListener('change',async event=>{
  if(event.target.dataset.datePart)syncDateFields($('#editor-form'));
@@ -325,7 +354,7 @@ async function startSession(){
  state.session=await api('/api/session');$('#login-view').hidden=true;$('#studio-view').hidden=false;
  $('#account-name').textContent=state.session.name||state.session.email?.split('@')[0]||'Mi cuenta';
  $('#today').textContent=new Intl.DateTimeFormat('es',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Mexico_City'}).format(new Date());
- state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['arm','Relaciones · ARM','people'],['social','O7 Pulse Social','globe'],['analytics','Analytics & Reporting','layout'],['subscription','Mi suscripción','briefcase']];
+ state.site=await api('/api/site-map');nav=[['overview','Resumen','home'],...state.site.sections.map(section=>[section.id,section.title,section.icon]),['seo','SEO · Secciones','search'],['arm','Relaciones · ARM','people'],['social','O7 Pulse Social','globe'],['analytics','Analytics & Reporting','layout'],['subscription','Mi suscripción','briefcase']];
  $('#sidebar-preview').href=state.config.preview;
  if(state.config.includedUntil){const date=new Date(state.config.includedUntil);if(Number.isFinite(date.getTime()))$('#workspace-plan').textContent='Hosting incluido hasta el '+new Intl.DateTimeFormat('es',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Mexico_City'}).format(date)+' · Renovación por configurar';}
  await reload();
@@ -334,4 +363,5 @@ async function init(){try{state.config=await api('/api/config');$('#login-mode-l
 const armUI=createArmUI({api,session:()=>state.session,config:()=>state.config,isCurrent:()=>Boolean(state.session)&&route()==='arm',toast,onConnect:async()=>{state.session=await api('/api/session');}});
 const socialUI=createSocialUI({api,content:()=>state.data,isCurrent:()=>Boolean(state.session)&&route()==='social',toast});
 const reportingUI=createReportingUI({api,session:()=>state.session||{},config:()=>state.config,isCurrent:key=>Boolean(state.session)&&route()===key,toast});
+const seoUI=createSeoUI({api,sections:()=>state.site.sections,rules:()=>state.seoRules,content:seoDraftContent,hasContentDrafts:section=>visualDirty(section)>0,onSaved:rule=>{state.seoRules=[...state.seoRules.filter(row=>row.id!==rule.id),rule];render();},toast});
 init();
