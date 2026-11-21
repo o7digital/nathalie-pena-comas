@@ -320,7 +320,14 @@
     "Watch the Souvenir Latino album release": "Die Albumvorstellung von Souvenir Latino ansehen",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Die Aufnahme anhören",
-    "Back to top": "Nach oben"
+    "Back to top": "Nach oben",
+    "Book tickets": "Tickets buchen",
+    "Featured concert": "Konzert im Fokus",
+    "News archive": "Nachrichtenarchiv",
+    "Performance archive": "Auftrittsarchiv",
+    "Discography": "Diskografie",
+    "Festival information": "Festivalinformationen",
+    "Past performances": "Vergangene Auftritte"
   },
   "fr": {
     "Save CV as PDF": "Enregistrer le CV en PDF",
@@ -643,7 +650,14 @@
     "Watch the Souvenir Latino album release": "Voir la présentation de Souvenir Latino",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Écouter l’enregistrement",
-    "Back to top": "Retour en haut"
+    "Back to top": "Retour en haut",
+    "Book tickets": "Réserver des billets",
+    "Featured concert": "Concert à l’affiche",
+    "News archive": "Archives des actualités",
+    "Performance archive": "Archives des interprétations",
+    "Discography": "Discographie",
+    "Festival information": "Informations sur le festival",
+    "Past performances": "Concerts passés"
   },
   "it": {
     "Save CV as PDF": "Salva il CV in PDF",
@@ -966,7 +980,14 @@
     "Watch the Souvenir Latino album release": "Guardare la presentazione di Souvenir Latino",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Ascoltare la registrazione",
-    "Back to top": "Torna su"
+    "Back to top": "Torna su",
+    "Book tickets": "Prenota i biglietti",
+    "Featured concert": "Concerto in evidenza",
+    "News archive": "Archivio notizie",
+    "Performance archive": "Archivio delle esibizioni",
+    "Discography": "Discografia",
+    "Festival information": "Informazioni sul festival",
+    "Past performances": "Esibizioni passate"
   },
   "sv": {
     "Save CV as PDF": "Spara CV som PDF",
@@ -1289,7 +1310,14 @@
     "Watch the Souvenir Latino album release": "Se presentationen av Souvenir Latino",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Lyssna på inspelningen",
-    "Back to top": "Till toppen"
+    "Back to top": "Till toppen",
+    "Book tickets": "Boka biljetter",
+    "Featured concert": "Utvald konsert",
+    "News archive": "Nyhetsarkiv",
+    "Performance archive": "Framträdandearkiv",
+    "Discography": "Diskografi",
+    "Festival information": "Festivalinformation",
+    "Past performances": "Tidigare framträdanden"
   },
   "hu": {
     "Save CV as PDF": "Önéletrajz mentése PDF-ként",
@@ -1612,7 +1640,14 @@
     "Watch the Souvenir Latino album release": "A Souvenir Latino lemezbemutatójának megtekintése",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "A felvétel meghallgatása",
-    "Back to top": "Vissza az oldal tetejére"
+    "Back to top": "Vissza az oldal tetejére",
+    "Book tickets": "Jegyfoglalás",
+    "Featured concert": "Kiemelt koncert",
+    "News archive": "Hírarchívum",
+    "Performance archive": "Előadásarchívum",
+    "Discography": "Diszkográfia",
+    "Festival information": "Fesztiválinformációk",
+    "Past performances": "Korábbi fellépések"
   },
   "hr": {
     "Save CV as PDF": "Spremi životopis kao PDF",
@@ -1935,7 +1970,14 @@
     "Watch the Souvenir Latino album release": "Pogledajte predstavljanje albuma Souvenir Latino",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Poslušajte snimku",
-    "Back to top": "Povratak na vrh"
+    "Back to top": "Povratak na vrh",
+    "Book tickets": "Rezervirajte ulaznice",
+    "Featured concert": "Izdvojeni koncert",
+    "News archive": "Arhiva vijesti",
+    "Performance archive": "Arhiva nastupa",
+    "Discography": "Diskografija",
+    "Festival information": "Informacije o festivalu",
+    "Past performances": "Prošli nastupi"
   },
   "ru": {
     "Save CV as PDF": "Сохранить резюме в PDF",
@@ -2258,7 +2300,14 @@
     "Watch the Souvenir Latino album release": "Смотреть презентацию альбома Souvenir Latino",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "Слушать запись",
-    "Back to top": "Наверх"
+    "Back to top": "Наверх",
+    "Book tickets": "Забронировать билеты",
+    "Featured concert": "Главный концерт",
+    "News archive": "Архив новостей",
+    "Performance archive": "Архив выступлений",
+    "Discography": "Дискография",
+    "Festival information": "Информация о фестивале",
+    "Past performances": "Прошедшие выступления"
   },
   "zh-TW": {
     "Save CV as PDF": "將履歷儲存為 PDF",
@@ -2581,7 +2630,14 @@
     "Watch the Souvenir Latino album release": "觀看 Souvenir Latino 專輯發表",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "聆聽錄音",
-    "Back to top": "回到頂端"
+    "Back to top": "回到頂端",
+    "Book tickets": "預訂門票",
+    "Featured concert": "焦點音樂會",
+    "News archive": "新聞典藏",
+    "Performance archive": "演出典藏",
+    "Discography": "唱片目錄",
+    "Festival information": "音樂節資訊",
+    "Past performances": "歷年演出"
   },
   "ja": {
     "Save CV as PDF": "履歴書をPDFで保存",
@@ -2904,6 +2960,13 @@
     "Watch the Souvenir Latino album release": "Souvenir Latino のアルバム発表を見る",
     "Que Nadie Sepa Mi Sufrir — Spirituosi": "Que Nadie Sepa Mi Sufrir — Spirituosi",
     "Listen to the audio": "録音を聴く",
-    "Back to top": "ページの先頭へ"
+    "Back to top": "ページの先頭へ",
+    "Book tickets": "チケットを予約",
+    "Featured concert": "注目のコンサート",
+    "News archive": "ニュースアーカイブ",
+    "Performance archive": "公演アーカイブ",
+    "Discography": "ディスコグラフィー",
+    "Festival information": "音楽祭情報",
+    "Past performances": "過去の公演"
   }
 }

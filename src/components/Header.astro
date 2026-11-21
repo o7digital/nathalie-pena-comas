@@ -1,4 +1,6 @@
 ---
+import { featuredConcert } from '../data/schedule';
+import '../styles/schedule.css';
 import { locales, localizer } from '../data/locales';
 import { translations, type Locale } from '../data/translations';
 import { navigation, sectionHref } from '../data/navigation';
@@ -12,5 +14,5 @@ const isHome = Astro.url.pathname === `/${lang}/`;
   <nav class="navlinks" id="navlinks" aria-label={t.navLabel}>
     {navigation.map(({id,...labels}) => <a href={sectionHref(id,lang,isHome)} aria-current={isHome && id==='home'?'location':undefined}>{l(labels.es, labels.en)}</a>)}
   </nav>
-  <div class="navright"><details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={`/${locale.code}/${isHome ? '' : 'privacy/'}`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
+  <div class="navright">{featuredConcert && <a class="booking-link" href={featuredConcert.url} target="_blank" rel="noopener noreferrer" aria-label={l('Reservar entradas','Book tickets')}><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4V7Z"/><path d="M15 7v3m0 2v2m0 2v3"/></svg><span>{l('Reservar entradas','Book tickets')}</span></a>}<details class="language-switch"><summary aria-label={l('Idioma', 'Language')}>{lang.toUpperCase()} ▾</summary><div class="language-options">{locales.map(locale => <a href={`/${locale.code}/${isHome ? '' : 'privacy/'}`} lang={locale.code} hreflang={locale.code} aria-current={lang === locale.code ? 'page' : undefined}>{locale.name}</a>)}</div></details><button class="hamburger" id="menu-btn" aria-controls="navlinks" aria-expanded="false" aria-label={t.menu}>☰</button></div>
 </header>

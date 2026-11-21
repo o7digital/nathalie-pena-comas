@@ -1,0 +1,30 @@
+.concert-spotlight { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:40px; align-items:center; padding:32px; margin-bottom:48px; border:1px solid var(--gold); background:#ffffff08; }
+.concert-spotlight-art { display:block; }
+.concert-spotlight-art img { width:100%; height:auto; }
+.concert-spotlight .kicker { color:var(--gold2); }
+.concert-spotlight h3 { margin:12px 0; font:clamp(36px,4.2vw,62px)/1.08 var(--serif); overflow-wrap:anywhere; }
+.concert-spotlight h3 em { color:var(--gold2); }
+.concert-spotlight p { margin:0 0 22px; font-size:16px; line-height:1.7; }
+.concert-spotlight .concert-spotlight-artist { font-size:19px; margin-bottom:14px; }
+.concert-spotlight .btn-gold { color:var(--ink); background:var(--gold); font-weight:600; }
+.booking-link { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; padding:11px 14px; background:#442332; color:#fff; font-size:13px; line-height:1.4; white-space:nowrap; }
+.booking-link svg { display:none; }
+.official-link-archive { margin-top:40px; border-top:1px solid currentColor; padding-top:20px; }
+.official-link-archive summary { cursor:pointer; font-size:16px; padding:10px 0; }
+.official-link-archive ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 32px; list-style:none; padding:18px 0; margin:0; }
+.official-link-archive a { display:block; font-size:15px; line-height:1.6; text-decoration:underline; text-underline-offset:4px; overflow-wrap:anywhere; }
+.journal-grid > * { min-width:0; }
+.press-feature h3,.news-list h3 { overflow-wrap:anywhere; hyphens:auto; }
+@media(max-width:1450px) and (min-width:1251px) { .nav { gap:14px; padding-inline:2%; } .navlinks { gap:14px; } .navlinks a { font-size:14px; } .navright { gap:12px; } .booking-link { padding:11px 10px; font-size:12px; } }
+@media(max-width:780px) {
+ .concert-spotlight { grid-template-columns:1fr; gap:26px; padding:24px; margin-bottom:32px; }
+ .concert-spotlight-art { width:100%; }
+ .concert-spotlight p { font-size:15px; }
+ .nav,.nav.scrolled { gap:10px; padding-inline:16px; }
+ .navright { gap:6px; }
+ .nav .official-brand img,.nav.scrolled .official-brand img { width:108px; }
+ .booking-link { width:40px; height:42px; padding:8px; }
+ .booking-link span { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+ .booking-link svg { display:block; }
+ .official-link-archive ul { grid-template-columns:1fr; }
+}

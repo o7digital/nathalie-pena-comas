@@ -109,6 +109,13 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Book tickets",
+          "source": "Reservar entradas",
+          "english": "Book tickets",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Replay introduction",
           "source": "Volver a ver la introducción",
           "english": "Replay introduction",
@@ -204,6 +211,20 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Book tickets",
+          "source": "Reservar entradas",
+          "english": "Book tickets",
+          "label": "Texto del enlace",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Featured concert",
+          "source": "Concierto destacado",
+          "english": "Featured concert",
+          "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
           "key": "copy:View full schedule",
           "source": "Ver agenda completa",
           "english": "View full schedule",
@@ -223,6 +244,13 @@
           "english": "Upcoming dates will be announced here.",
           "label": "Descripción",
           "auxiliary": false
+        },
+        {
+          "key": "copy:Past performances",
+          "source": "Archivo de actuaciones",
+          "english": "Past performances",
+          "label": "Texto",
+          "auxiliary": true
         },
         {
           "key": "copy:Programme announced on the official website. Dates subject to updates.",
@@ -776,6 +804,13 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Book tickets",
+          "source": "Reservar entradas",
+          "english": "Book tickets",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Selected recordings",
           "source": "Discografía seleccionada",
           "english": "Selected recordings",
@@ -1094,6 +1129,20 @@
           "english": "Official video · 2026",
           "label": "Texto",
           "auxiliary": false
+        },
+        {
+          "key": "copy:Performance archive",
+          "source": "Archivo de interpretaciones",
+          "english": "Performance archive",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Discography",
+          "source": "Discografía",
+          "english": "Discography",
+          "label": "Título",
+          "auxiliary": false
         }
       ]
     },
@@ -1268,11 +1317,18 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Hear her performances",
-          "source": "Escuchar sus interpretaciones",
-          "english": "Hear her performances",
+          "key": "copy:Festival information",
+          "source": "Información del festival",
+          "english": "Festival information",
           "label": "Texto del enlace",
           "auxiliary": false
+        },
+        {
+          "key": "copy:News archive",
+          "source": "Archivo de noticias",
+          "english": "News archive",
+          "label": "Texto",
+          "auxiliary": true
         }
       ]
     },
@@ -1915,6 +1971,13 @@
           "source": "Navegación principal",
           "english": "Main navigation",
           "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Book tickets",
+          "source": "Reservar entradas",
+          "english": "Book tickets",
+          "label": "Texto del enlace",
           "auxiliary": true
         },
         {

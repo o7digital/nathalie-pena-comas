@@ -17,11 +17,17 @@ for(const lang of ['es','en'] as const)for(const width of [390,1440]){
    await expect(rows.filter({visible:true})).toHaveCount(upcoming.length);
    await expect(agenda.locator('[data-concert-date="2026-12-20"] .concert-ticket-note')).toContainText(lang==='es'?'Entrada libre':'Free admission');
    await expect(agenda.locator('[data-concert-date="2026-12-20"] .concert-tickets a')).toHaveCount(0);
-   await expect(agenda.locator('[data-concert-date="2027-04-07"] .concert-ticket-note')).toContainText(lang==='es'?'Entradas próximamente':'Tickets coming soon');
-   await expect(agenda.locator('[data-concert-date="2027-04-07"] .concert-tickets a')).toHaveCount(0);
+   await expect(agenda.locator('[data-concert-date="2027-04-07"] .concert-tickets a')).toHaveAttribute('href','https://www.tuboleta.com.do/nathaliepe%C3%B1a-comas');
    await more.locator('summary').click();await expect(more).not.toHaveAttribute('open','');
   }
   const first=agenda.locator('.concert-tickets a').first();await expect(first).toHaveAttribute('href',upcoming.find(row=>row.url&&row.ticket_status==='available')!.url);
+  const spotlight=agenda.locator('.concert-spotlight');
+  await expect(spotlight).toBeVisible();
+  await expect(spotlight).toContainText('Quinto Elemento: Tierra');
+  await expect(spotlight).toContainText('20:30');
+  await expect(spotlight.locator('.btn-gold')).toHaveAttribute('href','https://www.tuboleta.com.do/nathaliepe%C3%B1a-comas');
+  await expect(page.locator('#site-header .booking-link')).toBeVisible();
+  await expect(page.locator('#site-header .booking-link')).toHaveAttribute('href','https://www.tuboleta.com.do/nathaliepe%C3%B1a-comas');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await agenda.screenshot({path:`test-results/agenda-${lang}-${width}.png`});
  });

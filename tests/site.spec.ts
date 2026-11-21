@@ -79,7 +79,8 @@ test('reduced motion keeps content visible', async ({ page }) => {
 test('official album gallery and opera performances open the correct destinations', async ({page}) => {
  await page.goto('/en/');
  await expect(page.locator('.album')).toHaveCount(4);
- await expect(page.locator('.release-feature a')).toHaveAttribute('href','https://orcd.co/quintoelemento');
+ await expect(page.locator('.release-feature .btn-gold')).toHaveAttribute('href','https://orcd.co/quintoelemento');
+ await expect(page.locator('.release-feature .concert-reservation')).toHaveAttribute('href','https://www.tuboleta.com.do/nathaliepe%C3%B1a-comas');
  for (const [id,title] of [['pG7lJPLcO-g','Song to the Moon'],['NrGZajhOGAc','O soave fanciulla']]) {
   await page.locator(`.video [data-video="${id}"]`).click();
   await expect(page.locator('#video-title')).toHaveText(title);

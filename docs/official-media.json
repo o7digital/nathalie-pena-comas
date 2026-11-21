@@ -109,6 +109,12 @@
       "url": "https://i.ytimg.com/vi/Ept9wg2IlDo/hqdefault.jpg",
       "credit": "Nathalie Peña-Comas / official YouTube channel",
       "used": true
+    },
+    {
+      "file": "src/assets/official/quinto-elemento-concert.jpg",
+      "url": "https://static.wixstatic.com/media/3b8fb9_0655aff8132e4f5b93f65672413759ac~mv2.jpg",
+      "credit": "Official Quinto Elemento concert artwork, published by TuBoleta for Nathalie Peña-Comas",
+      "used": true
     }
   ]
 }

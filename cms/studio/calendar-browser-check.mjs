@@ -46,7 +46,7 @@ try{
  await page.locator('#search').fill('Quinto Elemento');assert.equal(await page.locator('#items tbody tr').count(),2);
  await page.locator('[data-edit="concert-2027-04-07"]').click();
  assert.equal(await page.locator('#event-day').inputValue(),'7');assert.equal(await page.locator('#event-month').inputValue(),'4');assert.equal(await page.locator('#event-year').inputValue(),'2027');
- assert.equal(await page.locator('#editor [name=ticket_status]').inputValue(),'soon');assert.equal(await page.locator('#editor [name=url]').inputValue(),'https://www.tuboleta.com.do/');
+ assert.equal(await page.locator('#editor [name=ticket_status]').inputValue(),'available');assert.equal(await page.locator('#editor [name=url]').inputValue(),'https://www.tuboleta.com.do/nathaliepe%C3%B1a-comas');
  await page.locator('#cancel-editor').click();assert.equal(writes.length,0);
  await page.locator('#search').fill('');await page.locator('[data-agenda-view=calendar]').click();await page.locator('[data-agenda-today]').click();
  await page.locator('[data-new-date="2026-11-18"]').focus();await page.keyboard.press('Enter');
