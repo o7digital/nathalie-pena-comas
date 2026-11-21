@@ -109,6 +109,13 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Quinto Elemento",
+          "source": "Quinto Elemento",
+          "english": "Quinto Elemento",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Book tickets",
           "source": "Reservar entradas",
           "english": "Book tickets",
@@ -222,6 +229,41 @@
           "source": "Concierto destacado",
           "english": "Featured concert",
           "label": "Antetítulo",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Quinto Elemento:",
+          "source": "Quinto Elemento:",
+          "english": "Quinto Elemento:",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Tierra",
+          "source": "Tierra",
+          "english": "Tierra",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas",
+          "source": "Nathalie Peña-Comas",
+          "english": "Nathalie Peña-Comas",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Sala Carlos Piantini · Teatro Nacional Eduardo Brito",
+          "source": "Sala Carlos Piantini · Teatro Nacional Eduardo Brito",
+          "english": "Sala Carlos Piantini · Teatro Nacional Eduardo Brito",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Santo Domingo",
+          "source": "Santo Domingo",
+          "english": "Santo Domingo",
+          "label": "Texto",
           "auxiliary": false
         },
         {
