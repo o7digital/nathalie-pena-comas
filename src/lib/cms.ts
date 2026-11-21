@@ -3,13 +3,15 @@ import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { assertTranslationsReady } from '../../cms/studio/translations.mjs';
+import {videoSourceType,VIDEO_LIMIT} from '../../cms/studio/public/video-data.js';
 
 export type CmsImage = { src: string; width: number; height: number; cms: true };
 export type ContentImage = ImageMetadata | CmsImage;
-type File = { id: string; width: number | null; height: number | null; type: string };
+type File = { id: string; width: number | null; height: number | null; type: string; filesize?: string | number };
 export type CmsRecord = {
  id: string; status: string; sort: number; title: string; detail?: string;
  image?: File; credit?: string; url?: string; youtube_id?: string; category?: string;
+ source_type?: 'youtube'|'upload'; video_file?: File;
  date?: string; ensemble?: string; venue?: string; city?: string; ticket_status?: string;
  key?: string; locale?: string; value?: string;
  source_hash?: string; auto_translated?: boolean; translated_at?: string;
@@ -35,6 +37,7 @@ async function fetchContent(collection: string): Promise<CmsRecord[]> {
  endpoint.search = new URLSearchParams({ filter: JSON.stringify({ status: { _eq: 'published' } }), fields: '*,image.id,image.width,image.height,image.type', sort: 'sort,id', limit: '-1' }).toString();
  // Text and event collections do not have an image relationship.
  if (collection === 'site_texts' || collection === 'concerts') endpoint.searchParams.set('fields', '*');
+ if(collection==='videos')endpoint.searchParams.set('fields','*,image.id,image.width,image.height,image.type,video_file.id,video_file.type,video_file.filesize');
  const response = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20000) });
  if (!response.ok) throw new Error(`Directus ${collection}: HTTP ${response.status}. Build stopped; keep the previous deployment.`);
  const result = await response.json();
@@ -83,6 +86,16 @@ export function externalLink(value: string | undefined): string {
  const parsed = new URL(value);
  if (parsed.username || parsed.password) throw new Error('Content links must not contain credentials.');
  return parsed.href;
+}
+
+export function uploadedVideoUrl(row:CmsRecord):string|undefined{
+ if(videoSourceType(row)!=='upload')return undefined;
+ const file=row.video_file;
+ if(!file||!['video/mp4','video/webm'].includes(file.type)||!/^[a-f\d-]{36}$/i.test(file.id)||!/^[a-zA-Z\d_-]{1,200}$/.test(row.id)||!Number(file.filesize)||Number(file.filesize)>VIDEO_LIMIT)throw new Error('Published uploaded videos require a valid MP4 or WebM file.');
+ const studio=import.meta.env.PUBLIC_STUDIO_URL||process.env.PUBLIC_STUDIO_URL;
+ if(!studio)throw new Error('PUBLIC_STUDIO_URL is required for uploaded website videos.');
+ const origin=new URL(studio);if(origin.username||origin.password||(origin.protocol!=='https:'&&!['localhost','127.0.0.1'].includes(origin.hostname)))throw new Error('PUBLIC_STUDIO_URL must be an HTTPS Studio URL without credentials.');
+ return new URL(`/site-videos/${encodeURIComponent(row.id)}/${file.id}`,origin).href;
 }
 
 export const textOverrides = await readContent('site_texts');

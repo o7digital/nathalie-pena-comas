@@ -246,6 +246,7 @@ body { background:var(--cream); color:var(--ink); font-size:18px; line-height:1.
 .collection .kicker,.editorial .kicker,.photo-gallery .kicker,.newsletter .kicker { color:#745326; }
 .album-meta span:first-child { display:none; }
 .video-modal-inner,.consent-modal { background:var(--bg); }
+#video-container:has(video){aspect-ratio:16/9;max-height:70vh;background:#000}#video-container video{display:block;width:100%;height:100%;object-fit:contain}
 :focus-visible { outline-color:#745326; }
 .signature-hero :focus-visible,.international :focus-visible,.featured :focus-visible,.agenda :focus-visible,.films :focus-visible,.spirituosi :focus-visible,.footer :focus-visible { outline-color:var(--gold); }
 /* Let the composition grow on short screens instead of covering its controls. */

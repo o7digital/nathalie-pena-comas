@@ -27,7 +27,7 @@ export function editorValue(element){
  return [...element.childNodes].map(visit).join('').replace(/(?:<br\/>)+$/,'');
 }
 
-export function mountVisualEditor(root,{section,rows,photos,valueOf,photoOf,onText,onPhoto,onSave,prefs,dirtyCount,busy,canEdit=()=>true}){
+export function mountVisualEditor(root,{section,rows,photos,valueOf,photoOf,onText,onPhoto,onSave,prefs,dirtyCount,busy,canEdit=()=>true,onEditVideo=()=>{}}){
  const frame=root.querySelector('iframe'),viewport=root.querySelector('.visual-viewport'),inspector=root.querySelector('.visual-inspector-content');
  const fields=new Map(rows.map(row=>[targetKey(row.target),row])),pictures=new Map(photos.map(row=>[`${row.collection}:${row.id}`,row]));
  // innerText includes CSS text-transform; keep the artist's original capitalization.
@@ -62,6 +62,8 @@ export function mountVisualEditor(root,{section,rows,photos,valueOf,photoOf,onTe
  function showPhoto(row,node){
   selected={kind:'image',row,node};highlight(node);
   inspector.innerHTML=`<span class="visual-kind">FOTOGRAFÍA</span><h2>${esc(row.label)}</h2><img class="visual-photo" src="${esc(photoUrl(row))}" alt="${esc(row.label)}"><button type="button" class="button primary" data-upload-visual>Cambiar fotografía</button><p>JPG, PNG, WebP o AVIF · Hasta 25 MB.</p><p>Elige una foto y revisa el resultado en la página. Guarda para conservar el cambio.</p>`;
+  inspector.querySelector('[data-upload-visual]').textContent='Subir una fotografía';
+  if(row.collection==='videos'){inspector.querySelector('.visual-kind').textContent='PORTADA DEL VÍDEO';const button=document.createElement('button');button.type='button';button.className='button quiet';button.dataset.editVisualVideo='';button.textContent='Subir o cambiar el vídeo';button.disabled=!canEdit(row);inspector.querySelector('[data-upload-visual]').after(button);}
   if(!canEdit(row)){inspector.querySelector('[data-upload-visual]').disabled=true;const note=document.createElement('p');note.className='visual-locked-note';note.textContent='Esta fotografía pertenece a una sección fijada en SEO.';inspector.append(note);}
  }
  function outline(){
@@ -146,6 +148,7 @@ export function mountVisualEditor(root,{section,rows,photos,valueOf,photoOf,onTe
   if(button.dataset.outlineText!==undefined){const row=rows[Number(button.dataset.outlineText)];showText(row,true);targets.get(targetKey(row.target))?.[0]?.scrollIntoView({block:'center'});}
   if(button.dataset.outlinePhoto!==undefined){const row=photos[Number(button.dataset.outlinePhoto)],node=imageNodes.get(`${row.collection}:${row.id}`)?.[0];node?.scrollIntoView({block:'center'});showPhoto(row,node);}
   if(button.hasAttribute('data-upload-visual'))root.querySelector('.visual-upload').click();
+  if(button.hasAttribute('data-edit-visual-video')&&selected?.kind==='image'&&canEdit(selected.row))onEditVideo(selected.row);
   if(button.hasAttribute('data-focus-visual')){const node=targets.get(targetKey(selected.row.target))?.[0];node?.scrollIntoView({block:'center'});node?.focus();}
   if(button.dataset.format&&selected?.kind==='text'&&canEdit(selected.row.target)){
    const input=inspector.querySelector('[data-visual-text]');input.focus();document.execCommand(button.dataset.format);change(selected.row,editorValue(input),input);

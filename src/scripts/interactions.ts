@@ -30,25 +30,32 @@ if (!motion.matches && 'IntersectionObserver' in window) {
 }
 const video = $<HTMLDialogElement>('#video-modal');
 const container = $('#video-container');
-let currentVideo = ''; let videoTrigger: HTMLElement | null = null;
+let currentVideo = ''; let currentNative = ''; let videoTrigger: HTMLElement | null = null;
 const validVideo = (id: string) => /^[A-Za-z0-9_-]{11}$/.test(id);
-document.querySelectorAll<HTMLElement>('[data-video]').forEach(button => button.addEventListener('click', () => {
- const id = button.dataset.video ?? ''; if (!validVideo(id) || !video) return;
- currentVideo = id; videoTrigger = button;
+function nativeVideoUrl(value:string){try{const url=new URL(value,location.origin);return !url.username&&!url.password&&(url.origin===location.origin||url.origin===video?.dataset.studioOrigin)&&/^\/site-videos\/[a-zA-Z\d_-]{1,200}\/[a-f\d-]{36}$/i.test(url.pathname)&&!url.search&&!url.hash?url.href:'';}catch{return '';}}
+document.querySelectorAll<HTMLElement>('[data-video],[data-native-video]').forEach(button => button.addEventListener('click', () => {
+ const id = button.dataset.video ?? '',native=button.dataset.nativeVideo?nativeVideoUrl(button.dataset.nativeVideo):''; if ((!native&&!validVideo(id)) || !video) return;
+ currentVideo = native?'':id;currentNative=native; videoTrigger = button;
  const title = button.dataset.title ?? (id === 'HbRmwVkSP8Q' ? 'Sombras Nada Más' : 'Esclavo y Amo');
  const heading = $('#video-title'); if (heading) heading.textContent = title;
- const fallback = $<HTMLAnchorElement>('#video-fallback'); if (fallback) fallback.href = `https://www.youtube.com/watch?v=${id}`;
+ const fallback = $<HTMLAnchorElement>('#video-fallback'),labels=$('#video-labels'); if (fallback){fallback.href=native||`https://www.youtube.com/watch?v=${id}`;fallback.textContent=(native?labels?.dataset.nativeFallback:labels?.dataset.youtubeFallback)+' ↗';}
+ const notice=$('#video-external-notice');if(notice)notice.hidden=Boolean(native);
  $('.video-consent')?.removeAttribute('hidden');
  video.showModal(); document.body.style.overflow = 'hidden';
 }));
 $('#load-video')?.addEventListener('click', () => {
- if (!validVideo(currentVideo) || !container) return;
+ if(!container)return;
+ if(currentNative){
+  const player=document.createElement('video');player.controls=true;player.playsInline=true;player.autoplay=true;player.preload='metadata';player.src=currentNative;player.setAttribute('aria-label',$('#video-title')?.textContent||'Nathalie Peña-Comas');
+  container.replaceChildren(player);$('.video-consent')?.setAttribute('hidden','');void player.play().catch(()=>{});return;
+ }
+ if (!validVideo(currentVideo)) return;
  const iframe = document.createElement('iframe'); iframe.title = $('#video-title')?.textContent ?? 'Nathalie Peña-Comas';
  iframe.src = `https://www.youtube-nocookie.com/embed/${currentVideo}?autoplay=1&rel=0`;
  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; iframe.allowFullscreen = true; iframe.referrerPolicy = 'strict-origin-when-cross-origin';
  container.replaceChildren(iframe); $('.video-consent')?.setAttribute('hidden', '');
 } );
-video?.addEventListener('close', () => { container?.replaceChildren(); document.body.style.overflow = ''; videoTrigger?.focus(); });
+video?.addEventListener('close', () => {container?.querySelectorAll('video').forEach(player=>{player.pause();player.removeAttribute('src');player.load();});container?.replaceChildren(); document.body.style.overflow = ''; videoTrigger?.focus(); });
 $('[data-close-video]')?.addEventListener('click', () => video?.close());
 video?.addEventListener('click', e => { if (e.target === video) video.close(); });
 const consentDialog = $<HTMLDialogElement>('#consent-modal');
@@ -103,7 +110,7 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', event => {
  if (event.key !== 'Tab') return;
  const dialog = document.querySelector<HTMLDialogElement>('dialog[open]'); if (!dialog) return;
- const focusable = [...dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), iframe, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
+ const focusable = [...dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), iframe, video, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
  const first = focusable[0], last = focusable.at(-1); if (!first || !last) return;
  if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
  else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { event.preventDefault(); first.focus(); }

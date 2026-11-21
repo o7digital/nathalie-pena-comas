@@ -35,3 +35,9 @@ test('collection locks cover drafts, archive, ordering and featured content; pen
  const required={...emptySeoRule('gallery'),required_keywords:['Ensayo']};assert.throws(()=>assertSeoPublication([required],[gallery],before),/SEO pendiente/);
  const after=proposedContent(before,{record:{collection:'gallery',id:'b',data:{status:'published'}}});assert.doesNotThrow(()=>assertSeoPublication([required],[gallery],after));
 });
+test('native video files are frozen while new nullable fields preserve existing YouTube lock fingerprints',()=>{
+ const section={id:'videos',title:'Vídeos',collection:'videos',fields:[]},before={...content,videos:[{id:'clip',title:'Recital',status:'published',youtube_id:'abcdefghijk',image:'cover'}]},lock={...emptySeoRule('videos'),locked:true};
+ const normalized=proposedContent(before,{record:{collection:'videos',id:'clip',data:{source_type:'youtube',video_file:null}}});assert.equal(sectionFingerprint(section,before),sectionFingerprint(section,normalized));
+ const native=proposedContent(before,{record:{collection:'videos',id:'clip',data:{source_type:'upload',video_file:'file-a',youtube_id:null}}});assert.throws(()=>assertSeoMutation([lock],[section],before,native),/fijada/);
+ const replacement=proposedContent(native,{record:{collection:'videos',id:'clip',data:{video_file:'file-b'}}});assert.throws(()=>assertSeoMutation([lock],[section],native,replacement),/fijada/);
+});

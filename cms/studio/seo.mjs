@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {emptySeoRule,seoChecks,sectionRecords,SeoError} from './public/seo-data.js';
+import {videoFileId,videoSourceType} from './public/video-data.js';
 export {SeoError};
 const locales=['es','en','de','fr','it','sv','hu','hr','ru','zh-TW','ja'];
 const imageId=row=>typeof row.image==='string'?row.image:row.image?.id||null;
@@ -11,7 +12,7 @@ export function sectionFingerprint(section,content){
  const snapshot={texts:keys.map(key=>[key,locales.map(locale=>{
   const row=texts.find(row=>row.key===key&&row.locale===locale),field=section.fields.find(field=>field.key===key);
   return [locale,row?.value??(locale==='es'?field?.source:field?.localizations?.[locale])??null,row?.status||'published'];
- })]),records:records.map(row=>({...Object.fromEntries(recordFields.map(field=>[field,row[field]??null])),image:imageId(row)})),images:(content.site_images||[]).filter(row=>section.image&&row.key===section.image).sort((a,b)=>String(a.id).localeCompare(String(b.id))).map(row=>({id:row.id,key:row.key,title:row.title,status:row.status,sort:row.sort??null,image:imageId(row)}))};
+ })]),records:records.map(row=>({...Object.fromEntries(recordFields.map(field=>[field,row[field]??null])),image:imageId(row),...(videoSourceType(row)==='upload'?{source_type:'upload',video_file:videoFileId(row)}:{})})),images:(content.site_images||[]).filter(row=>section.image&&row.key===section.image).sort((a,b)=>String(a.id).localeCompare(String(b.id))).map(row=>({id:row.id,key:row.key,title:row.title,status:row.status,sort:row.sort??null,image:imageId(row)}))};
  return createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
 }
 export function assertSeoMutation(rules,sections,before,after,{touchedKeys=[]}={}){
