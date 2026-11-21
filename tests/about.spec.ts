@@ -20,6 +20,8 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
   await page.setViewportSize({width,height:900});
   await page.goto(`/${lang}/#about`);
   const about=page.locator('#about');
+  await expect(about.locator('.story-visual img')).toHaveCount(1);
+  await expect(about.locator('.biography-portrait')).toHaveCount(0);
   await expect(about.locator('.biography-prose>p')).toHaveCount(12);
   await expect(about.locator('.biography-prose>p:visible')).toHaveCount(12);
   await expect(about.locator('[role=tab],.biography-index,.biography-chapter')).toHaveCount(0);
@@ -41,7 +43,7 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
   if(width===1440) {
    const reading=await about.locator('.biography-prose').boundingBox();
    expect(reading!.width).toBeGreaterThan(600);
-   expect(reading!.width).toBeLessThan(850);
+   expect(reading!.width).toBeLessThan(880);
   }
   for(const paragraph of await about.locator('.biography-prose>p').all()) {
    expect(await paragraph.evaluate(el=>Number.parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(16);

@@ -288,44 +288,9 @@
       "icon": "photo",
       "anchor": "about",
       "page": "home",
-      "image": "biography",
+      "image": "story",
       "collection": null,
       "fields": [
-        {
-          "key": "copy:Nathalie Peña-Comas — official portrait",
-          "source": "Nathalie Peña-Comas — retrato oficial",
-          "english": "Nathalie Peña-Comas — official portrait",
-          "label": "Texto",
-          "auxiliary": true
-        },
-        {
-          "key": "copy:Singing is something mystical and spiritual, it is like healing… This is a music for the soul.",
-          "source": "Cantar es algo místico y espiritual, es como sanar… Es música para el alma.",
-          "english": "Singing is something mystical and spiritual, it is like healing… This is a music for the soul.",
-          "label": "Descripción",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Biography",
-          "source": "Biografía",
-          "english": "Biography",
-          "label": "Título",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Save CV as PDF",
-          "source": "Guardar CV en PDF",
-          "english": "Save CV as PDF",
-          "label": "Texto del enlace",
-          "auxiliary": false
-        },
-        {
-          "key": "copy:Explore the complete repertoire",
-          "source": "Explorar el repertorio completo",
-          "english": "Explore the complete repertoire",
-          "label": "Texto del enlace",
-          "auxiliary": false
-        },
         {
           "key": "copy:The artist",
           "source": "La artista",
@@ -355,11 +320,25 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Save CV as PDF",
+          "source": "Guardar CV en PDF",
+          "english": "Save CV as PDF",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
           "key": "copy:Full biography · Print edition",
           "source": "Biografía completa · Versión imprimible",
           "english": "Full biography · Print edition",
           "label": "Texto",
           "auxiliary": false
+        },
+        {
+          "key": "copy:Nathalie Peña-Comas — official portrait",
+          "source": "Nathalie Peña-Comas — retrato oficial",
+          "english": "Nathalie Peña-Comas — official portrait",
+          "label": "Texto",
+          "auxiliary": true
         },
         {
           "key": "copy:Nathalie Peña-Comas / Soprano",
@@ -590,6 +569,13 @@
           "source": "Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.",
           "english": "Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.",
           "label": "Párrafo 7",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Explore the complete repertoire",
+          "source": "Explorar el repertorio completo",
+          "english": "Explore the complete repertoire",
+          "label": "Texto del enlace",
           "auxiliary": false
         },
         {
