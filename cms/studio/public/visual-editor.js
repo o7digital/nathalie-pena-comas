@@ -30,7 +30,8 @@ export function editorValue(element){
 export function mountVisualEditor(root,{section,rows,photos,valueOf,photoOf,onText,onPhoto,onSave,prefs,dirtyCount,busy}){
  const frame=root.querySelector('iframe'),viewport=root.querySelector('.visual-viewport'),inspector=root.querySelector('.visual-inspector-content');
  const fields=new Map(rows.map(row=>[targetKey(row.target),row])),pictures=new Map(photos.map(row=>[`${row.collection}:${row.id}`,row]));
- const readValue=(row,node)=>row.rich?editorValue(node):node.innerText.replace(/\n/g,' ');
+ // innerText includes CSS text-transform; keep the artist's original capitalization.
+ const readValue=(row,node)=>row.rich?editorValue(node):node.textContent.replace(/\n/g,' ');
  const htmlOf=(row,value)=>row.rich?safeHtml(value):esc(value);
  const targets=new Map(),imageNodes=new Map();
  let doc,activated,selected,destroyed=false,mode='edit',device=prefs.device||'desktop',saving=false;
