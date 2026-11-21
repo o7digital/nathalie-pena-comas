@@ -27,7 +27,7 @@ try{
   };
   return route.fulfill({status:Object.hasOwn(data,path)?200:404,json:data[path]||{error:'Unexpected test path'}});
  });
- await page.goto(origin+'/#about');await page.locator('[data-section-form=about]').waitFor();
+ await page.goto(origin+'/#about');await page.locator('.studio-text-fields>summary').click();await page.locator('[data-section-form=about]').waitFor();
  const section=siteMap.sections.find(row=>row.id==='about');
  assert.equal(await page.locator('[data-text-key]').count(),section.fields.length);
  const field=section.fields.find(row=>!row.auxiliary),input=page.locator(`[data-text-key=${JSON.stringify(field.key)}]`);
@@ -45,9 +45,9 @@ try{
  await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/npc-editable-studio-desktop.png',fullPage:true});
  failNext=true;await input.fill('Un cambio que debe conservarse.');await page.getByRole('button',{name:'Traducir a 10 idiomas ↗',exact:true}).click();
  await page.locator('.section-save-error').filter({hasText:'Conserva tu original'}).waitFor();assert.equal(await input.inputValue(),'Un cambio que debe conservarse.');assert.equal(await input.isDisabled(),false);
- await page.locator('#navigation a[href="#albums"]').click();await page.locator('[data-section-form=albums]').waitFor();
+ await page.locator('#navigation a[href="#albums"]').click();await page.locator('.studio-text-fields>summary').click();await page.locator('[data-section-form=albums]').waitFor();
  assert.equal(await page.locator('.section-copy-panel').getAttribute('open'),'');assert.equal(await page.getByRole('button',{name:'Traducir a 10 idiomas ↗',exact:true}).isVisible(),true);
- await page.locator('#navigation a[href="#privacy"]').click();await page.locator('[data-section-form=privacy]').waitFor();
+ await page.locator('#navigation a[href="#privacy"]').click();await page.locator('.studio-text-fields>summary').click();await page.locator('[data-section-form=privacy]').waitFor();
  assert.equal(await page.locator('[data-preview-locale=de]').getAttribute('href'),'https://preview.example.test/de/privacy/');
  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/npc-editable-studio-mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);console.log('Content Studio UX passed: original text, editable green fields, explicit Translate, unsaved input translation, error recovery, 11 language links, read-only review, media sections, privacy pages and mobile.');

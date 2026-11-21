@@ -6,6 +6,12 @@ Interface éditoriale dédiée, hébergée dans le service Railway `studio`, env
 
 Utiliser les identifiants Directus existants pour le mode « Studio ». L'administrateur provisoire accède aussi à l'ARM depuis cette session.
 
+Les rubriques s'ouvrent sur un **éditeur visuel WYSIWYG**, comme Etapel Studio : la vraie page du site, avec ses polices, sa mise en page et ses photographies. Cliquer sur un texte pour écrire directement dans le rendu ou dans l'inspecteur à droite ; cliquer sur une photo pour la remplacer et voir immédiatement le résultat. « Contenido » retrouve aussi les libellés et contenus dépliables. Les vues Ordinateur / Tablette / Mobile, le mode « Vista previa » en lecture seule et l'agrandissement permettent de vérifier le rendu avant de sauvegarder. L'Agenda conserve son calendrier au-dessus de l'éditeur visuel.
+
+« Guardar y traducir » conserve les textes et images dans Directus et prépare les dix traductions. Les changements restent en mémoire pendant la navigation entre rubriques et en cas d'échec de traduction ou d'enregistrement. Le rendu du Studio reprend immédiatement les dernières valeurs enregistrées, même avant la reconstruction du site. « Actualizar vista previa » lance ensuite uniquement le déploiement Vercel de `dev`. Les formulaires et liens de langues restent disponibles sous « Campos de texto, idiomas y traducciones ».
+
+Le build génère 22 documents compagnons sous `/_studio/pages/`, annotés avec les identités CMS stables sans modifier le HTML public. Le service Studio les charge uniquement depuis sa preview configurée, après authentification. Le document est nettoyé et chargé dans une iframe sandbox sans scripts : ses CSS, polices et photos restent celles du site, ses animations, lecteurs externes et formulaires actifs sont désactivés. Le proxy authentifié `/api/preview-asset` ne permet que les CSS, polices et images du site configuré ; les liens des CSS passent aussi par ce proxy. `VERCEL_AUTOMATION_BYPASS_SECRET` réutilise un accès d'automatisation Vercel existant pour cet aperçu protégé et reste exclusivement sur Railway dev. Aucun jeton CMS ou Vercel n'est transmis au navigateur ni à l'iframe. Le snapshot de construction intermédiaire est supprimé du résultat du build.
+
 Le menu suit le site : **Inicio, Agenda, La artista, Trayectoria, Discografía, Repertorio, Vídeos, Prensa y noticias, Spirituosi, Galería, Newsletter, Contacto**. « Resumen » présente l'ensemble et « Idiomas y ajustes » regroupe les textes généraux, la navigation et les messages de Nath AI. « Privacidad » donne accès aux textes de la page de confidentialité. Les images sont éditables dans leur section ; les albums, concerts, vidéos et photos restent visibles dans les rubriques correspondantes. Les textes des rubriques contenant une collection sont ouverts sous « Textos de… » et peuvent être repliés.
 
 Le catalogue couvre les **190 textes fixes** actuellement utilisés dans le site et ses contrôles, en complément des textes des collections médias. Les textes existants sont préremplis. Le vert, le fond léger et le libellé « Editable » identifient les champs modifiables ; les traductions en relecture restent de couleur neutre.
@@ -67,7 +73,7 @@ Validation ARM : `node cms/studio/arm-browser-check.mjs` utilise des fixtures is
 
 ## Configuration et sécurité
 
-Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `ARM_API_URL`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`, `ARM_ADMIN_EMAIL`, `STUDIO_ARTIST_EMAIL`, `STUDIO_ARTIST_USER_ID`, `ARM_SERVICE_EMAIL`, `ARM_SERVICE_PASSWORD`, `STUDIO_INCLUDED_UNTIL`, `STUDIO_CUSTOMER_EMAIL`, `OPENAI_API_KEY` et `TRANSLATION_MODEL`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
+Variables serveur : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET` (minimum 32 caractères aléatoires), `STUDIO_ORIGIN`, `STUDIO_CONTENT_TOKEN`, `VERCEL_PREVIEW_DEPLOY_HOOK`, `STUDIO_PREVIEW_URL`, `VERCEL_AUTOMATION_BYPASS_SECRET`, `ARM_API_URL`, `ARM_TENANT_ID`, `ARM_SUBSCRIPTION_ID`, `ARM_ADMIN_EMAIL`, `STUDIO_ARTIST_EMAIL`, `STUDIO_ARTIST_USER_ID`, `ARM_SERVICE_EMAIL`, `ARM_SERVICE_PASSWORD`, `STUDIO_INCLUDED_UNTIL`, `STUDIO_CUSTOMER_EMAIL`, `OPENAI_API_KEY` et `TRANSLATION_MODEL`. Aucun secret ne doit être ajouté à Git ni aux variables publiques du site.
 
 Les sessions sont chiffrées et authentifiées dans un cookie HttpOnly, Secure en déploiement, SameSite Strict. Les jetons Directus/Pulse restent côté serveur. Les écritures exigent l'origine configurée ; seuls les chemins et champs autorisés sont transmis. Les médias nécessitent une session et sont servis avec un cache privé. Le Studio ne sert aucun fichier serveur ni accès arbitraire aux API d'administration.
 
@@ -81,7 +87,7 @@ railway run --no-local --service directus --environment dev -- node cms/studio/p
 
 `provision-arm.cjs` a provisionné le tenant via les services métier déjà déployés du CRM, puis attribué cette seule souscription à l'espace de l'administrateur désigné et enregistré sa période incluse. Il ne modifie pas le code du CRM central. Ce script doit s'exécuter dans le conteneur API CRM avec une configuration client explicite. **Sa sortie contient les identifiants techniques : la capturer dans un processus privé et l'envoyer aux variables Railway par stdin, sans l'afficher ni la sauvegarder dans Git.** Une réexécution retrouve la même souscription et conserve son échéance, mais renouvelle le mot de passe du seul connecteur ; mettre à jour Railway et redéployer immédiatement. Ne pas réexécuter pour prolonger un abonnement.
 
-Le service utilise `cms/studio/Dockerfile` avec le dépôt comme contexte. Le démarrage ne nécessite aucune installation de dépendances Node. Déploiement :
+Le service utilise `cms/studio/Dockerfile` avec le dépôt comme contexte. L'image installe `parse5` depuis le fichier verrouillé pendant sa construction ; le démarrage ne nécessite aucune installation. Déploiement :
 
 ```sh
 railway up --service studio --environment dev --detach
@@ -94,6 +100,7 @@ Les sessions sont sans stockage local. Tous les contenus restent dans les volume
 ```sh
 npm --prefix cms/studio run check
 npm --prefix cms/studio test
+node cms/studio/visual-browser-check.mjs
 node cms/studio/content-browser-check.mjs
 node cms/studio/arm-browser-check.mjs
 railway run --no-local --service directus --environment dev -- node cms/studio/editor-browser-check.mjs
@@ -102,6 +109,8 @@ railway run --no-local --service directus --environment dev -- node cms/studio/b
 ```
 
 Le dernier test attend un Studio local sur le port 4380 ; définir `STUDIO_TEST_URL` pour viser le service déployé. Il vérifie une connexion réelle, les images privées, la création/modification d'un brouillon d'agenda, l'état du connecteur ARM, le mobile et la déconnexion. Son brouillon de test est supprimé en fin de parcours avec le compte administrateur. Les tests unitaires isolent les services et vérifient les frontières de permissions et de tenant.
+
+`visual-browser-check.mjs` utilise le vrai design issu de `npm run build` avec des données CMS isolées. Il vérifie l'édition directe, l'inspecteur, l'enregistrement, les erreurs et brouillons conservés, le remplacement de photo, les trois tailles, la lecture seule, la reprise après une erreur de chargement, la confidentialité et le mobile. Il n'écrit aucun contenu client.
 
 `arm-browser-check.mjs` utilise uniquement des données de test isolées pour vérifier les formulaires, les étapes des propositions et les statuts des tâches. Il ne se connecte à aucun compte CRM réel.
 

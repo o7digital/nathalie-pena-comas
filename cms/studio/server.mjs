@@ -10,6 +10,7 @@ import { translateSpanish,translationWrites,localizedFields,recordTextKey,assert
 import {validDate} from './public/calendar.js';
 import {createArm} from './arm.mjs';
 import {ArmError} from './public/arm-data.js';
+import {previewPath,previewDocument,assetPath,proxyCss,PreviewError} from './preview.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fields = {
@@ -29,6 +30,7 @@ export function createStudioServer(options = {}) {
   origin: process.env.STUDIO_ORIGIN,
   publishHook: process.env.VERCEL_PREVIEW_DEPLOY_HOOK,
   preview: process.env.STUDIO_PREVIEW_URL || 'https://nathalie-pena-comas-git-dev-olivier-steineur.vercel.app/es/',
+  previewBypass: process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
   crm: process.env.ARM_API_URL || 'https://api.crm.o7digitalgroup.com/api',
   tenant: process.env.ARM_TENANT_ID,
   editorToken: process.env.STUDIO_CONTENT_TOKEN,
@@ -45,6 +47,8 @@ export function createStudioServer(options = {}) {
  if (!config.cms || !config.secret || config.secret.length < 32) throw new Error('Configure DIRECTUS_URL and a strong STUDIO_SESSION_SECRET.');
  const encryptionKey = createHash('sha256').update(config.secret).digest();
  const attempts = new Map();
+ const previewAssets=new Map();
+ const previewHeaders=()=>config.previewBypass?{'x-vercel-protection-bypass':config.previewBypass}:{};
  let imageQueue = Promise.resolve();
  let delegatedToken = null;
  let contentQueue=Promise.resolve();
@@ -206,7 +210,7 @@ export function createStudioServer(options = {}) {
  async function serve(req, res) {
   const url = new URL(req.url, 'http://studio.local'), path=url.pathname;
   res.setHeader('X-Content-Type-Options','nosniff'); res.setHeader('Referrer-Policy','same-origin'); res.setHeader('X-Frame-Options','DENY');
-  res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; media-src 'self' blob:; font-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+  res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' blob: data:; style-src 'self'; media-src 'self' blob:; font-src 'self'; script-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   if (path==='/health') return send(res,{ok:true});
   if(/^\/social-media\/[a-f\d-]{36}$/.test(path)&&['GET','HEAD'].includes(req.method))return socialMedia.publicStream(req,res,url);
   if (path==='/api/config' && req.method==='GET') return send(res,{armReady:armReady(),preview:config.preview,client:'Nathalie Peña-Comas',includedUntil:config.includedUntil || null,sourceLocale:'es',translationReady:Boolean(config.translationKey||config.translate),translatedLanguages:10});
@@ -248,6 +252,35 @@ export function createStudioServer(options = {}) {
     return send(res,{email:s.email,name:s.name,armConnected:Boolean(s.crmToken || canDelegate(profile?.data)),armReady:armReady(),reportingOwner:Boolean(config.adminEmail && profile?.data?.email?.toLowerCase()===config.adminEmail.toLowerCase())});
    }
    if(path==='/api/site-map' && req.method==='GET')return send(res,siteMap);
+   if(path==='/api/preview'&&req.method==='GET'){
+    let template;
+    try{template=previewPath(url.searchParams.get('page'));}catch(error){throw new ApiError(error.status||400,error.message);}
+    const response=await fetch(new URL(template,config.preview),{headers:previewHeaders(),signal:AbortSignal.timeout(20000),redirect:'error'});
+    if(!response.ok)throw new ApiError(503,'La página visual no está disponible. Vuelve a intentar en unos instantes.');
+    if(Number(response.headers.get('content-length'))>5_000_000)throw new ApiError(502,'La página supera el tamaño de vista previa.');
+    const raw=await response.text();if(raw.length>5_000_000)throw new ApiError(502,'La página supera el tamaño de vista previa.');
+    let html;
+    const assetOrigin=config.origin||`http://${req.headers.host}`;
+    try{html=previewDocument(JSON.parse(raw),url.searchParams.get('page'),config.preview,{assetOrigin});}catch(error){throw new ApiError(error instanceof PreviewError?error.status:502,'No se pudo preparar la página visual.');}
+    const siteOrigin=new URL(config.preview).origin;
+    res.setHeader('X-Frame-Options','SAMEORIGIN');
+    res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'none'; style-src 'self' 'unsafe-inline' ${siteOrigin}; img-src 'self' blob: data: ${siteOrigin}; font-src 'self' data: ${siteOrigin}; frame-ancestors 'self'; form-action 'none'; base-uri ${siteOrigin}; sandbox allow-same-origin`);
+    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'});return res.end(html);
+   }
+   if(path==='/api/preview-asset'&&req.method==='GET'){
+    let asset;try{asset=assetPath(url.searchParams.get('path'));}catch(error){throw new ApiError(400,error.message);}
+    let cached=previewAssets.get(asset);
+    if(!cached||cached.until<Date.now()){
+     const response=await fetch(new URL(asset,config.preview),{headers:previewHeaders(),signal:AbortSignal.timeout(30000),redirect:'error'});
+     const type=response.headers.get('content-type')?.split(';')[0];
+     if(!response.ok||!type||!(/^(?:image\/(?:jpeg|png|webp|avif|svg\+xml)|font\/[\w.-]+|application\/(?:font-woff|x-font-ttf|octet-stream)|text\/css)$/.test(type)))throw new ApiError(502,'No se pudo cargar el diseño de esta página.');
+     if(Number(response.headers.get('content-length'))>25*1024*1024)throw new ApiError(413,'El recurso supera el tamaño permitido.');
+     let bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25*1024*1024)throw new ApiError(413,'El recurso supera el tamaño permitido.');
+     if(type==='text/css')bytes=Buffer.from(proxyCss(bytes.toString('utf8'),asset,config.preview,config.origin||`http://${req.headers.host}`));
+     cached={bytes,type,until:Date.now()+60000};if(previewAssets.size>=80)previewAssets.delete(previewAssets.keys().next().value);previewAssets.set(asset,cached);
+    }
+    res.writeHead(200,{'Content-Type':cached.type,'Cache-Control':'private, max-age=60'});return res.end(cached.bytes);
+   }
    if(path.startsWith('/api/social')) {
     const previewMedia=path.match(/^\/api\/social\/media-preview\/([a-f\d-]{36})$/);
     if(previewMedia&&req.method==='GET')return socialMedia.privateStream(req,res,previewMedia[1],s.access);
@@ -431,7 +464,7 @@ export function createStudioServer(options = {}) {
   }
   if(path==='/social-callback.html')res.setHeader('Referrer-Policy','no-referrer');
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const armAsset=['/arm.js','/arm-data.js','/arm.css'].includes(path)?path.slice(1):null;
   const relative=armAsset || (path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
@@ -443,7 +476,7 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','visual-editor.js','visual-editor.css','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  return http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
