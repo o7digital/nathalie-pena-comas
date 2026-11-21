@@ -1,0 +1,33 @@
+/* The official site's portrait, artist quote and uninterrupted biography. */
+.story.artist-biography { padding:0; background:#fff; color:#29262a; }
+.biography-portrait { position:relative; height:clamp(460px,49vw,720px); overflow:hidden; background:#6b4f5b; }
+.biography-portrait>img { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 38%; }
+.biography-portrait::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#241a256b,transparent 65%),linear-gradient(0deg,#241a2550,transparent 55%); pointer-events:none; }
+.biography-portrait blockquote { position:absolute; z-index:1; bottom:48px; left:max(7%,calc((100% - 1180px)/2)); max-width:340px; margin:0; color:#fff; }
+.story .biography-portrait blockquote p { color:inherit; margin:0 0 14px; font:italic 22px/1.65 var(--sans); }
+.biography-portrait cite { font-style:normal; font-size:15px; letter-spacing:.025em; }
+.biography-reading { display:grid; grid-template-columns:180px minmax(0,820px); gap:64px; max-width:1200px; margin:0 auto; padding:90px 30px 100px; }
+.biography-heading { align-self:start; position:sticky; top:135px; }
+.story .biography-heading h2 { margin:0; color:#29262a; font:clamp(35px,3.2vw,48px)/1.1 var(--serif); letter-spacing:-.025em; overflow-wrap:anywhere; }
+.biography-prose { min-width:0; }
+.story .biography-prose p { margin:0 0 24px; color:#353133; font-size:17px; line-height:1.95; overflow-wrap:anywhere; }
+.biography-prose p[id] { scroll-margin-top:130px; }
+.biography-reading-actions { display:flex; gap:24px; align-items:center; flex-wrap:wrap; margin-top:38px; padding-top:26px; border-top:1px solid #dcd2ca; }
+.biography-reading-actions .cv-button { min-height:0; padding:0 0 4px; color:#64482c; border:0; border-bottom:1px solid currentColor; background:none; font:500 14px/1.6 var(--sans); }
+.biography-reading-actions .text-link { margin:0; font-size:14px; }
+@media(max-width:900px) {
+ .biography-reading { grid-template-columns:140px minmax(0,1fr); gap:36px; padding:65px 32px 75px; }
+ .biography-portrait blockquote { left:32px; bottom:32px; max-width:300px; }
+}
+@media(max-width:600px) {
+ .biography-portrait { height:530px; }
+ .biography-portrait>img { object-position:57% 35%; }
+ .biography-portrait::after { background:linear-gradient(0deg,#241a25c9,transparent 65%); }
+ .biography-portrait blockquote { left:24px; right:24px; bottom:28px; max-width:none; }
+ .story .biography-portrait blockquote p { font-size:19px; line-height:1.6; }
+ .biography-reading { display:block; padding:48px 24px 65px; }
+ .biography-heading { position:static; margin-bottom:30px; }
+ .story .biography-heading h2 { font-size:42px; }
+ .story .biography-prose p { font-size:16px; line-height:1.85; margin-bottom:22px; }
+ .biography-reading-actions { gap:20px; }
+}

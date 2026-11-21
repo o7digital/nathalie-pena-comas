@@ -11,7 +11,7 @@ const facts = [
  'Eugene Kohn', 'Valery Polyansky', 'Martin Sieghart', 'José Antonio Molina', 'Francisco Navarro Lara', 'Yao-Yu Wu', 'Ernst Kovacic', 'Joji Hattori', 'Ola Rudner', 'Ferenc Gábor', 'Harald Krumpöck',
  'Andrea Bocelli', 'KS Ramón Vargas', 'Gregory Kunde', 'Joyce DiDonato', 'Aquiles Machado', 'Stephen Costello', 'Morris Robinson', 'Tuomas Katajala', 'Johnny Ventura', 'Danny Rivera', 'Plácido Domingo Jr.',
  'Souvenir Latino', 'Global Music Awards', 'BBC Radio 3', '2015', 'Rai 3', 'Belarusian Broadcasting Company', 'Slovenian National Radio', 'Dominican State Radio and Television Corporation',
- 'Ebe Stignani', 'Montecatini', 'Osaka', 'Ada Sari', '2014 · 2015 · 2016 · 2018 · 2019 · 2020 · 2021 · 2022 · 2026',
+ 'Ebe Stignani', 'Montecatini', 'Osaka', 'Ada Sari', '2014', '2015', '2016', '2020', '2021', '2022', '2026',
 ];
 
 for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',768],['ru',390],['zh-TW',390],['ja',390]] as const) {
@@ -20,11 +20,9 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
   await page.setViewportSize({width,height:900});
   await page.goto(`/${lang}/#about`);
   const about=page.locator('#about');
-  await expect(about.locator('[data-biography]')).toHaveCount(6);
-  await expect(about.locator('.biography-roles li')).toHaveCount(10);
-  await expect(about.locator('[data-biography="international"] .biography-countries li')).toHaveCount(25);
-  await expect(about.locator('[data-biography="spirituosi"] .biography-countries li')).toHaveCount(5);
-  await expect(about.locator('[data-biography="collaborations"] .biography-names li')).toHaveCount(32);
+  await expect(about.locator('.biography-prose>p')).toHaveCount(12);
+  await expect(about.locator('.biography-prose>p:visible')).toHaveCount(12);
+  await expect(about.locator('[role=tab],.biography-index,.biography-chapter')).toHaveCount(0);
   const text=await about.textContent()??'';
   for(const fact of facts) {
    // Cities in editorial prose are translated; their international proper names remain in the institution lists.
@@ -35,58 +33,42 @@ for (const [lang,width] of [['es',1440],['en',390],['fr',390],['fr',320],['de',7
    expect(text).toContain(fact);
   }
   if(lang==='fr') {
-   await expect(about).toContainText('Formation et vocation');
    await expect(about).toContainText('Saint-Domingue');
    await expect(about).toContainText('deuxième prix');
    await expect(about).toContainText('composition polonaise');
    expect(text).not.toContain('Her acting debut');
   }
-  // One chapter is shown at a time; each tab exposes its complete content.
-  await expect(about.locator('[role="tab"]')).toHaveCount(6);
-  await expect(about.locator('[role="tabpanel"]:visible')).toHaveCount(1);
-  for(const link of await about.locator('.biography-index a').all()) {
-   const target=await link.getAttribute('href');
-   await link.click();
-   await expect(link).toHaveAttribute('aria-selected','true');
-   await expect(about.locator(target!)).toBeVisible();
-   await expect(about.locator('[role="tabpanel"]:visible')).toHaveCount(1);
-  }
   if(width===1440) {
-   await about.locator('a[href="#about-training"]').click();
-   const dossier=await about.boundingBox();
-   expect(dossier!.height).toBeLessThan(1300);
+   const reading=await about.locator('.biography-prose').boundingBox();
+   expect(reading!.width).toBeGreaterThan(600);
+   expect(reading!.width).toBeLessThan(850);
   }
-  await about.locator('a[href="#about-awards"]').click();
-  await about.locator('[data-biography="awards"]').scrollIntoViewIfNeeded();
+  for(const paragraph of await about.locator('.biography-prose>p').all()) {
+   expect(await paragraph.evaluate(el=>Number.parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(16);
+  }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const awards=await about.locator('[data-biography="awards"]').boundingBox();
-  const photo=await about.locator('.story-visual').boundingBox();
-  expect(photo!.y+photo!.height).toBeLessThan(awards!.y);
  });
 }
 
 test('the full biography remains readable without JavaScript',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,baseURL:process.env.TEST_BASE_URL||'http://localhost:4322'});
  const page=await context.newPage();await page.goto('/fr/#about');
- await expect(page.locator('#about [data-biography]')).toHaveCount(6);
+ await expect(page.locator('#about .biography-prose>p')).toHaveCount(12);
  await expect(page.locator('#about')).toContainText('Joyce DiDonato');
  await expect(page.locator('#about')).toContainText('Manfred Wagner-Artzt');
  await expect(page.locator('#about')).toContainText('Osaka');
- await expect(page.locator('#about [data-biography]:visible')).toHaveCount(6);
+ await expect(page.locator('#about .biography-prose>p:visible')).toHaveCount(12);
  await context.close();
 });
 
-test('CV tabs support keyboard navigation and direct chapter links',async({page})=>{
+test('biography passages remain directly addressable without hiding the surrounding text',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
- await page.goto('/fr/#about-stage');
- await expect(page.locator('#about-stage')).toBeVisible();
- const stage=page.locator('[role="tab"][href="#about-stage"]');
- await expect(stage).toHaveAttribute('aria-selected','true');
- await stage.focus();await page.keyboard.press('ArrowRight');
- await expect(page.locator('[role="tab"][href="#about-spirituosi"]')).toBeFocused();
- await expect(page.locator('#about-spirituosi')).toBeVisible();
- await page.keyboard.press('End');await expect(page.locator('#about-collaborations')).toBeVisible();
- await page.keyboard.press('Home');await expect(page.locator('#about-training')).toBeVisible();
+ for(const id of ['about-stage','about-collaborations','about-training']) {
+  await page.goto(`/fr/#${id}`);
+  await expect(page.locator(`#${id}`)).toBeVisible();
+  await expect(page.locator('#about .biography-prose>p:visible')).toHaveCount(12);
+  await expect(page.locator('#about [role=tab]')).toHaveCount(0);
+ }
 });
 
 for(const lang of ['es','en','fr','de','it','sv','hu','hr','ru','zh-TW','ja']) {

@@ -157,4 +157,23 @@ if (document.getElementById('home')) {
  window.addEventListener('resize', updateSectionLinks);
  languageLinks.forEach(link => link.addEventListener('click', updateSectionLinks));
  updateSectionLinks();
+ // Keep a direct biography/section link in place after fonts and panels settle.
+ const initialHash = location.hash;
+ const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type;
+ if (initialHash && navigationType !== 'back_forward') {
+  let userInteracted = false;
+  const cancelInitialScroll = () => { userInteracted = true; };
+  const inputEvents = ['pointerdown', 'wheel', 'keydown'] as const;
+  inputEvents.forEach(event => window.addEventListener(event, cancelInitialScroll, { once:true, passive:true }));
+  const restoreInitialSection = async () => {
+   await document.fonts.ready;
+   if (!userInteracted && location.hash === initialHash) {
+    document.getElementById(initialHash.slice(1))?.scrollIntoView({ block:'start', behavior:'instant' });
+    updateSectionLinks();
+   }
+   inputEvents.forEach(event => window.removeEventListener(event, cancelInitialScroll));
+  };
+  if (document.readyState === 'complete') void restoreInitialSection();
+  else window.addEventListener('load', restoreInitialSection, { once:true });
+ }
 }

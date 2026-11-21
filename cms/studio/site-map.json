@@ -288,9 +288,44 @@
       "icon": "photo",
       "anchor": "about",
       "page": "home",
-      "image": "story",
+      "image": "biography",
       "collection": null,
       "fields": [
+        {
+          "key": "copy:Nathalie Peña-Comas — official portrait",
+          "source": "Nathalie Peña-Comas — retrato oficial",
+          "english": "Nathalie Peña-Comas — official portrait",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Singing is something mystical and spiritual, it is like healing… This is a music for the soul.",
+          "source": "Cantar es algo místico y espiritual, es como sanar… Es música para el alma.",
+          "english": "Singing is something mystical and spiritual, it is like healing… This is a music for the soul.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Biography",
+          "source": "Biografía",
+          "english": "Biography",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Save CV as PDF",
+          "source": "Guardar CV en PDF",
+          "english": "Save CV as PDF",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Explore the complete repertoire",
+          "source": "Explorar el repertorio completo",
+          "english": "Explore the complete repertoire",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
         {
           "key": "copy:The artist",
           "source": "La artista",
@@ -320,25 +355,11 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Save CV as PDF",
-          "source": "Guardar CV en PDF",
-          "english": "Save CV as PDF",
-          "label": "Texto",
-          "auxiliary": true
-        },
-        {
           "key": "copy:Full biography · Print edition",
           "source": "Biografía completa · Versión imprimible",
           "english": "Full biography · Print edition",
           "label": "Texto",
           "auxiliary": false
-        },
-        {
-          "key": "copy:Nathalie Peña-Comas — official portrait",
-          "source": "Nathalie Peña-Comas — retrato oficial",
-          "english": "Nathalie Peña-Comas — official portrait",
-          "label": "Texto",
-          "auxiliary": true
         },
         {
           "key": "copy:Nathalie Peña-Comas / Soprano",
@@ -572,13 +593,6 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Explore the complete repertoire",
-          "source": "Explorar el repertorio completo",
-          "english": "Explore the complete repertoire",
-          "label": "Texto del enlace",
-          "auxiliary": false
-        },
-        {
           "key": "copy:With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
           "source": "Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:",
           "english": "With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:",
@@ -660,6 +674,97 @@
           "source": "Artistas",
           "english": "Artists",
           "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She has performed in",
+          "source": "Ha actuado en",
+          "english": "She has performed in",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her festival appearances include",
+          "source": "Ha participado en festivales como",
+          "english": "Her festival appearances include",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Her concert venues include",
+          "source": "Ha cantado en salas como",
+          "english": "Her concert venues include",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She has performed with orchestras including",
+          "source": "Ha actuado con orquestas como",
+          "english": "She has performed with orchestras including",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She has worked with conductors",
+          "source": "Ha trabajado con los maestros",
+          "english": "She has worked with conductors",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She has shared the stage with",
+          "source": "Ha compartido escenario con",
+          "english": "She has shared the stage with",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In 2022, she won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "source": "En 2022 ganó el primer premio en el Ebe Stignani International Opera Competition y el segundo premio en el Montecatini Opera Festival Singing Competition.",
+          "english": "In 2022, she won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.",
+          "label": "Párrafo 10",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She received the Soberano Award for Classical Singer of the Year in the Dominican Republic in",
+          "source": "Ha recibido el Premio Soberano a la cantante lírica del año en la República Dominicana en",
+          "english": "She received the Soberano Award for Classical Singer of the Year in the Dominican Republic in",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In 2013, she was a finalist at the 14th Osaka International Music Competition.",
+          "source": "En 2013 fue finalista del 14.º Osaka International Music Competition.",
+          "english": "In 2013, she was a finalist at the 14th Osaka International Music Competition.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:In 2011, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition at the 14th Ada Sari International Competition of Vocal Art.",
+          "source": "En 2011 recibió los premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.",
+          "english": "In 2011, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition at the 14th Ada Sari International Competition of Vocal Art.",
+          "label": "Párrafo 11",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:She studied voice with",
+          "source": "Estudió canto con",
+          "english": "She studied voice with",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:and piano with",
+          "source": "y piano con",
+          "english": "and piano with",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Since 2019, Nathalie has served as Cultural Ambassador for the Dominican Republic.",
+          "source": "Desde 2019, Nathalie es embajadora cultural de la República Dominicana.",
+          "english": "Since 2019, Nathalie has served as Cultural Ambassador for the Dominican Republic.",
+          "label": "Descripción",
           "auxiliary": false
         }
       ]

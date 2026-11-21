@@ -2,16 +2,26 @@
 import { localizer } from '../data/locales';
 import Image from './ContentImage.astro';
 import Biography from './Biography.astro';
+import BiographyProse from './BiographyProse.astro';
+import originalPortrait from '../assets/official/artist.jpg';
 import artist from '../assets/official/editorial.jpg';
 import {type Locale} from '../data/translations';
 import { sectionImage } from '../lib/cms';
 import '../styles/biography.css';
+import '../styles/biography-prose.css';
 const sectionPhoto = await sectionImage('story', artist);
+const biographyPhoto = await sectionImage('biography', originalPortrait);
 interface Props {lang:Locale; printable?:boolean}
 const {lang,printable=false}=Astro.props;
 const l = localizer(lang);
 ---
-<section class="story section" id="about" aria-labelledby="about-title" data-biography-tabs={printable?undefined:true}>
+{!printable ? <section class="story section artist-biography" id="about" aria-labelledby="about-title">
+ <div class="biography-portrait">
+  <Image src={biographyPhoto} width={1920} widths={[640,960,1440,1920]} sizes="100vw" alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} format="webp" loading="lazy" />
+  <blockquote><p>{l('Cantar es algo místico y espiritual, es como sanar… Es música para el alma.','Singing is something mystical and spiritual, it is like healing… This is a music for the soul.')}</p><cite>Nathalie Peña-Comas</cite></blockquote>
+ </div>
+ <div class="biography-reading"><header class="biography-heading"><h2 id="about-title">{l('Biografía','Biography')}</h2></header><div><BiographyProse lang={lang}/><div class="biography-reading-actions"><a class="cv-button" href={`/${lang}/cv/?print`} target="_blank" rel="noopener">{l('Guardar CV en PDF', 'Save CV as PDF')}</a><a class="text-link" href="#repertorio">{l('Explorar el repertorio completo', 'Explore the complete repertoire')}</a></div></div></div>
+</section> : <section class="story section" id="about" aria-labelledby="about-title">
  <header class="story-heading">
   <div><div class="kicker">{l("La artista", "The artist")} <span aria-hidden="true">/</span> {l('Biografía completa', 'Full biography')}</div><h2 id="about-title">{l('Nathalie Peña-Comas')}</h2><p class="story-profession">{l('Soprano y actriz', 'Soprano & actress')}</p></div>
   <div class="story-actions">
@@ -33,5 +43,4 @@ const l = localizer(lang);
   <a href="#about-training">{l('Formación y vocación', 'Training and vocation')}</a><a href="#about-awards">{l('Premios y distinciones', 'Awards and distinctions')}</a><a href="#about-stage">{l('Ópera y teatro', 'Opera and theatre')}</a><a href="#about-spirituosi">{l('Spirituosi y difusión', 'Spirituosi and broadcasts')}</a><a href="#about-international">{l('Escenarios del mundo', 'Stages around the world')}</a><a href="#about-collaborations">{l('Encuentros artísticos', 'Artistic collaborations')}</a>
  </nav>
  <Biography lang={lang} printable={printable}/>
-</section>
-<script>import '../scripts/biography';</script>
+</section>}

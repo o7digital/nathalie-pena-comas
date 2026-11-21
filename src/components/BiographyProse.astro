@@ -1,0 +1,25 @@
+---
+import biography from '../data/biography.json';
+import { localizer } from '../data/locales';
+import type { Locale } from '../data/translations';
+interface Props {lang:Locale}
+const {lang}=Astro.props;
+const l=localizer(lang);
+const regions=new Intl.DisplayNames([lang],{type:'region'});
+const country=(code:string)=>code==='England'?l('Inglaterra','England'):regions.of(code)??code;
+const list=(values:string[])=>new Intl.ListFormat(lang,{style:'long',type:'conjunction'}).format(values);
+---
+<div class="biography-prose">
+ <p class="biography-lead">{l('Nathalie Peña-Comas es una soprano y actriz nacida en Santo Domingo, República Dominicana, y nominada al Latin Grammy.', 'Nathalie Peña-Comas is a Latin Grammy-nominated soprano and actress, born in Santo Domingo, Dominican Republic.')}</p>
+ <p id="about-international">{l('Ha actuado en','She has performed in')} {list(biography.countries.map(country))}.</p>
+ <p id="about-stage">{l('Sus papeles operísticos en Europa y en la República Dominicana incluyen:', 'Her operatic appearances in Europe and the Dominican Republic include the following roles:')} {list(biography.roles.map(entry=>`${entry.role} (${entry.work})`))}.</p>
+ <p>{l('Debutó como actriz en el Los Angeles Theater Center, interpretando a Nightingale en el estreno mundial de la obra Ghost Waltz. En mayo de 2023 fue invitada de honor del 64.º Viennese Opera Ball en Nueva York.', 'Her acting debut was as Nightingale in the world premiere of Ghost Waltz at the Los Angeles Theater Center. In May 2023, she was Guest of Honor at the 64th Viennese Opera Ball in New York.')}</p>
+ <p>{l('Ha participado en festivales como','Her festival appearances include')} {list(biography.festivals)}. {l('Ha cantado en salas como','Her concert venues include')} {list(biography.venues)}.</p>
+ <p id="about-collaborations">{l('Ha actuado con orquestas como','She has performed with orchestras including')} {list(biography.orchestras)}. {l('Ha trabajado con los maestros','She has worked with conductors')} {list(biography.conductors)}. {l('Ha compartido escenario con','She has shared the stage with')} {list(biography.collaborators)}.</p>
+ <p>{l('Algunos de sus conciertos se han transmitido en directo a través de:', 'Live broadcasts of some of her concerts have been carried by:')} {list(biography.broadcasts)}.</p>
+ <p id="about-spirituosi">{l('Con Ensemble Spirituosi, sexteto dedicado a la música académica y folclórica de América Latina, ha realizado giras por:', 'With Ensemble Spirituosi, a sextet devoted to Latin American classical and folk music, she has toured:')} {list(biography.spirituosiTourCountries.map(country))}. {l('Su primer álbum, Souvenir Latino, ganó tres medallas de oro en los Global Music Awards de Los Ángeles y formó parte de la programación de BBC Radio 3 en Londres. Spirituosi recibió también el Premio Soberano al mejor concierto clásico de 2015 en la República Dominicana.', 'Their debut album, Souvenir Latino, earned three gold medals at the Global Music Awards in Los Angeles and featured on BBC Radio 3 in London. Spirituosi also received the Soberano Award for Best Classical Concert of 2015 in the Dominican Republic.')}</p>
+ <p id="about-awards">{l('En 2022 ganó el primer premio en el Ebe Stignani International Opera Competition y el segundo premio en el Montecatini Opera Festival Singing Competition.','In 2022, she won first prize at the Ebe Stignani International Opera Competition and second prize at the Montecatini Opera Festival Singing Competition.')} {l('Ha recibido el Premio Soberano a la cantante lírica del año en la República Dominicana en','She received the Soberano Award for Classical Singer of the Year in the Dominican Republic in')} {list(biography.soberanoYears.map(String))}.</p>
+ <p>{l('En 2013 fue finalista del 14.º Osaka International Music Competition.','In 2013, she was a finalist at the 14th Osaka International Music Competition.')} {l('En 2011 recibió los premios especiales a la soprano más prometedora y a la mejor interpretación de una composición polaca en el 14.º Ada Sari International Competition of Vocal Art.','In 2011, she received special prizes for Most Promising Soprano and Best Interpretation of a Polish Composition at the 14th Ada Sari International Competition of Vocal Art.')}</p>
+ <p id="about-training">{l('Se graduó en la Universidad de Música y Artes Escénicas de Viena, donde obtuvo un Bachelor of Arts en Pedagogía del Canto y del Piano.', 'A graduate of the University of Music and Performing Arts Vienna, she holds a Bachelor of Arts in Voice and Piano Pedagogy.')} {l('Estudió canto con','She studied voice with')} {list(biography.voiceTeachers)} {l('y piano con','and piano with')} {biography.pianoTeacher}. {l('Clases magistrales', 'Masterclasses')}: {list(biography.masterclasses)}. {l('Desde 2018 trabaja con la maestra rumana Irina Gavrilovici.', 'Since 2018, she has worked with Romanian maestra Irina Gavrilovici.')}</p>
+ <p>{l('Desde 2019, Nathalie es embajadora cultural de la República Dominicana.','Since 2019, Nathalie has served as Cultural Ambassador for the Dominican Republic.')}</p>
+</div>
