@@ -10,7 +10,7 @@ async function directus(path,method='GET',body){
  if(!response.ok)throw Error(`Media QA Directus ${method} ${path.split('?')[0]}: ${response.status}`);
  return response.status===204?null:(await response.json()).data;
 }
-const files=new Set(),records=[],prefix='Studio media QA '+randomUUID();
+const files=new Set(),records=[],prefix='Studio media QA '+randomUUID().replaceAll('-','');
 const originalVideos=await directus('/items/videos?limit=-1&sort=id'),originalRules=await directus('/items/studio_seo?limit=-1&sort=id');
 if(originalRules.some(row=>['videos','gallery'].includes(row.id)&&row.locked))throw Error('Media QA needs editable dev media sections; current customer SEO locks were preserved.');
 const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
@@ -36,6 +36,7 @@ try{
  assert.equal((await fetch(publicUrl,{method:'HEAD'})).status,200);
  const viewer=await browser.newPage();await viewer.goto(origin);await viewer.evaluate(url=>{const video=document.createElement('video');video.src=url;video.controls=true;document.body.append(video);},publicUrl);await viewer.waitForFunction(()=>document.querySelector('video')?.readyState>=2);await viewer.close();
  await visibility('archived');assert.equal((await fetch(publicUrl)).status,404);await page.locator('#cancel-editor').click();
+ console.log('Live native video upload, persisted draft, private/public playback and archive revocation passed.');
  await page.locator('#navigation a[href="#gallery"]').click();await page.locator('.page-head [data-action=new]').waitFor();
  const photoSaved=page.waitForResponse(response=>response.url().endsWith('/api/content/gallery')&&response.request().method()==='POST');const chooser=page.waitForEvent('filechooser');await page.locator('.page-head [data-action=new]').click();await(await chooser).setFiles({name:prefix+'.png',mimeType:'image/png',buffer:fixture.photo});
  const photoResponse=await photoSaved;assert(photoResponse.ok(),'Live photo draft: '+photoResponse.status());const photo=(await photoResponse.json()).data;records.push(['gallery',photo.id]);files.add(photo.image);assert.equal(photo.status,'draft');
