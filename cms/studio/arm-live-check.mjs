@@ -1,5 +1,5 @@
 // Real, scoped CRM verification. Requires the Nathalie Directus dev variables and Railway CLI access.
-import { chromium } from '@playwright/test';
+import { firefox } from '@playwright/test';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -20,8 +20,9 @@ async function crm(path,method='GET',body) {
 }
 token=(await crm('/auth/login','POST',{email:config.ARM_SERVICE_EMAIL,password:config.ARM_SERVICE_PASSWORD})).token;
 assert.equal((await crm('/auth/me')).user.tenantId,config.ARM_TENANT_ID);
-const created=[],errors=[];
-const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
+const created=[],errors=[],privateCreated=[];
+async function cms(path,method='GET',body){const response=await fetch(process.env.PUBLIC_URL+path,{method,headers:{Authorization:'Bearer '+process.env.ADMIN_TOKEN,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});if(!response.ok)throw Error('Private QA cleanup/check: '+response.status);return response.status===204?null:response.json();}
+const browser=await firefox.launch();
 try {
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',error=>errors.push(error.message));
  await page.goto(origin+'/#arm');await page.locator('input[name=email]').fill(process.env.ADMIN_EMAIL);await page.locator('input[name=password]').fill(process.env.ADMIN_PASSWORD);await page.getByRole('button',{name:/Entrar a mi Studio/}).click();
@@ -34,7 +35,7 @@ try {
   assert(response.ok(),'Studio '+resource+' create: '+response.status());const data=await response.json();assert(data.id);created.push([resource,data.id]);
   await page.waitForFunction(()=>!document.querySelector('#arm-editor').open);
  }
- await page.getByRole('button',{name:/Añadir contacto/}).click();await page.locator('#arm-record-form [name=name]').fill(title);await page.locator('#arm-record-form [name=company]').fill('Private verification');await page.locator('#arm-record-form [name=companySector]').selectOption('Festival');await page.locator('#arm-record-form [name=address]').fill('Viena, Austria');await page.locator('#arm-record-form [name=notes]').fill('Private verification notes');await save('clients');
+ await page.getByRole('button',{name:/Añadir contacto/}).click();await page.locator('#arm-record-form [name=name]').fill(title);await page.locator('#arm-record-form [name=company]').fill('Private verification');await page.locator('#arm-record-form [name=email]').fill('studio-arm-qa-'+Date.now()+'@example.test');await page.locator('#arm-record-form [data-facet=relationshipTypes] summary').click();await page.locator('#arm-record-form [data-facet=relationshipTypes] input[value=Festival]').check();await page.locator('#arm-record-form [data-facet=countries] summary').click();await page.locator('#arm-record-form [data-facet=countries] input[value="Japón"]').check();await page.locator('#arm-record-form [data-facet=countries] input[value="Austria"]').check();await page.locator('#arm-record-form [data-facet=roles] summary').click();await page.locator('#arm-record-form [data-facet=roles] input[value="Director/a de teatro"]').check();await page.locator('#arm-record-form [data-facet=roles] input[value="Promotor/a"]').check();await page.locator('#arm-record-form [name=gender]').selectOption('female');await page.locator('#arm-record-form [name=address]').fill('Viena, Austria');await page.locator('#arm-record-form [name=notes]').fill('Private verification notes');await save('clients');
  await page.getByRole('heading',{name:title,exact:true}).waitFor();
  const contactId=created[0][1];
  await page.getByRole('button',{name:'Editar ficha ↗',exact:true}).click();await page.locator('#arm-record-form [name=notes]').fill('Updated private notes');
@@ -42,6 +43,13 @@ try {
  assert.equal((await crm('/clients/'+contactId)).notes,'Updated private notes');
  await page.reload();await page.locator('#arm-search').fill(title);await page.getByRole('button',{name:'Abrir ficha de '+title,exact:true}).click();await page.getByText('Updated private notes',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Propuestas y oportunidades',exact:true}).click();await page.getByRole('button',{name:/Nueva propuesta/}).click();await page.locator('#arm-record-form [name=title]').fill(title+' proposal');await page.locator('#arm-record-form [name=clientId]').selectOption(contactId);await page.locator('#arm-record-form [name=value]').fill('1200');await page.locator('#arm-record-form [name=currency]').selectOption('EUR');await save('deals');
+ await page.getByRole('button',{name:'Contactos profesionales',exact:true}).click();await page.locator('#arm-search').fill(title);
+ await page.locator('[data-mode=filter][data-facet=countries] summary').click();await page.locator('[data-mode=filter][data-facet=countries] input[value="Japón"]').check();
+ await page.locator('[data-mode=filter][data-facet=roles] summary').click();await page.locator('[data-mode=filter][data-facet=roles] input[value="Director/a de teatro"]').check();assert.equal(await page.locator('#arm-results tbody tr').count(),1);
+ await page.getByRole('button',{name:'Escribir a esta selección',exact:true}).click();assert(await page.locator('[data-mail-send]').isDisabled());await page.locator('#olivia-subject').fill(title+' draft');await page.locator('#olivia-message').fill('Private draft persistence verification. No message is sent.');
+ const savingDraft=page.waitForResponse(response=>response.url().endsWith('/api/arm/mail/drafts')&&response.request().method()==='POST');await page.getByRole('button',{name:'Guardar borrador',exact:true}).click();const draftResponse=await savingDraft;assert(draftResponse.ok(),'Draft save '+draftResponse.status());const savedDraft=await draftResponse.json();privateCreated.push(['studio_mail_drafts',savedDraft.id]);await page.locator('#olivia-save-status').getByText('Borrador guardado en tu espacio privado.',{exact:true}).waitFor();await page.getByRole('button',{name:'Cerrar correo',exact:true}).click();
+ await page.reload();await page.getByRole('button',{name:'Borradores · Olivia One',exact:true}).click();await page.locator('[data-mail-draft="'+savedDraft.id+'"]').click();assert.equal(await page.locator('#olivia-subject').inputValue(),title+' draft');assert.equal(await page.locator('#olivia-message').textContent(),'Private draft persistence verification. No message is sent.');await page.getByRole('button',{name:'Cerrar correo',exact:true}).click();
+ await page.getByRole('button',{name:'Propuestas y oportunidades',exact:true}).click();
  const pipeline=(await crm('/pipelines/'+deployment.crmSubscription.pipelineId));
  const next=pipeline.stages.find(stage=>stage.status==='OPEN'&&stage.position===1);assert(next);
  const moved=page.waitForResponse(response=>response.url().includes('/api/arm/deals/')&&response.request().method()==='PATCH');
@@ -65,6 +73,8 @@ try {
 }finally {
  await browser.close();
  const failures=[];
+ for(const [,contactId]of created.filter(([resource])=>resource==='clients')){try{const filter=encodeURIComponent(JSON.stringify({contact_id:{_eq:contactId}}));const result=await cms('/items/studio_contact_profiles?fields=id&filter='+filter);for(const row of result.data)privateCreated.push(['studio_contact_profiles',row.id]);}catch(error){failures.push(error.message);}}
+ for(const [collection,id]of privateCreated)try{await cms('/items/'+collection+'/'+id,'DELETE');}catch(error){failures.push(error.message);}
  for(const [resource,id] of created.reverse())try{await crm('/'+resource+'/'+encodeURIComponent(id),'DELETE');}catch(error){failures.push(error.message);}
  if(failures.length) throw new Error('QA cleanup requires attention: '+failures.join('; '));
  console.log('Temporary CRM verification records removed.');

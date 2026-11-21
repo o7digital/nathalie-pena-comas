@@ -9,6 +9,8 @@ import siteMap from './site-map.json' with { type: 'json' };
 import { translateSpanish,translationWrites,localizedFields,recordTextKey,assertTranslationsReady,sourceHash,targetLocales } from './translations.mjs';
 import {validDate} from './public/calendar.js';
 import {createArm} from './arm.mjs';
+import {createPrivateRecords} from './private-records.mjs';
+import {createOliviaMail} from './olivia-mail.mjs';
 import {ArmError} from './public/arm-data.js';
 import {previewPath,previewDocument,assetPath,proxyCss,PreviewError} from './preview.mjs';
 import {assertSeoMutation,assertSeoPublication,sectionFingerprint,publicSeoRule,seoRuleFor,SeoError} from './seo.mjs';
@@ -59,7 +61,9 @@ export function createStudioServer(options = {}) {
  const contentWrite=work=>{const job=contentQueue.then(work);contentQueue=job.catch(()=>undefined);return job;};
  const socialMedia=createSocialMedia({cms:config.cms,editorToken:config.editorToken,secret:config.secret,origin:config.origin||'https://studio-dev-4236.up.railway.app'});
  const siteMedia=createSiteMedia({cms:config.cms,editorToken:config.editorToken});
- const arm=createArm({request:(path,token,method='GET',data)=>upstream(config.crm,path,token,method,data)});
+ const privateRecords=createPrivateRecords({tenant:config.tenant,request:(path,method='GET',data)=>upstream(config.cms,path,config.editorToken,method,data)});
+ const arm=createArm({profiles:options.profiles||privateRecords.profiles,request:(path,token,method='GET',data)=>upstream(config.crm,path,token,method,data)});
+ const mail=createOliviaMail({drafts:options.mailDrafts||privateRecords.drafts,contacts:token=>arm.execute(token,'clients',null,'GET'),...(options.mailFetch?{fetcher:options.mailFetch}:{})});
  const reporting = createReporting({
   connectors: options.reportingConnectors || createReportingConnectors(),
   read: async(start,end) => {
@@ -247,7 +251,7 @@ export function createStudioServer(options = {}) {
     const expected=config.origin || `${config.secure?'https':'http'}://${req.headers.host}`;
     if (req.headers.origin !== expected) throw new ApiError(403,'Origen de solicitud no permitido.');
    }
-   if (path==='/api/logout' && req.method==='POST') { const s=session(req); if(s?.refresh) await upstream(config.cms,'/auth/logout',null,'POST',{refresh_token:s.refresh}).catch(()=>{}); setSession(res,null); return send(res,{ok:true}); }
+   if (path==='/api/logout' && req.method==='POST') { const s=session(req); if(s?.olivia)await mail.disconnect(s);if(s?.refresh) await upstream(config.cms,'/auth/logout',null,'POST',{refresh_token:s.refresh}).catch(()=>{}); setSession(res,null); return send(res,{ok:true}); }
    if (path==='/api/login' && req.method==='POST') {
     const input=await jsonBody(req);
     if (typeof input.email!=='string' || typeof input.password!=='string' || input.email.length>180 || input.password.length>200) throw new ApiError(400,'Introduce tu usuario o correo y contraseña.');
@@ -520,6 +524,16 @@ export function createStudioServer(options = {}) {
    }
    if(path.startsWith('/api/arm/')) {
     const crmToken=await crmTokenFor(s);
+    if(path.startsWith('/api/arm/mail/')){
+     if(path==='/api/arm/mail/status'&&req.method==='GET')return send(res,await mail.status(s));
+     if(path==='/api/arm/mail/connect'&&req.method==='POST'){const result=await mail.connect(s,await jsonBody(req));setSession(res,s);return send(res,result);}
+     if(path==='/api/arm/mail/disconnect'&&req.method==='POST'){const result=await mail.disconnect(s);setSession(res,s);return send(res,result);}
+     if(path==='/api/arm/mail/drafts'&&req.method==='GET')return send(res,await mail.list(s));
+     if(path==='/api/arm/mail/drafts'&&req.method==='POST')return send(res,await mail.save(s,crmToken,await jsonBody(req)));
+     const draftSend=path.match(/^\/api\/arm\/mail\/drafts\/([\da-f-]{36})\/send$/);
+     if(draftSend&&req.method==='POST')return send(res,await mail.send(s,crmToken,draftSend[1],await jsonBody(req)));
+     throw new ApiError(404,'Operación de correo no disponible.');
+    }
     if(path==='/api/arm/import'&&req.method==='POST')return send(res,await arm.importContacts(crmToken,await jsonBody(req,2_000_000)));
     const match=path.match(/^\/api\/arm\/(clients|deals|tasks|pipelines)(?:\/([a-zA-Z\d_-]+))?$/);
     if(!match) throw new ApiError(404,'Recurso no disponible.');
@@ -532,7 +546,7 @@ export function createStudioServer(options = {}) {
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
   const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/media-upload.js':'media-upload.js','/video-upload.js':'video-upload.js','/video-data.js':'video-data.js','/media.css':'media.css','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/seo.js':'seo.js','/seo-data.js':'seo-data.js','/seo.css':'seo.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
-  const armAsset=['/arm.js','/arm-data.js','/arm.css'].includes(path)?path.slice(1):null;
+  const armAsset=['/arm.js','/arm-data.js','/arm.css','/contact-classification.js','/arm-classification.js','/olivia-mail.js'].includes(path)?path.slice(1):null;
   const relative=armAsset || (path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
   if(!relative) throw new ApiError(404,'Página no encontrada.');
   let bytes;
@@ -547,7 +561,7 @@ export function createStudioServer(options = {}) {
  const server=http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}
   const status=error instanceof ApiError || error instanceof ReportingError || error instanceof SocialMediaError || error instanceof SiteMediaError || error instanceof ArmError || error instanceof SeoError?error.status:500;
-  send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message},status);
+  send(res,{error:status===500?'No se pudo completar la solicitud. Inténtalo de nuevo.':error.message,...(error instanceof ArmError&&error.savedContactId?{savedContactId:error.savedContactId}:{})},status);
  }));
  server.requestTimeout=15*60*1000;return server;
 }

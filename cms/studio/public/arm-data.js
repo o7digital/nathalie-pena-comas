@@ -1,5 +1,7 @@
 // Shared by the private Studio server and its contact import preview.
-export const contactFields=['firstName','name','company','function','companySector','clientStatus','email','phone','website','address','notes'];
+import {classificationFields,validateClassifications,facets} from './contact-classification.js';
+export const nativeContactFields=['firstName','name','company','function','companySector','clientStatus','email','phone','website','address','notes'];
+export const contactFields=[...nativeContactFields,...classificationFields];
 export const contactTypes=['Programador/a','Teatro / Ópera','Festival','Agencia / Representación','Orquesta / Ensemble','Prensa / Medios','Artista / Colaborador','Producción','Otro'];
 export const contactStatuses={PROSPECT:'Por contactar',CLIENT:'Relación activa',LOST:'Inactivo'};
 export class ArmError extends Error {constructor(message,status=400){super(message);this.status=status;}}
@@ -13,8 +15,10 @@ export function contactKeys(row){
 }
 export function validateContact(input,{partial=false}={}){
  if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(key=>!contactFields.includes(key)))throw new ArmError('La ficha contiene campos no permitidos.');
- const result={};
+ let classification;try{classification=validateClassifications(input);}catch(error){throw new ArmError(error.message);}
+ const result={...classification};
  for(const [key,value]of Object.entries(input)){
+  if(classificationFields.includes(key))continue;
   if(typeof value!=='string')throw new ArmError('Revisa el campo '+key+'.');
   const text=value.trim();
   const limit=key==='notes'?20000:['website','address'].includes(key)?2048:['phone','email'].includes(key)?254:120;
@@ -31,6 +35,8 @@ export function validateContact(input,{partial=false}={}){
 
 const aliases={firstName:['nombre','prenom','firstname','first name'],name:['apellidos','apellido','nom','lastname','last name','name','nombre profesional'],company:['organizacion','organización','empresa','company','organisation','organization'],function:['cargo','funcion','función','function','role','poste'],companySector:['tipo','categoria','categoría','sector','companysector','type'],clientStatus:['estado','status','clientstatus'],email:['correo','correo electronico','email','e-mail'],phone:['telefono','teléfono','phone','telephone'],website:['web','website','sitio web','site web'],address:['direccion','dirección','address','adresse','ciudad / pais'],notes:['notas','notes','comentarios']};
 const headers=new Map(Object.entries(aliases).flatMap(([key,values])=>[key,...values].map(value=>[normalized(value),key])));
+for(const [key,facet]of Object.entries(facets)){headers.set(normalized(key),key);headers.set(normalized(facet.label),key);}
+for(const label of ['gender','género','genero','genre'])headers.set(normalized(label),'gender');
 export function csvCells(text){
  if(typeof text!=='string'||text.length>2_000_000)throw new ArmError('El CSV puede ocupar como máximo 2 MB.');
  text=text.replace(/^\uFEFF/,'');
@@ -60,6 +66,7 @@ export function parseContactsCsv(text){
  return rows.map((cells,index)=>{
   const raw=Object.fromEntries(mapping.flatMap((key,i)=>key?[[key,cells[i]||'']]:[]));
   try{
+   for(const key of Object.keys(facets))if(Object.hasOwn(raw,key))raw[key]=raw[key].split('|').map(value=>value.trim()).filter(Boolean);
    if(cells.length!==heading.length)throw new ArmError('El número de columnas no coincide con la cabecera.');
    const status=normalized(raw.clientStatus);
    if(status){const match=Object.entries(contactStatuses).find(([key,label])=>normalized(key)===status||normalized(label)===status);if(match)raw.clientStatus=match[0];}
@@ -69,5 +76,5 @@ export function parseContactsCsv(text){
 }
 export function contactsCsv(rows){
  const cell=value=>'"'+String(value??'').replace(/^[\s]*[=+@-]/,"'$&").replace(/"/g,'""')+'"';
- return '\uFEFF'+[contactFields,...rows.map(row=>contactFields.map(key=>row[key]??''))].map(row=>row.map(cell).join(',')).join('\r\n');
+ return '\uFEFF'+[contactFields,...rows.map(row=>contactFields.map(key=>Array.isArray(row[key])?row[key].join(' | '):row[key]??''))].map(row=>row.map(cell).join(',')).join('\r\n');
 }

@@ -60,6 +60,30 @@ test('the private studio serves its login but never exposes server files or unau
  assert.equal((await request('/api/session',{headers:{Cookie:'npc_studio=forged'}})).status,401);
 });
 
+test('private mail routes enforce Studio authorization and origin, save drafts before connection and seal Olivia cookies',async t=>{
+ const rows=[],providerCalls=[];
+ const mailDrafts={list:async owner=>structuredClone(rows.filter(row=>row.owner===owner)),save:async(owner,id,draft)=>{const row={id,owner,draft,updated_at:new Date().toISOString()};rows.push(row);return row;}};
+ const mailFetch=async(url,options)=>{
+  providerCalls.push({url,options});
+  if(url.endsWith('/api/auth/login')){const headers=new Headers();headers.append('Set-Cookie','__Host-olivia_session=provider-opaque-session; Secure; HttpOnly; Path=/');headers.append('Set-Cookie','olivia_csrf=provider-csrf; Secure; Path=/');return Response.json({user:{email:'artist@example.test'},csrfToken:'provider-csrf'},{headers});}
+  return Response.json({authenticated:true,user:{email:'artist@example.test'}});
+ };
+ const {request,login,origin}=await setup(t,{tenant:'tenant-nathalie',editorToken:'private-editor',adminEmail:'owner@example.test',serviceEmail:'service@example.test',servicePassword:'service-password',profiles:{ready:async()=>{},list:async()=>[],save:async()=>({})},mailDrafts,mailFetch});
+ assert.equal((await request('/api/arm/mail/drafts')).status,401);
+ const {cookie}=await login();
+ const headers={Cookie:cookie,Origin:origin,'Content-Type':'application/json'};
+ assert.equal((await request('/api/arm/mail/status',{headers})).status,200);
+ const draft={contactIds:[],subject:'Write now, connect later',html:'<p>Private message</p>'};
+ assert.equal((await request('/api/arm/mail/drafts',{method:'POST',headers:{...headers,Origin:'https://foreign.example'},body:JSON.stringify(draft)})).status,403);
+ const saved=await request('/api/arm/mail/drafts',{method:'POST',headers,body:JSON.stringify(draft)});assert.equal(saved.status,200);assert.equal(rows[0].owner,'owner');assert.equal(providerCalls.length,0);
+ assert.equal((await request('/api/arm/mail/drafts',{method:'POST',headers,body:JSON.stringify({...draft,tenant_id:'foreign'})})).status,400);
+ const connected=await request('/api/arm/mail/connect',{method:'POST',headers,body:JSON.stringify({email:'artist@example.test',password:'mailbox-password',privacyAccepted:true})});
+ assert.equal(connected.status,200);assert.deepEqual(await connected.json(),{connected:true,email:'artist@example.test'});
+ const sealed=connected.headers.get('Set-Cookie');assert.match(sealed,/HttpOnly/);assert.doesNotMatch(sealed,/provider-opaque-session|provider-csrf|mailbox-password/);
+ const status=await request('/api/arm/mail/status',{headers:{Cookie:sealed.split(';')[0]}});assert.equal((await status.json()).connected,true);
+ assert.equal(providerCalls.at(-1).options.headers.Cookie,'__Host-olivia_session=provider-opaque-session; olivia_csrf=provider-csrf');
+});
+
 test('login stores encrypted HttpOnly cookies and only whitelisted content can be changed',async t=>{
  const {request,login,origin,calls}=await setup(t);
  const {response,cookie}=await login();assert.equal(response.status,200);

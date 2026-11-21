@@ -33,7 +33,7 @@ function toast(message,error=false,persistent=false){const el=$('#toast');el.tex
 async function api(path,options={}){
  const response=await fetch(path,{...options,headers:{...(options.body instanceof FormData?{}:options.body?{'Content-Type':'application/json'}:{}),...options.headers},body:options.body instanceof FormData?options.body:options.body===undefined?undefined:JSON.stringify(options.body)});
  const data=await response.json().catch(()=>({}));
- if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;throw error;}return data;
+ if(!response.ok){const error=new Error(data.error||'No se pudo completar la solicitud.');error.status=response.status;if(data.savedContactId)error.savedContactId=data.savedContactId;throw error;}return data;
 }
 function showLogin(error=''){visualUI?.destroy();visualUI=null;seoUI.reset();socialUI.reset();reportingUI.reset();armUI.reset();state.session=null;state.data=null;state.editor=null;state.seoRules=[];state.drafts={};state.recordDrafts={};state.photoDrafts={};$('#editor').close();closeNav();$('#studio-view').hidden=true;$('#login-view').hidden=false;$('#login-error').textContent=error;}
 async function reload(){const result=await api('/api/content');state.data=result.content;state.seoRules=result.seoRules||[];renderNavigation();render();}
