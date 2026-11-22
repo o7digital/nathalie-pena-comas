@@ -102,3 +102,13 @@ Les messages sont transmis uniquement après accord ; le contrôle de disponibil
 Nath AI consulte les 22 pages dans les 11 langues ainsi que le calendrier complet, les 18 rôles d’opéra, les 40 œuvres de concert, les quatre albums et les deux singles. Chaque build produit une base versionnée, synchronisée automatiquement avec le VPS. Les anciennes previews ne peuvent pas rétablir un contenu dépassé ; les conversations des visiteurs ne deviennent pas des informations officielles.
 
 Récupération du cœur 3.6, déploiement VPS, configuration Vercel, contrôles et retour arrière : [guide Nath AI](services/nath-ai/README.md).
+
+## Écoute des albums et singles
+
+Les liens « Écouter » de l’accueil, de la discographie, du répertoire, de la section contemporaine et de Spirituosi ouvrent le même sélecteur de plateformes. « Écouter sa voix » et Spotify dans le pied de page donnent aussi accès à l’ensemble des enregistrements. Les liens de réservation et les vidéos de performances conservent leur parcours.
+
+Le catalogue `src/data/listening-catalog.json` réunit les destinations vérifiées, les titres et les durées des quatre albums et des deux singles. Chaque entrée garde ses sources officielles et la date de vérification : smart link Quinto Elemento, catalogues Spotify, Apple Music et Deezer. Les plateformes absentes du catalogue ne sont pas déduites. Les pochettes restent celles des albums publiés dans le CMS. Un lien d’album non reconnu conserve son ouverture externe.
+
+La fenêtre affiche les plateformes et la liste des titres avant toute connexion aux lecteurs externes. Choisir Spotify, Apple Music, Deezer ou une vidéo/playlist YouTube charge un seul lecteur officiel ; changer de lecteur ou fermer la fenêtre retire l’iframe précédente. Amazon Music, TIDAL et iTunes restent des liens directs. La lecture, les aperçus et l’accès au catalogue sont gérés par la plateforme choisie. Les adresses d’intégration passent par une liste de domaines et de formats autorisés.
+
+Les liens `/{lang}/#listen-quinto-elemento-tierra`, `#listen-alta-gracia`, `#listen-una-mujer`, `#listen-souvenir-latino`, `#listen-sombras-nada-mas`, `#listen-esclavo-y-amo` et `#listen-nathalie` ouvrent directement le sélecteur correspondant, sans charger de lecteur. Fermeture, Échap, retour du focus, Précédent/Suivant et affichage mobile sont couverts par `tests/listening.spec.ts`. Les boutons conservent leur destination officielle sans JavaScript. Les libellés sont localisés dans les onze langues et disponibles sous Discografía dans le Studio.

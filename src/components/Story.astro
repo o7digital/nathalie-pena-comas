@@ -30,7 +30,7 @@ const l = localizer(lang);
   <p>{l('Formada en Viena, desarrolla una carrera que une la ópera, el teatro, la música de concierto y las raíces latinoamericanas. Desde 2019 es embajadora cultural de la República Dominicana.', 'Trained in Vienna, her career connects opera, theatre, concert music and Latin American roots. Since 2019, she has served as Cultural Ambassador for the Dominican Republic.')}</p>
   </>}
   <aside class="story-philosophy"><span class="kicker">{l('Su visión artística', 'Her artistic vision')}</span><p>{l('Para Nathalie, cantar es un acto místico, espiritual y sanador. Su compromiso musical nace de ese propósito: una música para el alma.', 'For Nathalie, singing is mystical, spiritual and healing. Her musical commitment expresses that purpose: music for the soul.')}</p></aside>
-  <a class="text-link story-voice-link" href={printable?`/${lang}/#media`:'#media'}>{l("Escuchar su voz", "Hear her voice")}</a>
+  <a class="text-link story-voice-link" data-listen={printable?undefined:'nathalie'} href={printable?`/${lang}/#media`:'#media'}>{l("Escuchar su voz", "Hear her voice")}</a>
  </div>
  </div>
  {printable && <><nav class="biography-index" aria-label={l('Biografía completa', 'Full biography')}>

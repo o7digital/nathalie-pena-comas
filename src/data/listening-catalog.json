@@ -1,0 +1,472 @@
+{
+  "verifiedOn": "2026-11-21",
+  "releases": [
+    {
+      "key": "quinto-elemento-tierra",
+      "title": "Quinto Elemento: Tierra",
+      "artist": "Nathalie Peña-Comas",
+      "year": 2026,
+      "type": "EP",
+      "aliases": [
+        "https://orcd.co/quintoelemento"
+      ],
+      "services": [
+        {
+          "id": "spotify",
+          "url": "https://open.spotify.com/album/6vlLonr2byiZjhEHqLpOgT"
+        },
+        {
+          "id": "apple",
+          "url": "https://music.apple.com/us/album/quinto-elemento-tierra-ep/6819378829"
+        },
+        {
+          "id": "youtube",
+          "url": "https://www.youtube.com/playlist?list=OLAK5uy_lWIbuX7iuZos8uoI29kCCC8xJDskcWgzg"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/1114350922"
+        },
+        {
+          "id": "amazon",
+          "url": "https://music.amazon.com/albums/B0HM22WLRG"
+        },
+        {
+          "id": "tidal",
+          "url": "https://tidal.com/album/567353924"
+        },
+        {
+          "id": "itunes",
+          "url": "https://geo.itunes.apple.com/us/album/quinto-elemento-tierra-ep/6819378829?app=itunes"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Bésame Mucho",
+          "artist": "Nathalie Peña-Comas, Alex Acuña",
+          "durationMs": 204692,
+          "url": "https://open.spotify.com/track/6d5O8puaAqDOkiM7UwCawJ"
+        },
+        {
+          "title": "Esclavo y Amo",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 212480,
+          "url": "https://open.spotify.com/track/5nZEY6epbZDRFnWdyBHk77"
+        },
+        {
+          "title": "Sombras Nada Más",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 231120,
+          "url": "https://open.spotify.com/track/0MK5DJLTm3w7EHXVCahuMt"
+        },
+        {
+          "title": "Luz de Luna",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 199280,
+          "url": "https://open.spotify.com/track/6k1Fa3ypfLkxFnlzAnOHbv"
+        },
+        {
+          "title": "Secreto de Amor",
+          "artist": "Nathalie Peña-Comas, EM Collective",
+          "durationMs": 285453,
+          "url": "https://open.spotify.com/track/7cFRBpyLRiUf1GhneXXhnB"
+        }
+      ],
+      "sources": [
+        "https://orcd.co/quintoelemento",
+        "https://open.spotify.com/embed/album/6vlLonr2byiZjhEHqLpOgT",
+        "https://music.apple.com/us/album/quinto-elemento-tierra-ep/6819378829"
+      ]
+    },
+    {
+      "key": "alta-gracia",
+      "title": "Alta Gracia",
+      "artist": "Nathalie Peña-Comas",
+      "year": 2017,
+      "type": "Album",
+      "aliases": [],
+      "services": [
+        {
+          "id": "spotify",
+          "url": "https://open.spotify.com/album/186pleEY4aQjMXNuA8Z7xZ"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/51040682"
+        },
+        {
+          "id": "youtube",
+          "url": "https://www.youtube.com/watch?v=eHNxOweKnzE"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Ave Maria - Caccini",
+          "artist": "Giulio Caccini, Nathalie Peña-Comas",
+          "durationMs": 321986,
+          "url": "https://open.spotify.com/track/2XNBsBdDBjszFC9lBFH591"
+        },
+        {
+          "title": "Ave Maria - Bach/Gounod",
+          "artist": "Charles Gounod, Nathalie Peña-Comas",
+          "durationMs": 188760,
+          "url": "https://open.spotify.com/track/7LuvJJbQ9897vUG2fzIao3"
+        },
+        {
+          "title": "Vidit suum dulcem natum",
+          "artist": "Giovanni Battista Pergolesi, Nathalie Peña-Comas",
+          "durationMs": 210173,
+          "url": "https://open.spotify.com/track/6DjAFiOXBZlZGV2lD0eShQ"
+        },
+        {
+          "title": "Bibi tureygua",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 288440,
+          "url": "https://open.spotify.com/track/1yEpnR3ipUUNUql1bwGzBA"
+        },
+        {
+          "title": "Ave Maria - Mascagni/Mazzoni",
+          "artist": "Pietro Mazzoni, Nathalie Peña-Comas",
+          "durationMs": 235493,
+          "url": "https://open.spotify.com/track/47JwMImA02DLXzqYYZ8RQh"
+        },
+        {
+          "title": "Regina coeli laetare",
+          "artist": "Pietro Mascagni, Nathalie Peña-Comas",
+          "durationMs": 374080,
+          "url": "https://open.spotify.com/track/0v9nocFyn9E1z22EM8bJSB"
+        },
+        {
+          "title": "Tu virginum corona",
+          "artist": "Wolfgang Amadeus Mozart, Nathalie Peña-Comas",
+          "durationMs": 387373,
+          "url": "https://open.spotify.com/track/1M2qCgEC0bD3ivbsu88Wq5"
+        },
+        {
+          "title": "Ave Maria - Tejada",
+          "artist": "Manuel Tejada, Nathalie Peña-Comas",
+          "durationMs": 267413,
+          "url": "https://open.spotify.com/track/44wnChID0RktgXGeQ8ydU7"
+        },
+        {
+          "title": "Virgen de Altagracia",
+          "artist": "Dominican folklor, Nathalie Peña-Comas",
+          "durationMs": 478133,
+          "url": "https://open.spotify.com/track/6peOnIH2ZEFtcT7EFN5ccb"
+        }
+      ],
+      "sources": [
+        "https://open.spotify.com/embed/album/186pleEY4aQjMXNuA8Z7xZ",
+        "https://api.deezer.com/album/51040682"
+      ]
+    },
+    {
+      "key": "una-mujer",
+      "title": "Una Mujer",
+      "artist": "Nathalie Peña-Comas",
+      "year": 2017,
+      "type": "Album",
+      "aliases": [],
+      "services": [
+        {
+          "id": "spotify",
+          "url": "https://open.spotify.com/album/6KiKXObyw8fUZ6sqGPPViY"
+        },
+        {
+          "id": "apple",
+          "url": "https://music.apple.com/us/album/una-mujer/1223241296"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/39449801"
+        },
+        {
+          "id": "amazon",
+          "url": "https://music.amazon.com/albums/B06Y1ZD2Q3"
+        },
+        {
+          "id": "youtube",
+          "url": "https://www.youtube.com/watch?v=Mjqyh3CZf8k"
+        },
+        {
+          "id": "itunes",
+          "url": "https://geo.itunes.apple.com/us/album/una-mujer/1223241296?app=itunes"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Una Mujer",
+          "artist": "Nathalie Peña-Comas, Plácido Domingo",
+          "durationMs": 237332,
+          "url": "https://open.spotify.com/track/7MOkSnX70NqeUGPGPAhzvy"
+        },
+        {
+          "title": "Despiértame",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 228746,
+          "url": "https://open.spotify.com/track/41p84mlMB87mWNCikhqNSD"
+        },
+        {
+          "title": "Me Muero Sin Ti",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 240812,
+          "url": "https://open.spotify.com/track/0S2XD6nAQJ8aVIpTd5J6fV"
+        },
+        {
+          "title": "Quién Como El",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 246946,
+          "url": "https://open.spotify.com/track/0HEnWyiVYJVREplPE8uJxA"
+        },
+        {
+          "title": "La Tierra Escrita",
+          "artist": "Nathalie Peña-Comas, Maridalia Hernández",
+          "durationMs": 245199,
+          "url": "https://open.spotify.com/track/3mpPo8c4rSNJDh941BdeJg"
+        },
+        {
+          "title": "Regresé",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 201159,
+          "url": "https://open.spotify.com/track/0VImsMbjW2gaJbaynuTe5Y"
+        },
+        {
+          "title": "Esta Noche",
+          "artist": "Nathalie Peña-Comas, Raulin Rodriguez",
+          "durationMs": 229452,
+          "url": "https://open.spotify.com/track/2Y9S4aZ0Rf7jxLTTx32kfU"
+        },
+        {
+          "title": "Con Flores a María",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 266746,
+          "url": "https://open.spotify.com/track/4cYiaEOpo6TI6Y3cor4Ffu"
+        },
+        {
+          "title": "Sueña",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 293826,
+          "url": "https://open.spotify.com/track/1NstMdYzFnYOydRjlCFcwu"
+        }
+      ],
+      "sources": [
+        "https://open.spotify.com/embed/album/6KiKXObyw8fUZ6sqGPPViY",
+        "https://music.apple.com/us/album/una-mujer/1223241296"
+      ]
+    },
+    {
+      "key": "souvenir-latino",
+      "title": "Souvenir Latino",
+      "artist": "Ensemble Spirituosi",
+      "year": 2017,
+      "type": "Album",
+      "aliases": [],
+      "services": [
+        {
+          "id": "apple",
+          "url": "https://music.apple.com/ca/album/souvenir-latino/1268832661"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/45944422"
+        },
+        {
+          "id": "itunes",
+          "url": "https://geo.itunes.apple.com/us/album/souvenir-latino/1268832661?app=itunes"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Que Nadie Sepa Mi Sufrir",
+          "artist": "Spirituosi",
+          "durationMs": 235147,
+          "url": "https://music.apple.com/us/album/que-nadie-sepa-mi-sufrir/1268832661?i=1268833488"
+        },
+        {
+          "title": "Hymne à L’amour",
+          "artist": "Spirituosi",
+          "durationMs": 313747,
+          "url": "https://music.apple.com/us/album/hymne-%C3%A0-lamour/1268832661?i=1268833489"
+        },
+        {
+          "title": "Le Papillon Et La Fleur, Op. 1/1",
+          "artist": "Spirituosi",
+          "durationMs": 126907,
+          "url": "https://music.apple.com/us/album/le-papillon-et-la-fleur-op-1-1/1268832661?i=1268833490"
+        },
+        {
+          "title": "Au Bord De L’eau, Op. 8/1",
+          "artist": "Spirituosi",
+          "durationMs": 134187,
+          "url": "https://music.apple.com/us/album/au-bord-de-leau-op-8-1/1268832661?i=1268833491"
+        },
+        {
+          "title": "Mandoline, Op. 58/1",
+          "artist": "Spirituosi",
+          "durationMs": 139240,
+          "url": "https://music.apple.com/us/album/mandoline-op-58-1/1268832661?i=1268833492"
+        },
+        {
+          "title": "La Flor De La Canela",
+          "artist": "Spirituosi",
+          "durationMs": 214547,
+          "url": "https://music.apple.com/us/album/la-flor-de-la-canela/1268832661?i=1268833493"
+        },
+        {
+          "title": "Dolorita",
+          "artist": "Spirituosi",
+          "durationMs": 154747,
+          "url": "https://music.apple.com/us/album/dolorita/1268832661?i=1268833494"
+        },
+        {
+          "title": "Bachianas Brasileiras Nº 5",
+          "artist": "Spirituosi",
+          "durationMs": 358173,
+          "url": "https://music.apple.com/us/album/bachianas-brasileiras-n%C2%BA-5/1268832661?i=1268833495"
+        },
+        {
+          "title": "Yuca",
+          "artist": "Spirituosi",
+          "durationMs": 208293,
+          "url": "https://music.apple.com/us/album/yuca/1268832661?i=1268833496"
+        },
+        {
+          "title": "Chenche",
+          "artist": "Spirituosi",
+          "durationMs": 175667,
+          "url": "https://music.apple.com/us/album/chenche/1268832661?i=1268833497"
+        },
+        {
+          "title": "Mangulina",
+          "artist": "Spirituosi",
+          "durationMs": 202773,
+          "url": "https://music.apple.com/us/album/mangulina/1268832661?i=1268833498"
+        },
+        {
+          "title": "Bach-ata",
+          "artist": "Spirituosi",
+          "durationMs": 225453,
+          "url": "https://music.apple.com/us/album/bach-ata/1268832661?i=1268833499"
+        },
+        {
+          "title": "Ninfa Del Alma",
+          "artist": "Spirituosi",
+          "durationMs": 236347,
+          "url": "https://music.apple.com/us/album/ninfa-del-alma/1268832661?i=1268833500"
+        },
+        {
+          "title": "El Ave y El Nido",
+          "artist": "Spirituosi",
+          "durationMs": 208520,
+          "url": "https://music.apple.com/us/album/el-ave-y-el-nido/1268832661?i=1268833501"
+        },
+        {
+          "title": "Menino",
+          "artist": "Spirituosi",
+          "durationMs": 353560,
+          "url": "https://music.apple.com/us/album/menino/1268832661?i=1268833502"
+        },
+        {
+          "title": "Esa Color De Rosa y Azucena",
+          "artist": "Spirituosi",
+          "durationMs": 132213,
+          "url": "https://music.apple.com/us/album/esa-color-de-rosa-y-azucena/1268832661?i=1268833503"
+        },
+        {
+          "title": "Mariquita",
+          "artist": "Spirituosi",
+          "durationMs": 141107,
+          "url": "https://music.apple.com/us/album/mariquita/1268832661?i=1268833504"
+        }
+      ],
+      "sources": [
+        "https://music.apple.com/us/album/souvenir-latino/1268832661",
+        "https://api.deezer.com/album/45944422"
+      ]
+    },
+    {
+      "key": "sombras-nada-mas",
+      "title": "Sombras Nada Más",
+      "artist": "Nathalie Peña-Comas",
+      "year": 2026,
+      "type": "Single",
+      "aliases": [],
+      "services": [
+        {
+          "id": "spotify",
+          "url": "https://open.spotify.com/track/7g4bOGhlkoNXggEI2EHEKQ"
+        },
+        {
+          "id": "apple",
+          "url": "https://music.apple.com/us/album/sombras-nada-m%C3%A1s-single/6808254287"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/1070076342"
+        },
+        {
+          "id": "youtube",
+          "url": "https://www.youtube.com/watch?v=HbRmwVkSP8Q"
+        },
+        {
+          "id": "itunes",
+          "url": "https://geo.itunes.apple.com/us/album/sombras-nada-m%C3%A1s-single/6808254287?app=itunes"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Sombras Nada Más",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 231120,
+          "url": "https://music.apple.com/us/album/sombras-nada-m%C3%A1s/6808254287?i=6808254290"
+        }
+      ],
+      "sources": [
+        "https://open.spotify.com/embed/track/7g4bOGhlkoNXggEI2EHEKQ",
+        "https://music.apple.com/us/album/sombras-nada-m%C3%A1s-single/6808254287"
+      ]
+    },
+    {
+      "key": "esclavo-y-amo",
+      "title": "Esclavo y Amo",
+      "artist": "Nathalie Peña-Comas",
+      "year": 2026,
+      "type": "Single",
+      "aliases": [],
+      "services": [
+        {
+          "id": "spotify",
+          "url": "https://open.spotify.com/track/4BE0KqF21ot4HCBzuWR6aA"
+        },
+        {
+          "id": "apple",
+          "url": "https://music.apple.com/us/album/esclavo-y-amo-single/6781307613"
+        },
+        {
+          "id": "deezer",
+          "url": "https://www.deezer.com/album/1008062501"
+        },
+        {
+          "id": "youtube",
+          "url": "https://www.youtube.com/watch?v=otT5_7vJYv4"
+        },
+        {
+          "id": "itunes",
+          "url": "https://geo.itunes.apple.com/us/album/esclavo-y-amo-single/6781307613?app=itunes"
+        }
+      ],
+      "tracks": [
+        {
+          "title": "Esclavo y Amo",
+          "artist": "Nathalie Peña-Comas",
+          "durationMs": 212480,
+          "url": "https://music.apple.com/us/album/esclavo-y-amo/6781307613?i=6781307624"
+        }
+      ],
+      "sources": [
+        "https://open.spotify.com/embed/track/4BE0KqF21ot4HCBzuWR6aA",
+        "https://music.apple.com/us/album/esclavo-y-amo-single/6781307613"
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@ const profiles=[
 ];
 ---
 <nav class="footer-social" aria-label={l("Redes sociales de Nathalie", "Nathalie’s social media")}>
- {profiles.map(profile=><a class:list={['social-link',{'platform':profile.icon==='spotify'}]} href={profile.href} target="_blank" rel="noopener noreferrer" aria-label={`${l(profile.name)} — ${l("abrir en una pestaña nueva", "open in a new tab")}`}><span class="social-symbol"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+ {profiles.map(profile=><a class:list={['social-link',{'platform':profile.icon==='spotify'}]} href={profile.href} data-listen={profile.icon==='spotify'?'nathalie':undefined} target="_blank" rel="noopener noreferrer" aria-label={`${l(profile.name)} — ${profile.icon==='spotify'?l('Escuchar','Listen'):l("abrir en una pestaña nueva", "open in a new tab")}`}><span class="social-symbol"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
  {profile.icon==='youtube'&&<><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></>}
  {profile.icon==='instagram'&&<><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></>}
  {profile.icon==='facebook'&&<path d="M14 22v-9h3l.5-4H14V7c0-1.1.4-2 2-2h2V1.5C17.2 1.2 16 1 15 1c-3.1 0-5 1.9-5 5v3H7v4h3v9Z" fill="currentColor" stroke="none"/>}

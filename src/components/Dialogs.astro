@@ -1,4 +1,5 @@
 ---
+import ListeningDialog from './ListeningDialog.astro';
 import { translations, type Locale } from '../data/translations';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
@@ -16,3 +17,5 @@ const studioOrigin=new URL(import.meta.env.PUBLIC_STUDIO_URL||'https://studio-de
  <label><input id="consent-analytics" type="checkbox" /> {t.analytics}</label><label><input id="consent-marketing" type="checkbox" /> {t.marketing}</label>
  <div class="consent-actions"><button data-consent="reject" class="btn-outline">{t.reject}</button><button data-consent="save" class="btn-outline">{t.save}</button><button data-consent="accept" class="btn-gold">{t.accept}</button></div>
 </dialog>
+
+<ListeningDialog lang={lang}/>

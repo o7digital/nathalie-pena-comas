@@ -99,10 +99,12 @@ document.querySelectorAll<HTMLElement>('[data-consent]').forEach(button => butto
 }));
 document.addEventListener('click', e => {
  const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]'); if (!anchor) return;
+ if(anchor.hasAttribute('data-listen'))return;
  const url = new URL(anchor.href);
- const providers: Record<string, string> = { 'open.spotify.com': 'Spotify', 'www.youtube.com': 'YouTube', 'youtu.be': 'YouTube', 'music.apple.com': 'Apple Music' };
+ const providers: Record<string, string> = { 'open.spotify.com': 'Spotify', 'www.youtube.com': 'YouTube', 'youtu.be': 'YouTube', 'music.apple.com': 'Apple Music', 'geo.music.apple.com':'Apple Music', 'www.deezer.com':'Deezer', 'deezer.com':'Deezer', 'music.amazon.com':'Amazon Music', 'tidal.com':'TIDAL', 'geo.itunes.apple.com':'iTunes' };
  const platform = providers[url.hostname]; if (!platform) return;
- const event = { platform, destination: url.href, language: document.body.dataset.lang, section: anchor.closest('section')?.id ?? 'footer' };
+ const section=anchor.closest<HTMLElement>('#music-modal')?.dataset.sourceSection||anchor.closest('section')?.id||'footer';
+ const event = { platform, destination: url.href, language: document.body.dataset.lang, section };
  if (consent?.analytics) win.gtag?.('event', 'music_platform_click', event);
  if (consent?.marketing) win.fbq?.('trackCustom', 'MusicPlatformClick', event);
 });

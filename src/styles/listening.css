@@ -1,0 +1,51 @@
+.music-modal { width:min(1040px,calc(100% - 36px));max-width:calc(100% - 16px);max-height:92svh;padding:0;border:0;border-radius:4px;background:#faf7f2;color:#34252b;box-shadow:0 30px 120px #170b1366;overscroll-behavior:contain; }
+.music-modal::backdrop { background:#1d101bcc;backdrop-filter:blur(8px); }
+.music-modal [hidden] { display:none!important; }
+.music-modal-top { position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:20px 36px;border-bottom:1px solid #ded3c9;background:#faf7f2f7;backdrop-filter:blur(12px); }
+.music-modal-top .kicker { font-size:10px;color:#86653d; }
+.music-modal-top h2 { font:21px/1.2 var(--serif);color:#4c2c3b;margin:4px 0 0;letter-spacing:0; }
+.music-close { display:grid;place-items:center;flex-shrink:0;width:40px;height:40px;border:1px solid #d6c7bb;background:transparent;color:#4c2c3b;border-radius:50%;font-size:19px; }
+.music-modal-content { padding:36px; }
+.music-release-layout { display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start; }
+.music-release-art img { width:100%;height:auto;object-fit:contain;box-shadow:0 14px 32px #3d222321; }
+.music-release-credit { font-size:13px;font-weight:600;margin:19px 0 5px; }
+.music-release-facts { color:#7b6c62;font-size:11px;margin:0; }
+.music-release-facts span { margin:0 5px; }
+.music-release-heading h3 { color:#4c2c3b;font:clamp(31px,4vw,45px)/1.08 var(--serif);letter-spacing:-.025em;margin:0 0 14px;overflow-wrap:anywhere; }
+.music-release-heading>p { color:#7b6c62;font-size:13px;margin-bottom:21px; }
+.music-services { display:grid;gap:8px; }
+.music-service { display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid #dfd4ca;background:#fff;min-height:56px;transition:border-color .2s,background .2s; }
+.music-service:hover,.music-service[aria-current=true] { border-color:#8b5f44;background:#f3ece3; }
+.music-service>span:not(.music-service-icon) { font-size:14px;font-weight:600; }
+.music-service small { margin-left:auto;white-space:nowrap;font-size:11px;color:#795b3f; }
+.music-service small>span { margin-left:7px;font-size:15px; }
+.music-service-icon { display:inline-grid;place-items:center;flex-shrink:0;width:26px;height:26px; }
+.music-service-spotify { color:#16823c; }.music-service-apple,.music-service-itunes { color:#d63655; }.music-service-youtube { color:#e02c2c; }.music-service-deezer { color:#8f3fd0; }.music-service-amazon { color:#11677c; }
+.music-download { display:flex;align-items:center;justify-content:space-between;gap:20px;margin:15px 0;padding:12px 0;border-bottom:1px solid #ded3c9;font-size:12px;color:#7b6c62; }
+.music-download a { display:flex;align-items:center;gap:10px;color:#4c2c3b; }
+.music-provider-notice { color:#7b6c62;font-size:11px;line-height:1.6;margin:16px 0 0; }
+.music-player-region { margin-top:25px;padding-top:20px;border-top:1px solid #d8c9bd;scroll-margin-top:110px;min-width:0; }
+.music-player-top { display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:10px; }
+.music-player-top strong { font-size:13px; }.music-player-top .text-link { font-size:10px;margin:0;letter-spacing:0; }
+.music-player-region iframe { display:block;width:100%;max-width:100%;border:0;border-radius:10px;background:#eee5dc; }
+.music-player-region [role=status] { color:#7b6c62;font-size:12px;margin:8px 0; }
+.music-player-region [role=status]:empty { display:none; }
+.music-player-help { font-size:11px;color:#7b6c62;line-height:1.6;margin:12px 0 0; }
+.music-tracklist { margin-top:36px;padding-top:22px;border-top:1px solid #d8c9bd; }
+.music-tracklist>header { display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:14px; }
+.music-tracklist h4,.music-discography h4 { margin:0;color:#4c2c3b;font:27px/1.2 var(--serif); }
+.music-tracklist>header>span { color:#7b6c62;font-size:12px;white-space:nowrap; }
+.music-tracklist ol { list-style:none;padding:0;margin:0; }
+.music-tracklist li>a { display:flex;align-items:center;gap:18px;padding:16px 8px;border-top:1px solid #e7ded5; }
+.music-tracklist li>a:hover { background:#f1e9df; }
+.music-track-number { width:22px;flex-shrink:0;color:#9b8774;font-size:12px; }
+.music-track-copy { flex:1;min-width:0; }.music-track-copy strong { display:block;font-size:13px;font-weight:500;line-height:1.55;overflow-wrap:anywhere; }.music-track-copy small { display:block;color:#8a796b;font-size:11px;line-height:1.6; }
+.music-track-duration { color:#7b6c62;font-size:12px;font-variant-numeric:tabular-nums; }.music-track-play { color:#795b3f;font-size:19px; }
+.music-all-recordings { margin-top:24px;padding:10px 0;border:0;border-bottom:1px solid #ba9c7e;background:transparent;font-size:12px;color:#765435; }
+.music-discography { margin-top:32px;padding-top:25px;border-top:1px solid #d8c9bd; }.music-discography>div { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px; }
+.music-discography button { display:flex;align-items:center;gap:14px;min-width:0;background:#fff;border:1px solid #dfd4ca;padding:12px;text-align:left;color:#4c2c3b; }
+.music-discography img { width:64px;height:64px;object-fit:cover; }.music-discography button>span:first-of-type { flex:1;min-width:0; }.music-discography strong { display:block;font-size:13px;font-weight:500;line-height:1.5;overflow-wrap:anywhere; }.music-discography small { color:#8a796b;font-size:11px; }
+@media(max-width:700px) { .music-release-layout { grid-template-columns:180px minmax(0,1fr);gap:24px; }.music-modal-content { padding:26px; }.music-modal-top { padding:18px 26px; }.music-service { padding:12px;gap:9px; }.music-service small { font-size:10px; } }
+@media(max-width:600px) { .music-modal { width:calc(100% - 16px);max-height:96svh;margin:2svh auto; }.music-modal-top { padding:14px 18px;gap:12px; }.music-modal-top h2 { font-size:18px; }.music-modal-content { padding:24px 18px; }.music-release-layout { display:block; }.music-release-art { width:min(200px,65%);margin:0 auto 24px;text-align:center; }.music-release-main { min-width:0; }.music-release-heading { text-align:center; }.music-release-heading h3 { font-size:34px; }.music-release-credit { margin-top:13px; }.music-service { padding:12px 15px; }.music-service small { font-size:11px; }.music-tracklist { margin-top:25px; }.music-tracklist li>a { gap:11px;padding-inline:0; }.music-track-copy strong { font-size:12px; }.music-track-copy small { font-size:10px; }.music-discography>div { grid-template-columns:1fr; }.music-player-top { gap:10px; }.music-close { width:34px;height:34px; }.music-player-region iframe { min-width:280px; }.music-tracklist h4 { font-size:25px; } }
+
+@media(max-width:360px) { .music-modal-content { padding:20px 12px; }.music-service { padding-inline:12px; }.music-player-top { flex-wrap:wrap; } }

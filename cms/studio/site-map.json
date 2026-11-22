@@ -984,6 +984,146 @@
           "english": "Listen",
           "label": "Texto",
           "auxiliary": false
+        },
+        {
+          "key": "copy:Loading player…",
+          "source": "Cargando el reproductor…",
+          "english": "Loading player…",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Music player",
+          "source": "Reproductor de música",
+          "english": "Music player",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Nathalie’s music",
+          "source": "La música de Nathalie",
+          "english": "Nathalie’s music",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Close",
+          "source": "Cerrar",
+          "english": "Close",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Album",
+          "source": "Álbum",
+          "english": "Album",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Single",
+          "source": "Sencillo",
+          "english": "Single",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:track",
+          "source": "título",
+          "english": "track",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:tracks",
+          "source": "títulos",
+          "english": "tracks",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Choose your platform to listen.",
+          "source": "Elige tu plataforma para escuchar.",
+          "english": "Choose your platform to listen.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Available platforms",
+          "source": "Plataformas disponibles",
+          "english": "Available platforms",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Listen here",
+          "source": "Escuchar aquí",
+          "english": "Listen here",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Open",
+          "source": "Abrir",
+          "english": "Open",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Digital download",
+          "source": "Descarga digital",
+          "english": "Digital download",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Choosing a player connects to the selected platform.",
+          "source": "Al elegir un reproductor, se conecta con la plataforma seleccionada.",
+          "english": "Choosing a player connects to the selected platform.",
+          "label": "Descripción",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Open on the platform",
+          "source": "Abrir en la plataforma",
+          "english": "Open on the platform",
+          "label": "Texto del enlace",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Browse the tracks and control playback in the player. If it does not load, open the platform.",
+          "source": "Puedes consultar los títulos y controlar la reproducción en el lector. Si no carga, abre la plataforma.",
+          "english": "Browse the tracks and control playback in the player. If it does not load, open the platform.",
+          "label": "Descripción",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Track list",
+          "source": "Lista de títulos",
+          "english": "Track list",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:total",
+          "source": "en total",
+          "english": "total",
+          "label": "Texto",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:Choose a recording",
+          "source": "Elegir una grabación",
+          "english": "Choose a recording",
+          "label": "Título",
+          "auxiliary": false
+        },
+        {
+          "key": "copy:All recordings",
+          "source": "Todas las grabaciones",
+          "english": "All recordings",
+          "label": "Texto",
+          "auxiliary": true
         }
       ]
     },
@@ -2233,11 +2373,18 @@
           "auxiliary": true
         },
         {
+          "key": "copy:Listen",
+          "source": "Escuchar",
+          "english": "Listen",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
           "key": "copy:open in a new tab",
           "source": "abrir en una pestaña nueva",
           "english": "open in a new tab",
-          "label": "Texto del enlace",
-          "auxiliary": true
+          "label": "Texto",
+          "auxiliary": false
         },
         {
           "key": "copy:Soprano & actress",
@@ -2787,6 +2934,13 @@
           "auxiliary": false
         },
         {
+          "key": "copy:Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.",
+          "source": "Los reproductores musicales se cargan únicamente al seleccionar una plataforma. Spotify, Apple Music, Deezer o YouTube reciben entonces los datos de conexión necesarios para ofrecer su reproductor, conforme a sus propias políticas.",
+          "english": "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.",
+          "label": "Párrafo 4",
+          "auxiliary": false
+        },
+        {
           "key": "copy:Hosting and enquiries",
           "source": "Alojamiento y consultas",
           "english": "Hosting and enquiries",
@@ -2797,7 +2951,7 @@
           "key": "copy:Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the representation details in the Contact section.",
           "source": "Vercel aloja el sitio y puede procesar datos técnicos de conexión para entregar las páginas. Para consultas sobre la artista o el uso de sus contenidos, utiliza los contactos de representación de la sección Contacto.",
           "english": "Vercel hosts the site and may process technical connection data to deliver pages. For enquiries about the artist or use of her content, use the representation details in the Contact section.",
-          "label": "Párrafo 4",
+          "label": "Párrafo 5",
           "auxiliary": false
         },
         {

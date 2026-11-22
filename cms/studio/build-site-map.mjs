@@ -2,7 +2,7 @@ import { readFile,writeFile } from 'node:fs/promises';
 import ts from 'typescript';
 const specs=[
  ['home','Inicio','home','home','Hero','hero'],['concerts','Agenda','calendar','schedule','Schedule,ConcertRow',null,'concerts'],['about','La artista','photo','about','Story,Biography,BiographyProse','story'],
- ['voice','Trayectoria','briefcase','voice','International'],['albums','Discografía','album','music','Releases',null,'albums'],
+ ['voice','Trayectoria','briefcase','voice','International'],['albums','Discografía','album','music','Releases,ListeningDialog',null,'albums'],
  ['repertorio','Repertorio clásico','album','repertorio','Repertoire'],
  ['contemporary','Contemporáneo','album','contemporain','Contemporary'],
  ['videos','Vídeos','video','media','Videos',null,'videos'],['news','Prensa y noticias','text','news','Editorial','press'],

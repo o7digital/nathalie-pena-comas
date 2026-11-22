@@ -1,0 +1,28 @@
+---
+import {localizer} from '../data/locales';
+import {listeningArtist,listeningReleases,serviceNames} from '../data/listening';
+import {musicDuration,musicEmbed} from '../lib/music-players';
+import type {Locale} from '../data/translations';
+import Image from './ContentImage.astro';
+import ServiceIcon from './MusicServiceIcon.astro';
+import '../styles/listening.css';
+interface Props {lang:Locale}
+const {lang}=Astro.props,l=localizer(lang);
+const panels=[{...listeningArtist,year:undefined,type:'Artist',tracks:[]},...listeningReleases];
+---
+<dialog id="music-modal" class="music-modal" aria-labelledby="music-modal-title" data-player-loading={l('Cargando el reproductor…','Loading player…')} data-player-title={l('Reproductor de música','Music player')}>
+ <header class="music-modal-top"><div><span class="kicker">{l('Escuchar','Listen')}</span><h2 id="music-modal-title">{l('La música de Nathalie','Nathalie’s music')}</h2></div><button type="button" class="music-close" data-music-close aria-label={l('Cerrar','Close')}>✕</button></header>
+ <div class="music-modal-content">{panels.map(release=><article data-listening-panel={release.key} data-title={release.title} hidden>
+  <div class="music-release-layout"><aside class="music-release-art"><Image src={release.image} width={640} widths={[240,400,640]} sizes="(max-width:600px) 55vw, 280px" alt={release.title} loading="lazy"/><p class="music-release-credit">{release.artist}</p>{release.year&&<p class="music-release-facts">{release.year} <span>·</span> {release.type==='Album'?l('Álbum','Album'):release.type==='Single'?l('Sencillo','Single'):release.type} <span>·</span> {release.tracks.length} {release.tracks.length===1?l('título','track'):l('títulos','tracks')}</p>}</aside>
+   <div class="music-release-main"><div class="music-release-heading"><h3>{release.title}</h3><p>{l('Elige tu plataforma para escuchar.','Choose your platform to listen.')}</p></div>
+    <div class="music-services" aria-label={l('Plataformas disponibles','Available platforms')}>{release.services.filter(service=>service.id!=='itunes').map(service=>{const embed=musicEmbed(service.url);return <a class="music-service" href={service.url} target="_blank" rel="noopener noreferrer" data-music-service={service.id} data-music-embed={embed?.src} data-music-height={embed?.height} data-provider={serviceNames[service.id]}><ServiceIcon service={service.id}/><span>{serviceNames[service.id]}</span><small>{embed?l('Escuchar aquí','Listen here'):l('Abrir','Open')} <span aria-hidden="true">{embed?'▷':'↗'}</span></small></a>;})}</div>
+    {release.services.some(service=>service.id==='itunes')&&<div class="music-download"><span>{l('Descarga digital','Digital download')}</span>{release.services.filter(service=>service.id==='itunes').map(service=><a href={service.url} target="_blank" rel="noopener noreferrer"><ServiceIcon service={service.id}/>{serviceNames[service.id]} ↗</a>)}</div>}
+    <p class="music-provider-notice">{l('Al elegir un reproductor, se conecta con la plataforma seleccionada.','Choosing a player connects to the selected platform.')}</p>
+    <section class="music-player-region" data-music-player-region aria-label={l('Reproductor de música','Music player')} hidden><div class="music-player-top"><strong data-music-provider></strong><a data-music-external class="text-link" target="_blank" rel="noopener noreferrer">{l('Abrir en la plataforma','Open on the platform')} ↗</a></div><p data-music-player-status role="status"></p><div data-music-player></div><p class="music-player-help">{l('Puedes consultar los títulos y controlar la reproducción en el lector. Si no carga, abre la plataforma.','Browse the tracks and control playback in the player. If it does not load, open the platform.')}</p></section>
+   </div>
+  </div>
+  {release.tracks.length>0?<section class="music-tracklist"><header><h4>{l('Lista de títulos','Track list')}</h4><span>{musicDuration(release.tracks.reduce((total,track)=>total+track.durationMs,0))} {l('en total','total')}</span></header><ol>{release.tracks.map((track,index)=>{const embed=musicEmbed(track.url);return <li><a href={track.url} target="_blank" rel="noopener noreferrer" data-music-track data-music-embed={embed?.src} data-music-height={embed?.height} data-provider={embed?.provider}><span class="music-track-number">{String(index+1).padStart(2,'0')}</span><span class="music-track-copy"><strong>{track.title}</strong><small>{track.artist}</small></span><span class="music-track-duration">{musicDuration(track.durationMs)}</span><span class="music-track-play" aria-hidden="true">▷</span></a></li>;})}</ol></section>:<section class="music-discography"><h4>{l('Elegir una grabación','Choose a recording')}</h4><div>{listeningReleases.map(album=><button type="button" data-listening-switch={album.key}><Image src={album.image} width={120} sizes="64px" alt="" loading="lazy"/><span><strong>{album.title}</strong><small>{album.artist}</small></span><span aria-hidden="true">↗</span></button>)}</div></section>}
+  {release.key!=='nathalie'&&<button class="music-all-recordings" type="button" data-listening-switch="nathalie">← {l('Todas las grabaciones','All recordings')}</button>}
+ </article>)}</div>
+</dialog>
+<script>import '../scripts/listening';</script>

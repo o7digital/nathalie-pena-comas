@@ -48,7 +48,10 @@ for(const lang of ['es','en'] as const){
    const link=page.locator(`main a[href="${href}"]`).first();
    const panel=link.locator('xpath=ancestor::*[@role="tabpanel"]');
    if(await panel.count())await page.locator(`[role="tab"][aria-controls="${await panel.getAttribute('id')}"]`).click();
-   await link.click();await expect(page).toHaveURL(new RegExp(`${href}$`));await expect(page.locator(href)).toHaveCount(1);
+   await link.click();
+   const recording=await link.getAttribute('data-listen');
+   if(recording){await expect(page.locator('#music-modal')).toBeVisible();await expect(page.locator(`[data-listening-panel="${recording}"]`)).toBeVisible();await page.locator('[data-music-close]').click();await expect(page).not.toHaveURL(/#listen-/);}
+   else {await expect(page).toHaveURL(new RegExp(`${href}$`));await expect(page.locator(href)).toHaveCount(1);}
   }
   await page.route('https://www.youtube-nocookie.com/**',route=>route.fulfill({body:'<html>Video</html>',contentType:'text/html'}));
   for(const button of await page.locator('[data-video]').all()){

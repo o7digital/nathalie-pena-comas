@@ -1,4 +1,5 @@
 ---
+import {listeningAttributes} from '../data/listening';
 import { localizedRecord, readContent } from '../lib/cms';
 import Image from './ContentImage.astro';
 import { albums } from '../data/albums';
@@ -64,7 +65,7 @@ const performances = cmsPerformances === null ? localPerformances : cmsPerforman
  <div class="repertoire-listening">
   <header><span class="kicker">{l('Escuchar', 'Listen')}</span><h3>{l('La voz, en escena.', 'The voice, on stage.')}</h3></header>
   <div class="repertoire-listening-grid">
-   <div class="repertoire-recordings">{classical.map(release => <a class="repertoire-recording" href={release.url} target="_blank" rel="noopener"><Image src={release.image} width={240} widths={[120,240]} sizes="80px" loading="lazy" alt={release.title} /><span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</small><span class="repertoire-listen">{l('Escuchar el álbum', 'Listen to the album')} ↗</span></span></a>)}</div>
+   <div class="repertoire-recordings">{classical.map(release => <a class="repertoire-recording" href={release.url} {...listeningAttributes(release.url)} target="_blank" rel="noopener"><Image src={release.image} width={240} widths={[120,240]} sizes="80px" loading="lazy" alt={release.title} /><span class="repertoire-recording-copy"><strong>{release.title}</strong><small>{localizedRecord('albums',release.id,'detail',lang,release.detail)}</small><span class="repertoire-listen">{l('Escuchar el álbum', 'Listen to the album')} ↗</span></span></a>)}</div>
    <ul class="repertoire-performances">{performances.map(performance => <li><a href={`https://www.youtube.com/watch?v=${performance.id}`} target="_blank" rel="noopener"><span><strong>{performance.title}</strong><small>{performance.detail}</small></span><span aria-hidden="true">↗</span></a></li>)}</ul>
   </div>
  </div>

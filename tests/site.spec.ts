@@ -12,9 +12,10 @@ for (const lang of ['es', 'en']) for (const width of [390, 768, 1024, 1280, 1440
   await expect(page.locator('.release-feature h3')).toContainText('Quinto Elemento:');
   await expect(page.locator('.language-switch a[aria-current="page"]')).toHaveText(lang === 'es' ? 'Español' : 'English');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const image of await page.locator('img').all()) { await image.scrollIntoViewIfNeeded(); await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true); }
+  // Closed listening panels deliberately keep their images unloaded until opened.
+  for (const image of await page.locator('img:visible').all()) { await image.scrollIntoViewIfNeeded(); await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true); }
   await page.evaluate(() => window.scrollTo(0,0));
-  expect(await page.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  expect(await page.locator('img:visible').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   const ids = await page.locator('[id]').evaluateAll(elements => elements.map(e => e.id)); expect(new Set(ids).size).toBe(ids.length);
   expect(thirdParty).toEqual([]); expect(errors).toEqual([]);
   if (width <= 1250) {
@@ -59,13 +60,18 @@ test('analytics and advertising require separate consent; withdrawal persists', 
  });
  await page.route('https://www.googletagmanager.com/**', route => { gaEvents.push(route.request().url()); return route.fulfill({body:'',contentType:'text/javascript'}); });
  await page.route('https://connect.facebook.net/**', route => { pixelEvents.push(route.request().url()); return route.fulfill({body:'',contentType:'text/javascript'}); });
+ await page.route('https://open.spotify.com/embed/**',route=>route.fulfill({contentType:'text/html',body:'<html>Music player</html>'}));
  await page.goto('/en/'); await expect(page.locator('#consent-modal')).toBeVisible(); expect(gaEvents).toHaveLength(0); expect(pixelEvents).toHaveLength(0);
  await page.locator('[data-consent="reject"]').click(); await page.reload(); await expect(page.locator('#consent-modal')).not.toBeVisible(); expect(gaEvents).toHaveLength(0);
  await page.locator('footer [data-preferences]').click(); await page.locator('#consent-analytics').check(); await page.locator('[data-consent="save"]').click();
  await expect.poll(() => gaEvents.length).toBe(1); expect(pixelEvents).toHaveLength(0);
- await page.locator('.platform[href*="spotify"]').evaluate((el: HTMLAnchorElement) => { el.addEventListener('click', e => e.preventDefault()); el.click(); });
+ await page.locator('.footer-social .platform').click();
+ expect(await page.evaluate(()=>(window as unknown as {dataLayer:unknown[][]}).dataLayer.some(item=>item[1]==='music_platform_click'))).toBe(false);
+ await page.locator('#music-modal [data-listening-panel=nathalie] [data-music-service=spotify]').click();
  const events = await page.evaluate(() => (window as unknown as { dataLayer: unknown[][] }).dataLayer);
  expect(events.some(item => item[0] === 'event' && item[1] === 'music_platform_click')).toBe(true);
+ const event=events.find(item=>item[1]==='music_platform_click')?.[2] as {section:string};expect(event.section).toBe('footer');
+ await page.locator('[data-music-close]').click();await expect(page.locator('#music-modal')).not.toBeVisible();
  await page.locator('footer [data-preferences]').click(); await page.locator('[data-consent="reject"]').click(); await page.waitForLoadState('networkidle');
  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('npc-consent-v1') || '{}').analytics)).toBe(false);
  expect(gaEvents).toHaveLength(1);
