@@ -1,7 +1,16 @@
 /* Continuous biography inside the existing layout, with the blue-dress portrait. */
+.story-editorial .story-profile { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(32px,4.2vw,64px); align-items:start; padding-block:40px; }
+.story.story-editorial .story-visual { width:100%; }
+.story.story-editorial .story-copy { display:block; max-width:none; }
 .biography-prose { min-width:0; }
 .story .biography-prose p { margin:0 0 24px; color:#353133; font-size:17px; line-height:1.85; overflow-wrap:anywhere; }
 .biography-prose p[id] { scroll-margin-top:130px; }
+@media(max-width:900px) {
+ .story-editorial .story-profile { grid-template-columns:minmax(0,1fr); gap:32px; }
+ .story.story-editorial .story-visual { grid-row:auto; max-width:560px; margin-inline:auto; }
+ .story.story-editorial .story-caption { display:block; }
+}
 @media(max-width:600px) {
+ .story-editorial .story-profile { gap:28px; padding-block:28px; }
  .story .biography-prose p { font-size:16px; margin-bottom:22px; }
 }

@@ -13,7 +13,7 @@ interface Props {lang:Locale; printable?:boolean}
 const {lang,printable=false}=Astro.props;
 const l = localizer(lang);
 ---
-<section class="story section" id="about" aria-labelledby="about-title">
+<section class:list={['story','section',{'story-editorial':!printable}]} id="about" aria-labelledby="about-title">
  <header class="story-heading">
   <div><div class="kicker">{l("La artista", "The artist")} <span aria-hidden="true">/</span> {l('Biografía completa', 'Full biography')}</div><h2 id="about-title">{l('Nathalie Peña-Comas')}</h2><p class="story-profession">{l('Soprano y actriz', 'Soprano & actress')}</p></div>
   <div class="story-actions">
@@ -22,7 +22,7 @@ const l = localizer(lang);
   </div>
  </header>
  <div class="story-profile">
- <div class="story-visual"><Image src={sectionPhoto} width={800} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[320,480,800]} sizes="(max-width:600px) 80vw, 240px" format="webp" loading={printable?'eager':'lazy'} /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div>
+ <div class="story-visual"><Image src={sectionPhoto} width={1200} alt={l("Nathalie Peña-Comas — retrato oficial", "Nathalie Peña-Comas — official portrait")} widths={[640,960,1440,1920]} sizes={printable?'240px':'(max-width:600px) 150vw, (max-width:900px) 940px, (max-width:1440px) 68vw, 940px'} format="webp" loading={printable?'eager':'lazy'} /><span class="story-caption">{l("Nathalie Peña-Comas / Soprano")}</span></div>
  <div class="story-copy">
   <h3 class="story-roots">{l("Raíces latinas.", "Latin roots.")} <em>{l("Alma lírica.", "An operatic soul.")}</em></h3>
   {!printable ? <BiographyProse lang={lang}/> : <>
