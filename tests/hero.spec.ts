@@ -34,7 +34,7 @@ function state(page: Page, value: number) {
  return page.evaluate(value => (window as unknown as { heroVideoTest: { state(value:number):void } }).heroVideoTest.state(value), value);
 }
 
-test('silent Sombras video starts at fifteen seconds and stays until YouTube reports its end', async ({ page }) => {
+test('silent Sombras video starts at fifteen seconds and plays one full minute before the slideshow', async ({ page }) => {
  await mockYouTube(page);
  await freezeClock(page);
  await page.goto('/es/');
@@ -44,10 +44,10 @@ test('silent Sombras video starts at fifteen seconds and stays until YouTube rep
  await expect(frame).toHaveAttribute('title', 'Nathalie Peña-Comas — Sombras Nada Más');
  await expect(frame).toHaveAttribute('data-muted', 'true');
  await expect(page.locator('.hero-biography')).toContainText('Alta Gracia');
- await page.clock.fastForward(180000);
+ await page.clock.fastForward(59900);
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
  await expect(frame).toHaveCount(1);
- await state(page, 0);
+ await page.clock.fastForward(100);
  await expect(page.locator('.signature-hero')).not.toHaveClass(/is-video-intro/);
  const slides = page.locator('[data-hero-slide]');
  await expect(slides.nth(0)).toHaveClass(/is-active/);
@@ -83,7 +83,7 @@ test('sound can be enabled and muted with the keyboard, and replay starts muted 
  await page.locator('[data-hero-sound]').press('Space');
  await expect(frame).toHaveAttribute('data-muted','true');
  await sound.click();
- await page.clock.fastForward(60000);
+ await page.clock.fastForward(59000);
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
  await state(page, 0);
  await expect(page.locator('[data-hero-sound]')).toBeHidden();
@@ -129,13 +129,13 @@ test('the intro pauses during the complete video dialog and full playback still 
  await page.locator('#load-video').click();
  await expect(page.locator('#video-container iframe')).toHaveAttribute('src', /HbRmwVkSP8Q\?autoplay=1&rel=0$/);
  await page.keyboard.press('Escape');
- await page.clock.fastForward(60000);
+ await page.clock.fastForward(54900);
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
- await state(page, 0);
+ await page.clock.fastForward(100);
  await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
 });
 
-test('buffering and a hidden tab preserve the video until its natural end', async ({ page }) => {
+test('buffering and a hidden tab do not consume the one minute of actual playback', async ({ page }) => {
  await mockYouTube(page);
  await freezeClock(page);
  await page.goto('/en/');
@@ -154,9 +154,9 @@ test('buffering and a hidden tab preserve the video until its natural end', asyn
   Object.defineProperty(document, 'hidden', {configurable:true,value:false});
   document.dispatchEvent(new Event('visibilitychange'));
  });
- await page.clock.fastForward(120000);
+ await page.clock.fastForward(54900);
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
- await state(page, 0);
+ await page.clock.fastForward(100);
  await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
 });
 
