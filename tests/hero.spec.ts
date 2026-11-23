@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function mockYouTube(page: Page, autoplay = true) {
- await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ contentType:'text/html', body:'<html style="background:#151515"><body style="color:white">Ave Maria</body></html>' }));
+ await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ contentType:'text/html', body:'<html style="background:#151515"><body style="color:white">Sombras Nada Más</body></html>' }));
  await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({ contentType:'text/javascript', body:`
  window.YT = { Player: class {
   constructor(frame, { events }) {
@@ -11,6 +11,7 @@ async function mockYouTube(page: Page, autoplay = true) {
   }
   update(n) { this.state = n; this.events.onStateChange({ data:n }); }
   mute() { this.frame.dataset.muted = 'true'; }
+  unMute() { this.frame.dataset.muted = 'false'; }
   playVideo() { if (${autoplay} && this.state !== 1) { this.state = 1; queueMicrotask(() => this.events.onStateChange({ data:1 })); } }
   pauseVideo() { window.heroVideoTest.pauses++; if (this.state === 1) { this.state = 2; queueMicrotask(() => this.events.onStateChange({ data:2 })); } }
   destroy() { this.frame.remove(); }
@@ -33,13 +34,14 @@ function state(page: Page, value: number) {
  return page.evaluate(value => (window as unknown as { heroVideoTest: { state(value:number):void } }).heroVideoTest.state(value), value);
 }
 
-test('silent intro plays once for eighteen seconds, then portrait and album alternate every five seconds', async ({ page }) => {
+test('silent Sombras intro starts at fifteen seconds and plays eighteen seconds before the slideshow', async ({ page }) => {
  await mockYouTube(page);
  await freezeClock(page);
  await page.goto('/es/');
  await expect(page.locator('.signature-hero')).toHaveClass(/is-video-intro/);
  const frame = page.locator('[data-hero-player] iframe');
- await expect(frame).toHaveAttribute('src', /kglZQlwuAqU\?autoplay=1&mute=1&playsinline=1/);
+ await expect(frame).toHaveAttribute('src', /HbRmwVkSP8Q\?autoplay=1&mute=1&playsinline=1&start=15&/);
+ await expect(frame).toHaveAttribute('title', 'Nathalie Peña-Comas — Sombras Nada Más');
  await expect(frame).toHaveAttribute('data-muted', 'true');
  await expect(page.locator('.hero-biography')).toContainText('Alta Gracia');
  await page.clock.fastForward(17900);
@@ -61,6 +63,34 @@ test('silent intro plays once for eighteen seconds, then portrait and album alte
  await page.locator('[data-hero-select="1"]').click();
  await expect(slides.nth(1)).toHaveAttribute('aria-hidden', 'false');
  await expect(slides.nth(0)).toHaveAttribute('inert', '');
+});
+
+test('sound can be enabled and muted with the keyboard, and replay starts muted again', async ({ page }) => {
+ await mockYouTube(page);
+ await freezeClock(page);
+ await page.goto('/es/');
+ const sound = page.getByRole('button', {name:'Activar sonido',exact:true});
+ const frame = page.locator('[data-hero-player] iframe');
+ await expect(sound).toBeEnabled();
+ await expect(sound).toHaveAttribute('aria-pressed','false');
+ await expect(frame).toHaveAttribute('data-muted','true');
+ await sound.focus();
+ await sound.press('Enter');
+ await expect(page.locator('[data-hero-sound]')).toHaveText('Silenciar');
+ await expect(page.locator('[data-hero-sound]')).toHaveAttribute('aria-pressed','true');
+ await expect(frame).toHaveAttribute('data-muted','false');
+ await page.locator('[data-hero-sound]').press('Space');
+ await expect(frame).toHaveAttribute('data-muted','true');
+ await sound.click();
+ await page.clock.fastForward(18000);
+ await expect(page.locator('[data-hero-sound]')).toBeHidden();
+ await expect(page.locator('[data-hero-select="0"]')).toBeFocused();
+ await page.clock.fastForward(1000);
+ await page.locator('[data-hero-replay]').click();
+ await expect(sound).toBeEnabled();
+ await expect(sound).toHaveAttribute('aria-pressed','false');
+ await expect(frame).toHaveAttribute('data-muted','true');
+ await expect(frame).toHaveAttribute('src', /[?&]start=15&/);
 });
 
 test('intro can be paused, skipped with keyboard focus retained, and replayed', async ({ page }) => {
@@ -89,12 +119,12 @@ test('the intro pauses during the complete video dialog and full playback still 
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
  await page.clock.fastForward(5000);
  await page.locator('.hero [data-video]').click();
- await expect(page.locator('#video-fallback')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=kglZQlwuAqU');
+ await expect(page.locator('#video-fallback')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=HbRmwVkSP8Q');
  await expect(page.locator('#video-container iframe')).toHaveCount(0);
  await page.clock.fastForward(20000);
  await expect(page.locator('[data-hero-video]')).toHaveClass(/is-active/);
  await page.locator('#load-video').click();
- await expect(page.locator('#video-container iframe')).toHaveAttribute('src', /kglZQlwuAqU\?autoplay=1&rel=0$/);
+ await expect(page.locator('#video-container iframe')).toHaveAttribute('src', /HbRmwVkSP8Q\?autoplay=1&rel=0$/);
  await page.keyboard.press('Escape');
  await page.clock.fastForward(13000);
  await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
@@ -140,6 +170,7 @@ for (const failure of ['error','blocked','timeout'] as const) {
   await page.clock.fastForward(5000);
   await expect(page.locator('[data-hero-slide]').nth(1)).toHaveClass(/is-active/);
   await expect(page.locator('[data-hero-player] iframe')).toHaveCount(0);
+  await expect(page.locator('[data-hero-sound]')).toBeHidden();
  });
 }
 
@@ -147,6 +178,7 @@ test('a blocked API keeps the intro screen until the fallback after eight second
  await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({contentType:'text/javascript',body:''}));
  await freezeClock(page);
  await page.goto('/en/');
+ await expect(page.locator('[data-hero-sound]')).toBeDisabled();
  await expect(page.locator('[data-hero-slide]').nth(0)).not.toHaveClass(/is-active/);
  await expect(page.locator('.hero-inner')).toBeHidden();
  await page.clock.fastForward(8000);
@@ -167,6 +199,7 @@ for (const reason of ['reduced motion','save data','section link'] as const) {
   await page.clock.fastForward(10000);
   expect(requests).toEqual([]);
   await expect(page.locator('[data-hero-player] iframe')).toHaveCount(0);
+  await expect(page.locator('[data-hero-sound]')).toBeHidden();
   if (reason === 'reduced motion') {
    await expect(page.locator('[data-hero-pause]')).toHaveAttribute('aria-pressed', 'true');
    await expect(page.locator('[data-hero-slide]').nth(0)).toHaveClass(/is-active/);
@@ -190,6 +223,7 @@ for (const [width,height] of [[390,844],[768,900],[1024,900],[1440,900],[844,390
   const frame = await page.locator('[data-hero-player] iframe').boundingBox();
   const skip = await page.locator('[data-hero-skip]').boundingBox();
   const controls = await page.locator('.hero-slider-controls').boundingBox();
+  const sound = await page.locator('[data-hero-sound]').boundingBox();
   const caption = await page.locator('.hero-video-caption').boundingBox();
   expect(hero).toEqual({x:0,y:0,width,height});
   expect(stage).toEqual(hero);
@@ -200,6 +234,9 @@ for (const [width,height] of [[390,844],[768,900],[1024,900],[1440,900],[844,390
   expect(frame!.width / frame!.height).toBeCloseTo(16 / 9, 4);
   expect(skip!.x + skip!.width).toBeLessThanOrEqual(controls!.x);
   expect(controls!.y + controls!.height).toBeLessThanOrEqual(height);
+  expect(sound!.x).toBeGreaterThanOrEqual(0);
+  expect(sound!.x + sound!.width).toBeLessThanOrEqual(controls!.x);
+  expect(sound!.y + sound!.height).toBeLessThanOrEqual(height);
   expect(caption!.y).toBeGreaterThanOrEqual(0);
   expect(caption!.y + caption!.height).toBeLessThan(skip!.y);
   await expect(page.locator('.hero-inner')).toBeHidden();

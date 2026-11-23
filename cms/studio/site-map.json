@@ -18,16 +18,16 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Ave Maria",
-          "source": "Ave Maria",
-          "english": "Ave Maria",
+          "key": "copy:Sombras Nada Más",
+          "source": "Sombras Nada Más",
+          "english": "Sombras Nada Más",
           "label": "Texto",
           "auxiliary": false
         },
         {
-          "key": "copy:From the Vatican",
-          "source": "Desde El Vaticano",
-          "english": "From the Vatican",
+          "key": "translation:officialVideo",
+          "source": "Video oficial · 2026",
+          "english": "Official video · 2026",
           "label": "Texto",
           "auxiliary": false
         },
@@ -151,6 +151,20 @@
           "auxiliary": true
         },
         {
+          "key": "copy:Enable sound",
+          "source": "Activar sonido",
+          "english": "Enable sound",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
+          "key": "copy:Mute sound",
+          "source": "Silenciar",
+          "english": "Mute sound",
+          "label": "Texto",
+          "auxiliary": true
+        },
+        {
           "key": "copy:View photos",
           "source": "Ver las fotos",
           "english": "View photos",
@@ -172,9 +186,9 @@
           "auxiliary": false
         },
         {
-          "key": "copy:Listen to Ave Maria",
-          "source": "Escuchar Ave Maria",
-          "english": "Listen to Ave Maria",
+          "key": "copy:Watch the full video",
+          "source": "Ver el vídeo completo",
+          "english": "Watch the full video",
           "label": "Texto",
           "auxiliary": true
         }

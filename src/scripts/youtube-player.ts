@@ -2,6 +2,7 @@ export interface YouTubePlayer {
  playVideo(): void;
  pauseVideo(): void;
  mute(): void;
+ unMute(): void;
  destroy(): void;
 }
 

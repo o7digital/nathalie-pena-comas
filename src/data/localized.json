@@ -361,7 +361,10 @@
     "total": "insgesamt",
     "Choose a recording": "Eine Aufnahme auswählen",
     "All recordings": "Alle Aufnahmen",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Musikplayer werden erst geladen, wenn Sie eine Plattform auswählen. Spotify, Apple Music, Deezer oder YouTube erhalten dann die für ihren Player erforderlichen Verbindungsdaten gemäß ihren eigenen Richtlinien."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Musikplayer werden erst geladen, wenn Sie eine Plattform auswählen. Spotify, Apple Music, Deezer oder YouTube erhalten dann die für ihren Player erforderlichen Verbindungsdaten gemäß ihren eigenen Richtlinien.",
+    "Enable sound": "Ton einschalten",
+    "Mute sound": "Ton ausschalten",
+    "Watch the full video": "Vollständiges Video ansehen"
   },
   "fr": {
     "Save CV as PDF": "Enregistrer le CV en PDF",
@@ -725,7 +728,10 @@
     "total": "au total",
     "Choose a recording": "Choisir un enregistrement",
     "All recordings": "Tous les enregistrements",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Les lecteurs musicaux se chargent uniquement lorsque vous choisissez une plateforme. Spotify, Apple Music, Deezer ou YouTube reçoivent alors les données de connexion nécessaires à leur lecteur, selon leurs propres politiques."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Les lecteurs musicaux se chargent uniquement lorsque vous choisissez une plateforme. Spotify, Apple Music, Deezer ou YouTube reçoivent alors les données de connexion nécessaires à leur lecteur, selon leurs propres politiques.",
+    "Enable sound": "Activer le son",
+    "Mute sound": "Couper le son",
+    "Watch the full video": "Voir la vidéo complète"
   },
   "it": {
     "Save CV as PDF": "Salva il CV in PDF",
@@ -1089,7 +1095,10 @@
     "total": "in totale",
     "Choose a recording": "Scegli una registrazione",
     "All recordings": "Tutte le registrazioni",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "I lettori musicali vengono caricati solo quando scegli una piattaforma. Spotify, Apple Music, Deezer o YouTube ricevono i dati di connessione necessari al loro lettore, secondo le rispettive politiche."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "I lettori musicali vengono caricati solo quando scegli una piattaforma. Spotify, Apple Music, Deezer o YouTube ricevono i dati di connessione necessari al loro lettore, secondo le rispettive politiche.",
+    "Enable sound": "Attiva audio",
+    "Mute sound": "Disattiva audio",
+    "Watch the full video": "Guarda il video completo"
   },
   "sv": {
     "Save CV as PDF": "Spara CV som PDF",
@@ -1453,7 +1462,10 @@
     "total": "totalt",
     "Choose a recording": "Välj en inspelning",
     "All recordings": "Alla inspelningar",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Musikspelare laddas först när du väljer en plattform. Spotify, Apple Music, Deezer eller YouTube får då de anslutningsuppgifter som behövs för spelaren enligt sina egna policyer."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Musikspelare laddas först när du väljer en plattform. Spotify, Apple Music, Deezer eller YouTube får då de anslutningsuppgifter som behövs för spelaren enligt sina egna policyer.",
+    "Enable sound": "Aktivera ljud",
+    "Mute sound": "Stäng av ljud",
+    "Watch the full video": "Se hela videon"
   },
   "hu": {
     "Save CV as PDF": "Önéletrajz mentése PDF-ként",
@@ -1817,7 +1829,10 @@
     "total": "összesen",
     "Choose a recording": "Felvétel kiválasztása",
     "All recordings": "Összes felvétel",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "A zenelejátszók csak a platform kiválasztásakor töltődnek be. A Spotify, Apple Music, Deezer vagy YouTube ekkor megkapja a lejátszóhoz szükséges kapcsolati adatokat, a saját szabályzata szerint."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "A zenelejátszók csak a platform kiválasztásakor töltődnek be. A Spotify, Apple Music, Deezer vagy YouTube ekkor megkapja a lejátszóhoz szükséges kapcsolati adatokat, a saját szabályzata szerint.",
+    "Enable sound": "Hang bekapcsolása",
+    "Mute sound": "Némítás",
+    "Watch the full video": "Teljes videó megtekintése"
   },
   "hr": {
     "Save CV as PDF": "Spremi životopis kao PDF",
@@ -2181,7 +2196,10 @@
     "total": "ukupno",
     "Choose a recording": "Odaberite snimku",
     "All recordings": "Sve snimke",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Glazbeni reproduktori učitavaju se tek kada odaberete platformu. Spotify, Apple Music, Deezer ili YouTube tada primaju podatke o vezi potrebne za reproduktor, prema vlastitim pravilima."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Glazbeni reproduktori učitavaju se tek kada odaberete platformu. Spotify, Apple Music, Deezer ili YouTube tada primaju podatke o vezi potrebne za reproduktor, prema vlastitim pravilima.",
+    "Enable sound": "Uključi zvuk",
+    "Mute sound": "Isključi zvuk",
+    "Watch the full video": "Pogledaj cijeli video"
   },
   "ru": {
     "Save CV as PDF": "Сохранить резюме в PDF",
@@ -2545,7 +2563,10 @@
     "total": "всего",
     "Choose a recording": "Выбрать запись",
     "All recordings": "Все записи",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Музыкальные плееры загружаются только после выбора платформы. Spotify, Apple Music, Deezer или YouTube затем получают данные подключения, необходимые для работы плеера, в соответствии со своими правилами."
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "Музыкальные плееры загружаются только после выбора платформы. Spotify, Apple Music, Deezer или YouTube затем получают данные подключения, необходимые для работы плеера, в соответствии со своими правилами.",
+    "Enable sound": "Включить звук",
+    "Mute sound": "Выключить звук",
+    "Watch the full video": "Смотреть полное видео"
   },
   "zh-TW": {
     "Save CV as PDF": "將履歷儲存為 PDF",
@@ -2909,7 +2930,10 @@
     "total": "總時長",
     "Choose a recording": "選擇錄音作品",
     "All recordings": "所有錄音作品",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "音樂播放器僅在您選擇平台後載入。Spotify、Apple Music、Deezer 或 YouTube 屆時會依各自政策接收提供播放器所需的連線資料。"
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "音樂播放器僅在您選擇平台後載入。Spotify、Apple Music、Deezer 或 YouTube 屆時會依各自政策接收提供播放器所需的連線資料。",
+    "Enable sound": "開啟聲音",
+    "Mute sound": "靜音",
+    "Watch the full video": "觀看完整影片"
   },
   "ja": {
     "Save CV as PDF": "履歴書をPDFで保存",
@@ -3273,6 +3297,9 @@
     "total": "合計",
     "Choose a recording": "録音作品を選ぶ",
     "All recordings": "すべての録音作品",
-    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "音楽プレーヤーは、サービスを選択したときにのみ読み込まれます。Spotify、Apple Music、Deezer、YouTube は、それぞれの方針に従い、プレーヤーの提供に必要な接続情報を受け取ります。"
+    "Music players load only when you select a platform. Spotify, Apple Music, Deezer or YouTube then receive the connection data needed to provide their player, under their own policies.": "音楽プレーヤーは、サービスを選択したときにのみ読み込まれます。Spotify、Apple Music、Deezer、YouTube は、それぞれの方針に従い、プレーヤーの提供に必要な接続情報を受け取ります。",
+    "Enable sound": "音声をオン",
+    "Mute sound": "ミュート",
+    "Watch the full video": "動画全編を見る"
   }
 }

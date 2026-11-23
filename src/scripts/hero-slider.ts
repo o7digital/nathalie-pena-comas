@@ -1,4 +1,5 @@
 import { loadYouTubePlayer, type YouTubePlayer } from './youtube-player';
+import { heroVideo } from '../data/hero-video';
 
 const hero = document.querySelector<HTMLElement>('.signature-hero');
 if (hero) {
@@ -8,6 +9,7 @@ if (hero) {
  const pause = hero.querySelector<HTMLButtonElement>('[data-hero-pause]');
  const replay = hero.querySelector<HTMLButtonElement>('[data-hero-replay]');
  const skip = hero.querySelector<HTMLButtonElement>('[data-hero-skip]');
+ const sound = hero.querySelector<HTMLButtonElement>('[data-hero-sound]');
  const video = hero.querySelector<HTMLElement>('[data-hero-video]');
  const stage = hero.querySelector<HTMLElement>('[data-hero-player]');
  const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -18,6 +20,14 @@ if (hero) {
  let watchdog: ReturnType<typeof setTimeout> | undefined;
  let remaining = 18000, generation = 0;
  let started: number | undefined;
+ let muted = true, playerReady = false;
+ const updateSound = () => {
+  if (!sound) return;
+  sound.hidden = !intro;
+  sound.disabled = !playerReady;
+  sound.setAttribute('aria-pressed', String(!muted));
+  sound.textContent = (muted ? sound.dataset.enableLabel : sound.dataset.muteLabel) ?? '';
+ };
  const blocked = () => document.hidden || !inView || !!document.querySelector('dialog[open]');
  const show = (index: number) => {
   current = index;
@@ -36,6 +46,7 @@ if (hero) {
   replay?.setAttribute('aria-pressed', String(intro));
   buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(!intro && i === current)));
   if (skip) skip.hidden = !intro;
+  updateSound();
  };
  const schedule = () => {
   clearInterval(timer);
@@ -63,9 +74,10 @@ if (hero) {
   clearInterval(timer);
   const oldPlayer = player;
   player = undefined;
+  playerReady = false;
   oldPlayer?.pauseVideo();
   const oldFrame = stage?.querySelector('iframe');
-  const focusPhotos = skip === document.activeElement;
+  const focusPhotos = skip === document.activeElement || sound === document.activeElement;
   show(0);
   if (focusPhotos) buttons[0]?.focus({ preventScroll: true });
   // Fade to the portrait before removing the player to avoid a black flash.
@@ -76,6 +88,8 @@ if (hero) {
   if (intro || !stage) return;
   intro = true;
   running = false;
+  muted = true;
+  playerReady = false;
   remaining = 18000;
   started = undefined;
   const attempt = ++generation;
@@ -87,9 +101,9 @@ if (hero) {
    const api = await loadYouTubePlayer();
    if (!intro || generation !== attempt) return;
    const frame = document.createElement('iframe');
-   frame.title = 'Nathalie Peña-Comas — Ave Maria, desde El Vaticano';
-   const url = new URL('https://www.youtube-nocookie.com/embed/kglZQlwuAqU');
-   url.search = new URLSearchParams({ autoplay:'1', mute:'1', playsinline:'1', controls:'0', disablekb:'1', enablejsapi:'1', rel:'0', origin:location.origin }).toString();
+   frame.title = 'Nathalie Peña-Comas — ' + heroVideo.title;
+   const url = new URL('https://www.youtube-nocookie.com/embed/' + heroVideo.id);
+   url.search = new URLSearchParams({ autoplay:'1', mute:'1', playsinline:'1', start:String(heroVideo.startSeconds), controls:'0', disablekb:'1', enablejsapi:'1', rel:'0', origin:location.origin }).toString();
    frame.src = url.href;
    frame.allow = 'autoplay; encrypted-media; fullscreen';
    frame.referrerPolicy = 'strict-origin-when-cross-origin';
@@ -99,6 +113,8 @@ if (hero) {
     onReady: ({ target }) => {
      if (!intro || generation !== attempt) return;
      target.mute();
+     playerReady = true;
+     updateSound();
      if (!paused && !blocked()) target.playVideo();
      else target.pauseVideo();
     },
@@ -136,6 +152,16 @@ if (hero) {
  buttons.forEach((button, i) => button.addEventListener('click', () => { if (intro) finishIntro(); show(i); schedule(); }));
  pause?.addEventListener('click', () => setPaused(!paused));
  skip?.addEventListener('click', finishIntro);
+ sound?.addEventListener('click', () => {
+  if (!intro || !playerReady || !player) return;
+  muted = !muted;
+  if (muted) player.mute();
+  else {
+   player.unMute();
+   if (!paused && !blocked()) player.playVideo();
+  }
+  updateSound();
+ });
  replay?.addEventListener('click', () => { setPaused(false); void startIntro(); });
  hero.addEventListener('focusin', () => { if (!intro) schedule(); });
  hero.addEventListener('focusout', () => requestAnimationFrame(() => { if (!intro) schedule(); }));
