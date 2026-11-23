@@ -14,12 +14,11 @@ if (hero) {
  const stage = hero.querySelector<HTMLElement>('[data-hero-player]');
  const motion = matchMedia('(prefers-reduced-motion: reduce)');
  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
- let current = 0, paused = motion.matches, intro = false, running = false, inView = true;
+ let current = 0, paused = motion.matches, intro = false, inView = true;
  let player: YouTubePlayer | undefined;
  let timer: ReturnType<typeof setInterval> | undefined;
  let watchdog: ReturnType<typeof setTimeout> | undefined;
- let remaining = 18000, generation = 0;
- let started: number | undefined;
+ let generation = 0;
  let muted = true, playerReady = false;
  const updateSound = () => {
   if (!sound) return;
@@ -52,16 +51,10 @@ if (hero) {
   clearInterval(timer);
   timer = undefined;
   if (intro) {
-   if (started !== undefined) remaining = Math.max(0, remaining - (performance.now() - started));
-   started = undefined;
    if (paused || blocked()) {
     player?.pauseVideo();
    } else {
     player?.playVideo();
-    if (running) {
-     started = performance.now();
-     timer = setTimeout(finishIntro, remaining);
-    }
    }
   } else if (!paused && !blocked() && !hero.matches(':focus-within')) {
    timer = setInterval(() => show((current + 1) % slides.length), 5000);
@@ -69,7 +62,7 @@ if (hero) {
  };
  const finishIntro = () => {
   generation++;
-  intro = running = false;
+  intro = false;
   clearTimeout(watchdog);
   clearInterval(timer);
   const oldPlayer = player;
@@ -87,11 +80,8 @@ if (hero) {
  const startIntro = async () => {
   if (intro || !stage) return;
   intro = true;
-  running = false;
   muted = true;
   playerReady = false;
-  remaining = 18000;
-  started = undefined;
   const attempt = ++generation;
   clearInterval(timer);
   // Reserve the full-screen film immediately, including while YouTube loads.
@@ -122,15 +112,11 @@ if (hero) {
      if (!intro || generation !== attempt) return;
      if (data === 1) {
       clearTimeout(watchdog);
-      running = true;
       show(0);
       schedule();
      } else if (data === 0) finishIntro();
      else if (data === 2 || data === 3) {
       clearTimeout(watchdog);
-      running = false;
-      if (started !== undefined) remaining = Math.max(0, remaining - (performance.now() - started));
-      started = undefined;
       clearInterval(timer);
       if (data === 3 && !paused && !blocked()) watchdog = setTimeout(finishIntro, 8000);
      }
