@@ -1,4 +1,4 @@
-import {chromium} from '@playwright/test';
+import {chromium,firefox} from '@playwright/test';
 import {once} from 'node:events';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
@@ -10,7 +10,7 @@ import siteMap from './site-map.json' with {type:'json'};
 const videoId='00000000-0000-4000-a000-000000000001',imageId='00000000-0000-4000-a000-000000000002';
 const server=createStudioServer({cms:'http://unused.test',secret:'isolated-site-upload-browser-secret-32-characters'});server.listen(0,'127.0.0.1');await once(server,'listening');const origin='http://127.0.0.1:'+server.address().port,site='https://preview.example.test';
 const bundle=JSON.parse(await readFile('dist/_studio/pages/es.json','utf8')),content={gallery:[],albums:[],videos:[],concerts:[],site_images:[],site_texts:[...new Map(siteMap.sections.flatMap(section=>section.fields.map(field=>[field.key,field]))).values()].map((field,index)=>({id:'text-'+index,key:field.key,locale:'es',value:field.source,status:'published'}))};
-const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
+const browser=await (process.env.PLAYWRIGHT_BROWSER==='firefox'?firefox.launch():chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'}));
 try{
  const fixture=await browserMediaFixture(browser),page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[],writes=[];page.setDefaultTimeout(25000);page.on('pageerror',error=>errors.push(error.message));
  let mode='fail',waiting=null,uploads=0,photos=0;
@@ -33,6 +33,10 @@ try{
   const data={'/api/config':{preview:site+'/es/',translationReady:true},'/api/session':{name:'Media test editor'},'/api/site-map':siteMap,'/api/content':{content,seoRules:[]}};return route.fulfill({status:Object.hasOwn(data,path)?200:404,json:data[path]||{error:'Unexpected path'}});
  });
  await page.goto(origin+'/#videos');await page.locator('.page-head [data-action=new]').waitFor();await page.locator('.page-head [data-action=new]').click();
+ assert.equal(await page.locator('.video-source-editor').getAttribute('data-editing-kind'),'media');
+ assert.equal(await page.locator('#editor-photo').getAttribute('data-editing-kind'),'media');
+ assert.equal(await page.locator('.video-source-editor').evaluate(node=>getComputedStyle(node).borderLeftColor),'rgb(40, 107, 193)');
+ assert.equal(await page.locator('#editor [name=title]').evaluate(node=>node.closest('label').dataset.editingKind),'text');
  assert.equal(await page.locator('#video-source-type').inputValue(),'upload');assert(await page.getByRole('button',{name:'Subir vídeo desde mi dispositivo',exact:true}).isVisible());
  await page.locator('#editor [name=title]').fill('Concierto creado por Nathalie');
  await page.locator('#editor-video-upload').setInputFiles({name:'concierto.webm',mimeType:'video/webm',buffer:fixture.video});await page.locator('#video-upload-error').filter({hasText:'Tus textos siguen aquí'}).waitFor();assert.equal(await page.locator('#editor [name=title]').inputValue(),'Concierto creado por Nathalie');

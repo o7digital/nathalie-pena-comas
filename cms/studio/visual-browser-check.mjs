@@ -1,5 +1,5 @@
 // Real site design with isolated CMS fixtures: no client content or provider writes.
-import {chromium} from '@playwright/test';
+import {chromium,firefox} from '@playwright/test';
 import {once} from 'node:events';
 import http from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -23,7 +23,7 @@ const markers=siteMap.sections.flatMap(section=>section.fields.map(field=>({sect
 markers.push({section:'albums',value:'Alta Gracia',target:{collection:'albums',id:'album-2',field:'title'}});
 const html=annotatePreview(original,{texts:markers,sections:siteMap.sections,images:[{section:'about',src:photoSrc,collection:'site_images',id:'story'}]});
 const writes=[],errors=[];let failNext=false,failPreview=false,uploadCount=0;
-const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
+const browser=await (process.env.PLAYWRIGHT_BROWSER==='firefox'?firefox.launch():chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'}));
 try{
  const page=await browser.newPage({viewport:{width:1550,height:1100}});page.on('pageerror',error=>errors.push(error.message));
  await page.route('**/api/**',async route=>{
@@ -49,6 +49,7 @@ try{
   return route.fulfill({status:Object.hasOwn(data,path)?200:404,json:data[path]||{error:'Unexpected test path'}});
  });
  await page.goto(origin+'/#about');
+ assert.equal(await page.locator('.visual-welcome .editing-badge').first().evaluate(node=>getComputedStyle(node).fontSize),'11px');
  const frame=page.frameLocator('.visual-editor iframe'),input=frame.getByRole('textbox',{name:field.label,exact:true}).filter({hasText:field.source});
  await input.waitFor();assert.equal(await page.locator('.visual-editor iframe').evaluate(frame=>frame.contentWindow.getComputedStyle(frame.contentDocument.querySelector('#about')).display),'block');assert.equal(await page.locator('.studio-text-fields').getAttribute('open'),null);
  const caption=frame.locator('.story-caption[data-studio-editable]'),captionOriginal=await caption.textContent();
@@ -61,7 +62,7 @@ try{
  const edited=frame.getByRole('textbox',{name:field.label,exact:true}).filter({hasText:'Una voz que conecta culturas.'});await edited.waitFor();
  // The old built HTML receives the latest saved CMS values without a site rebuild.
  assert.equal(await edited.textContent(),'Una voz que conecta culturas.');
- await page.locator('[data-visual-mode=preview]').click();assert.equal(await edited.getAttribute('contenteditable'),'false');
+ await page.locator('[data-visual-mode=preview]').click();assert.equal(await edited.getAttribute('contenteditable'),'false');assert.equal(await edited.evaluate(node=>getComputedStyle(node).outlineStyle),'none');
  await page.locator('[data-visual-mode=edit]').click();
  failNext=true;await edited.fill('Un borrador que debe conservarse.');await page.locator('[data-visual-save]').click();
  await page.locator('.visual-error').filter({hasText:'Tu cambio se conserva'}).waitFor();assert.equal(await frame.getByRole('textbox',{name:field.label,exact:true}).filter({hasText:'Un borrador que debe conservarse.'}).textContent(),'Un borrador que debe conservarse.');assert.equal(await page.locator('[data-visual-save]').isEnabled(),true);

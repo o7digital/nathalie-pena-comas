@@ -544,7 +544,7 @@ export function createStudioServer(options = {}) {
   }
   if(path==='/social-callback.html')res.setHeader('Referrer-Policy','no-referrer');
   if(req.method!=='GET' && req.method!=='HEAD') throw new ApiError(405,'Método no permitido.');
-  const staticFiles={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/media-upload.js':'media-upload.js','/video-upload.js':'video-upload.js','/video-data.js':'video-data.js','/media.css':'media.css','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/seo.js':'seo.js','/seo-data.js':'seo-data.js','/seo.css':'seo.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
+  const staticFiles={'/editor-guidance.js':'editor-guidance.js','/editor-guidance.css':'editor-guidance.css','/':'index.html','/index.html':'index.html','/app.js':'app.js','/media-upload.js':'media-upload.js','/video-upload.js':'video-upload.js','/video-data.js':'video-data.js','/media.css':'media.css','/visual-editor.js':'visual-editor.js','/visual-editor.css':'visual-editor.css','/seo.js':'seo.js','/seo-data.js':'seo-data.js','/seo.css':'seo.css','/reporting.js':'reporting.js','/social.js':'social.js','/social-billing.js':'social-billing.js','/social-callback.html':'social-callback.html','/social-callback.js':'social-callback.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/artist.webp':'artist.webp','/logo-npc.png':'logo-npc.png'};
   const font=path.match(/^\/fonts\/([\w.-]+\.(?:ttf|txt))$/);
   const armAsset=['/arm.js','/arm-data.js','/arm.css','/contact-classification.js','/arm-classification.js','/olivia-mail.js'].includes(path)?path.slice(1):null;
   const relative=armAsset || (path==='/calendar.js'?'calendar.js':staticFiles[path]) || (font?'fonts/'+font[1]:null);
@@ -556,7 +556,7 @@ export function createStudioServer(options = {}) {
    else throw error;
   }
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ttf':'font/ttf','.txt':'text/plain'};
-  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','media-upload.js','video-upload.js','video-data.js','media.css','visual-editor.js','visual-editor.css','seo.js','seo-data.js','seo.css','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
+  res.writeHead(200,{'Content-Type':mime[extname(relative)],'Cache-Control':armAsset||['index.html','app.js','editor-guidance.js','editor-guidance.css','media-upload.js','video-upload.js','video-data.js','media.css','visual-editor.js','visual-editor.css','seo.js','seo-data.js','seo.css','calendar.js','reporting.js','social.js','social-billing.js','social-callback.html','social-callback.js','style.css'].includes(relative)?'no-store':'public, max-age=3600'});res.end(req.method==='HEAD'?undefined:bytes);
  }
  const server=http.createServer((req,res)=>serve(req,res).catch(error=>{
   if(res.headersSent){res.end();return;}

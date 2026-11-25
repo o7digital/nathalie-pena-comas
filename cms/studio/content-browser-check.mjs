@@ -1,5 +1,5 @@
 // Isolated UX check. No customer content, translation provider or CRM writes.
-import {chromium} from '@playwright/test';
+import {chromium,firefox} from '@playwright/test';
 import {once} from 'node:events';
 import assert from 'node:assert/strict';
 import {createStudioServer} from './server.mjs';
@@ -10,7 +10,7 @@ server.listen(0,'127.0.0.1');await once(server,'listening');
 const origin='http://127.0.0.1:'+server.address().port,preview='https://preview.example.test/es/';
 const texts=[...new Map(siteMap.sections.flatMap(section=>section.fields.map(field=>[field.key,field]))).values()].flatMap((field,index)=>['es',...targetLocales].map(locale=>({id:`text-${index}-${locale}`,key:field.key,locale,value:locale==='es'?field.source:field.localizations?.[locale]||`${locale}: ${field.english}`,status:'published'})));
 const writes=[],errors=[];let failNext=false;
-const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
+const browser=await (process.env.PLAYWRIGHT_BROWSER==='firefox'?firefox.launch():chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'}));
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1050}});page.on('pageerror',error=>errors.push(error.message));
  await page.route('**/api/**',async route=>{
@@ -32,7 +32,7 @@ try{
  assert.equal(await page.locator('[data-text-key]').count(),section.fields.length);
  const field=section.fields.find(row=>!row.auxiliary),input=page.locator(`[data-text-key=${JSON.stringify(field.key)}]`);
  assert.equal(await input.inputValue(),field.source);
- assert.equal(await input.evaluate(node=>getComputedStyle(node).color),'rgb(36, 99, 70)');
+ assert.equal(await input.evaluate(node=>getComputedStyle(node).color),'rgb(155, 37, 45)');
  assert.equal(await page.locator('[data-preview-locale]').count(),11);
  assert.equal(await page.locator('[data-preview-locale=fr]').getAttribute('href'),preview.replace('/es/','/fr/')+'#about');
  const value='Una artista que conecta culturas.';await input.fill(value);
@@ -50,5 +50,5 @@ try{
  await page.locator('#navigation a[href="#privacy"]').click();await page.locator('.studio-text-fields>summary').click();await page.locator('[data-section-form=privacy]').waitFor();
  assert.equal(await page.locator('[data-preview-locale=de]').getAttribute('href'),'https://preview.example.test/de/privacy/');
  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/npc-editable-studio-mobile.png',fullPage:true});
- assert.deepEqual(errors,[]);console.log('Content Studio UX passed: original text, editable green fields, explicit Translate, unsaved input translation, error recovery, 11 language links, read-only review, media sections, privacy pages and mobile.');
+ assert.deepEqual(errors,[]);console.log('Content Studio UX passed: original text, red SEO and green editable fields, explicit Translate, unsaved input translation, error recovery, 11 language links, read-only review, media sections, privacy pages and mobile.');
 }finally{await browser.close();server.closeAllConnections();server.close();}

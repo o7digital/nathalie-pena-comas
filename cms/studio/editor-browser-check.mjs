@@ -29,7 +29,7 @@ try {
  await page.getByText('Escribe en español.',{exact:true}).waitFor();
  const input=page.locator(`[data-text-key=${JSON.stringify(field.key)}]`);assert.equal(await input.inputValue(),original.value);
  await input.fill(value);const saved=page.waitForResponse(response=>response.url().endsWith('/api/sections/about')&&response.request().method()==='POST',{timeout:150000});
- assert.equal(await input.evaluate(node=>getComputedStyle(node).color),'rgb(36, 99, 70)');
+ assert.equal(await input.evaluate(node=>getComputedStyle(node).color),['Título','Antetítulo'].includes(field.label)?'rgb(155, 37, 45)':'rgb(33, 98, 59)');
  assert.equal(await page.locator('[data-preview-locale]').count(),11);
  assert.match(await page.locator('[data-preview-locale=fr]').getAttribute('href'),/\/fr\/#about$/);
  await page.getByRole('button',{name:'Traducir a 10 idiomas ↗',exact:true}).click();const response=await saved;assert.equal(response.status(),200);assert.equal((await response.json()).translatedLanguages,10);await page.locator('#toast').filter({hasText:/10 idiomas actualizados/}).waitFor();
